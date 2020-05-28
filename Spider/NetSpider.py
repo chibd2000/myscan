@@ -66,12 +66,12 @@ class NetSpider(Spider):
 
         logging.info("Fofa Spider page {}".format(page))
         temp_list = list()
-        url = "https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=69a2b36c3a68bbe6832686b4d257d3a3&qbase64=" + base64.b64encode(
+        url = "https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=0ef4f5a7b2888157f9809c76ef5a3ca3&qbase64=" + base64.b64encode(
             NetworkSegment.encode()).decode() + '&page=' + str(page)
 
         #  print(url)
         '''
-        https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=69a2b36c3a68bbe6832686b4d257d3a3&qbase64=xxxxx&page=1
+        https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=0ef4f5a7b2888157f9809c76ef5a3ca3&qbase64=xxxxx&page=1
         '''
         resp = requests.get(url=url, headers=self.headers)
 
@@ -197,7 +197,7 @@ class NetSpider(Spider):
 
         for page in range(1, 2):
             url = "https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key" \
-                  "=69a2b36c3a68bbe6832686b4d257d3a3&qbase64=" + base64.b64encode(
+                  "=0ef4f5a7b2888157f9809c76ef5a3ca3&qbase64=" + base64.b64encode(
                 domain_word.encode()).decode() + '&page=' + str(page)
 
             # print(url)
@@ -240,7 +240,7 @@ class NetSpider(Spider):
                     'search_keyword': domain_word
                 }
 
-                # print(sub_domain_info)
+                print(sub_domain_info)
 
                 self.web_domain_lists.append(sub_domain_info)
 
@@ -306,6 +306,7 @@ class NetSpider(Spider):
 
     '''主函数'''
     def main(self):
+        print(1111)
         logging.info("Net Spider Start")
         self.spider()
         return list(set(self.net_list))

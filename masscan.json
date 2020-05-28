@@ -1,2 +1,3 @@
-{   "ip": "60.190.19.116",   "timestamp": "1589355205", "ports": [ {"port": 80, "proto": "tcp", "status": "open", "reason": "syn-ack", "ttl": 45} ] },
+{   "ip": "42.247.33.25",   "timestamp": "1590668391", "ports": [ {"port": 443, "proto": "tcp", "status": "open", "reason": "syn-ack", "ttl": 44} ] },
+{   "ip": "42.247.33.25",   "timestamp": "1590668453", "ports": [ {"port": 80, "proto": "tcp", "status": "open", "reason": "syn-ack", "ttl": 44} ] },
 {finished: 1}

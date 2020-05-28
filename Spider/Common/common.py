@@ -174,7 +174,7 @@ def Common_createXlxs(target):
 
     worksheet6 = workbook.add_worksheet('子域名端口扫描')
     headings6 = ['ip', '端口', '协议', '服务', '标题']
-    worksheet6.set_column('A:A', 12)
+    worksheet6.set_column('A:A', 19)
     worksheet6.set_column('B:B', 28)
     worksheet6.set_column('C:C', 21)
     worksheet6.set_column('D:D', 25)

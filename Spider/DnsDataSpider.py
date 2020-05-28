@@ -16,9 +16,10 @@ class DnsDataSpider(Spider):
         self.target = target
         self.dnsdatalist = list()
 
+    # 写文件
     def write_file(self, web_lists, target, page):
         workbook = openpyxl.load_workbook(abs_path + str(target) + ".xlsx")
-        worksheet = workbook.worksheets[page] # 打开的是证书的sheet
+        worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
         index = 0
         while index < len(web_lists):
             web = list()
@@ -29,14 +30,16 @@ class DnsDataSpider(Spider):
         workbook.save(abs_path + str(target) + ".xlsx")
         workbook.close()
 
+    # 解析数据，这里用(递归)的方式进行查询
     def get_json_data(self, browser):
         WebDriverWait(browser, 20, 0.5).until(EC.presence_of_element_located((By.TAG_NAME, "pre")))
         json_data = json.loads(browser.find_element_by_tag_name('pre').text)
-        if not json_data:
+        if json_data:
             return json_data
         else:
             self.get_json_data(browser)
 
+    # 爬取
     def spider(self):
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
@@ -45,7 +48,7 @@ class DnsDataSpider(Spider):
         browser.get('https://dns.bufferover.run/dns?q=.' + self.target)
         browser.implicitly_wait(60)
 
-        json_data = {"FDNS_A": "", "RDNS": ""}
+        # json_data = {"FDNS_A": "", "RDNS": ""}
 
         json_data = self.get_json_data(browser)
 
@@ -72,9 +75,8 @@ class DnsDataSpider(Spider):
     def main(self):
         logging.info("DnsdataSpider Start")
         self.spider()
-        print(self.dnsdatalist)
+        # self.write_file(self.dnsdatalist, self.target, 2)
         return self.dnsdatalist
-        # self.write_file()
 
 
 if __name__ == '__main__':

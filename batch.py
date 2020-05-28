@@ -24,6 +24,7 @@ if sys.platform == 'win32':
 
 abs_path = os.getcwd() + os.path.sep
 
+
 '''信息搜集类'''
 class Spider(object):
     def __init__(self, domain):
@@ -102,16 +103,35 @@ class Spider(object):
         pass
 
     '''端口扫描 多进程异步执行，在洗数据result()之后 去获得该数组中的标识符为target为'yes'的字典对其中的ip进行扫描 然后write_file写入文件（这里是扫描子域名下的ip）'''
-    # def ipscanportspider(self):
-    #     logging.info("PortScan Start")
-    #     pool = multiprocessing.Pool(5)
-    #     for aaa in self.clear_task_list:
-    #         if aaa['target'] == 'subdomain':
-    #             if aaa['ips'] != '':
-    #                 bbb = PortScan(self.domain, aaa['ips'])
-    #                 pool.apply_async(bbb.main,)  # 同步运行,阻塞、直到本次任务执行完毕拿到res
-    #     pool.close()
-    #     pool.join()
+    def ipscanportspider(self):
+        # 测试数据如下：
+        # {'ips': '60.190.19.102', 'port': [], 'target': 'ip', 'subdomain': ''},
+        # {'subdomain': 'webvpn.nbcc.cn', 'ips': '42.247.33.26', 'port': None, 'target': 'subdomain'},
+        # {'subdomain': 'a004.cache.saaswaf.com', 'ips': '119.188.95.114', 'port': None, 'target': 'webdomain'},
+        # {'subdomain': 'vpn.nbcc.cn', 'ips': '42.247.33.25', 'port': None, 'target': 'subdomain'},
+        logging.info("PortScan Start")
+
+        temp_ips = list()  # 用来记录扫描过的ip 防止多次扫描 节省时间
+        pool = multiprocessing.Pool(5)
+        for aaa in self.clear_task_list:
+            flag = 0
+            if aaa['target'] == 'subdomain':
+                if aaa['ips'] != '':
+                    for i in temp_ips:
+                        if aaa['ips'] == i:
+                            flag += 1
+                    if flag != 0:
+                        continue
+                    else:
+                        temp_ips.append(aaa['ips'])
+                        print("过滤完成 实现 防止多次扫描相同的ip 节省时间")
+                        print("已经扫描过的ip有如下：")
+                        print(temp_ips)
+                        print("当前正在扫描的IP为：" + aaa['ips'])
+                        bbb = PortScan(self.domain, aaa['ips'])
+                        pool.apply_async(func=bbb.main)  # 异步运行,非阻塞
+        pool.close()
+        pool.join()
 
     '''洗数据'''
     def result(self):
@@ -172,27 +192,37 @@ class Spider(object):
 
     '''程序的入口点'''
     def run(self):
-        self.thread_list.append(Thread(target=self.baiduspider,))
-        self.thread_list.append(Thread(target=self.ctfrspider,))
+        # self.thread_list.append(Thread(target=self.baiduspider,))
+        # self.thread_list.append(Thread(target=self.ctfrspider,))
         self.thread_list.append(Thread(target=self.netspider,))
-        self.thread_list.append(Thread(target=self.dnsbrutespider,))
-        self.thread_list.append(Thread(target=self.dnsspider,))
-        self.thread_list.append(Thread(target=self.thridspider,))
-        self.thread_list.append(Thread(target=self.ipreserverspider,))
+        # self.thread_list.append(Thread(target=self.dnsbrutespider,))
+        # self.thread_list.append(Thread(target=self.dnsspider,))
+        # self.thread_list.append(Thread(target=self.thridspider,))
+        # self.thread_list.append(Thread(target=self.ipreserverspider,))
 
         for i in self.thread_list:
             i.start()
+
         for i in self.thread_list:
             i.join()
 
         # 洗数据
-        self.result()
+        print("=================这里是洗数据=================")
+        # self.result()
 
         # 解析A记录
-        self.domainreservespider()
-        print("self.task_list 新数据展示：", self.clear_task_list)
+        print("=================这里是解析A记录=================")
+        # self.domainreservespider()
 
-        # 端口扫描，扫描速度太慢，就不用了
+        # print("self.task_list最终整理数据为：", self.clear_task_list)
+
+        # self.clear_task_list = [
+        #     {'subdomain': 'vpn.nbcc.cn', 'ips': '42.247.33.25', 'port': None, 'target': 'subdomain'},
+        #     # {'subdomain': 'www.nbcc.cn', 'ips': '183.136.237.217', 'port': None, 'target': 'subdomain'}
+        # ]
+
+        # # 端口扫描，扫描速度太慢，就不用了
+        # print("=================这里是端口扫描=================")
         # self.ipscanportspider()
 
         # 最后返回处理好的数据 交给Exploit类
@@ -241,8 +271,6 @@ class Exploit(object):
         self.thread_list.append(Thread(target=self.unauthscan,))  # 未授权扫描ip和http域名
         self.thread_list.append(Thread(target=self.sensitivefilescan,))  # 敏感文件扫描
         # self.thread_list.append(Thread(target=self.cmsscan, ))  # cms扫描
-        # self.thread_list.append(Thread(target=self.Unauthscan,))
-        # self.thread_list.append(Thread(target=self.Unauthscan,))
 
         for i in self.thread_list:
             i.start()
@@ -269,7 +297,7 @@ if __name__ == '__main__':
     starttime = time.time()
     spider = Spider(args.domain)
     clear_task_list = spider.run()
-    print(time.time() - starttime)
+    print("总共耗时时间为：" + str(time.time() - starttime))
 
     # [
     #   {"subdomain":"www.baidu.com","ips":"1.1.1.1","port":None,target:"yes"},

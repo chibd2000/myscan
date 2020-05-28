@@ -4,24 +4,23 @@
 import nmap
 import multiprocessing
 import json
-from threading import Lock
+import threading
 import openpyxl
 import os
 import requests
 import re
 import chardet
-# 这里自己就参考 nmap和masscan配合扫描的代码 改成多进程异步增加效率
+requests.packages.urllib3.disable_warnings()
 
 abs_path = os.getcwd() + os.path.sep
 
 # 端口扫描的实现
 class PortScan(object):
     def __init__(self, domain, _ip):
-        super().__init__()
         self.domain = domain
         self.scanlists = list()
         self.ports = list()
-        self.lock = Lock()
+        # self.lock = threading.Lock()
         self._ip = _ip
 
     # 写文件操作
@@ -31,20 +30,20 @@ class PortScan(object):
         index = 0
         while index < len(web_lists):
             web = list()
-            web.append(web_lists[index]['scan_ip']) # scan_ip
-            web.append(web_lists[index]['port']) # port
-            web.append(web_lists[index]['banner']) # banner
-            web.append(web_lists[index]['service_name']) # service
-            web.append(web_lists[index]['title']) # title
+            web.append(web_lists[index]['scan_ip'])  # scan_ip
+            web.append(web_lists[index]['port'])  # port
+            web.append(web_lists[index]['banner'])  # banner
+            web.append(web_lists[index]['service_name'])  # service
+            web.append(web_lists[index]['title'])  # title
             worksheet.append(web)
             index += 1
         workbook.save(abs_path + str(target) + ".xlsx")
         workbook.close()
 
     # 调用masscan识别端口
-    def portscan(self, scan_ip):
+    def Portscan(self, scan_ip):
         temp_ports = []  # 设定一个临时端口列表
-        os.system(abs_path + 'masscan.exe ' + scan_ip + ' -p 1-100 -oJ masscan.json --rate 1000')
+        os.system(abs_path + 'masscan.exe ' + scan_ip + ' -p 1-65535 -oJ masscan.json --rate 1000')
 
         # 提取json文件中的端口
         with open(abs_path + 'masscan.json', 'r') as f:
@@ -54,7 +53,8 @@ class PortScan(object):
                     temp_ports.append(str(temp["ports"][0]["port"]))# 端口取出加入临时端口中
 
         if len(temp_ports) > 25:
-            temp_ports.clear()  # 如果端口数量大于30，说明可能存在防火墙，属于误报，清空列表
+            print("判断防火墙存在 清空列表继续扫描!")
+            temp_ports.clear()  # 如果端口数量大于25，说明可能存在防火墙，属于误报，清空列表
         else:
             self.ports.extend(temp_ports)  # 小于30则放到总端口列表里
 
@@ -63,15 +63,18 @@ class PortScan(object):
         nm = nmap.PortScanner()
         try:
             for port in self.ports:
-                info = {} # 存储字典
-                ret = nm.scan(scan_ip, port, arguments='-Pn -sS') # 默认是 not ping 半tcp策略扫描
+                info = {}  # 存储字典
+                ret = nm.scan(scan_ip, port, arguments='-Pn -sS')  # 默认是 not ping 半tcp策略扫描
                 service_name = ret['scan'][scan_ip]['tcp'][int(port)]['name']
                 # print('[*] 主机 ' + scan_ip + ' 的 ' + str(port) + ' 端口服务为: ' + service_name)
-
+                # 一共有三种情况 一种是http 一种是https 一种是 不是http 不是https
                 # 如果扫描出来的协议是 http https的话则如下操作
                 if 'http' in service_name or service_name == 'sun-answerbook':
                     if service_name == 'https' or service_name == 'https-alt':
                         scan_url_port = 'https://' + scan_ip + ':' + str(port)
+                        info['scan_ip'] = scan_ip
+                        info['service_name'] = service_name
+                        info['port'] = port
                         try:
                             resp = requests.get(scan_url_port, timeout=3, verify=False)
                             # 获取网站的页面编码并且应用
@@ -84,11 +87,9 @@ class PortScan(object):
                                 banner = resp.headers['server']
                                 info['banner'] = banner
                                 info['title'] = title
-                                # self.scanlists.append(scan_url_port + '\t' + banner + '\t' + title)
                             else:
                                 info['banner'] = ''
                                 info['title'] = ''
-                                # self.scanlists.append(scan_url_port + '\t' + service_name + '\t' + "获取标题失败，请手动尝试！！！")
                             self.scanlists.append(info)
                             # print(info)
                         except:
@@ -138,21 +139,18 @@ class PortScan(object):
             pass
         self.ports.clear()  # 扫一次清理一次
 
-    @property
     def main(self):
-        self.portscan(self._ip)
+        self.Portscan(self._ip)
         self.Scan(self._ip)
-        self.lock.acquire()
-        print(self.scanlists)
         self.write_file(self.scanlists, self.domain, 5)
-        self.lock.release()
 
 
 if __name__ == '__main__':
+    res = list()
     ip_lists = ['120.79.66.58', '116.85.41.113']
     pool = multiprocessing.Pool(5)
     for _ip in ip_lists:
-        bbb = PortScan('nbcc.cn', _ip)
-        pool.apply_async(bbb.main, ) #同步运行,阻塞、直到本次任务执行完毕拿到res
+        bbb = PortScan('nbpt.edu.cn', _ip)
+        pool.apply_async(func=bbb.main)
     pool.close()
     pool.join()

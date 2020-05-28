@@ -2,6 +2,7 @@
 
 from Spider.Common.common import *
 import requests
+import abc
 import re
 import chardet
 import logging
@@ -10,10 +11,8 @@ import openpyxl
 requests.packages.urllib3.disable_warnings()
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s]%(asctime)s %(message)s")
 
-
 '''爬取基类'''
-class Spider(object):
-
+class Spider(metaclass=abc.ABCMeta):
     def __init__(self):
         self.source = 'BaseSpider'  #
         self.lock = Lock()
@@ -21,14 +20,17 @@ class Spider(object):
         self.target = ''  # 被爬取的域名
 
     #  写文件函数
+    @abc.abstractmethod
     def write_file(self, web_lists, target, page):
         pass
 
     # 爬取函数
+    @abc.abstractmethod
     def spider(self):
         pass
 
     #  启动函数
+    @abc.abstractmethod
     def main(self):
         pass
 
