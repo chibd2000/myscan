@@ -194,12 +194,11 @@ def Common_createXlxs(target):
     worksheet8.write_row('A1', headings8)
 
     worksheet9 = workbook.add_worksheet('存活网站标题')
-    headings9 = ['网址', '状态码', '标题', 'ip', '框架信息']
+    headings9 = ['网址', '状态码', '标题', 'X-Powered-By']
     worksheet9.set_column('A:A', 35)
-    worksheet9.set_column('B:B', 12)
+    worksheet9.set_column('B:B', 8)
     worksheet9.set_column('C:C', 28)
     worksheet9.set_column('D:D', 28)
-    worksheet9.set_column('E:E', 28)
     worksheet9.write_row('A1', headings9)
 
     worksheet10 = workbook.add_worksheet('漏洞扫描')
@@ -218,3 +217,19 @@ def Common_getTopDomainName(Subdomain, FatherUrl):
         return temp_url
     else:
         return Common_getTopDomainName(Subdomain, temp_url)
+
+
+'''功能：简单的判断下当 端口为443,80的时候返回的格式为http?s:// + ....，否则其他端口的话每个url都返回两次'''
+def Common_url_by_port(domain, port):
+    protocols = ['http://', 'https://']
+    if port == 443:
+        url = f'https://{domain}'
+        return url
+    elif port == 80:
+        url = f'http://{domain}'
+        return url
+    else:
+        url = []
+        for protocol in protocols:
+            url.append(f'{protocol}{domain}:{port}')
+        return url

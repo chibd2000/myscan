@@ -3,6 +3,7 @@
 from Spider.BaseSpider import *
 from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
+from Config import config
 import base64
 
 # 这里需要配合fofa搜集到的网段来进行shodan的爬取，所以两个模块一起写，处理函数还是分开写了 test01 test02，为了增加效率 每页的爬取都用一个线程
@@ -21,6 +22,8 @@ class NetSpider(Spider):
         self.web_ip_lists_shodan = list()  # shodan存放ip信息的列表
         self.web_ip_lists_fofa = list()  # fofa存放ip信息的列表
         self.thread_list = list()
+        self.fofa_api = config.fofa_api
+        self.shodan_api = config.shodan_api
 
     '''保存文件'''
     def write_file(self, web_lists, target, page):
@@ -66,12 +69,12 @@ class NetSpider(Spider):
 
         logging.info("Fofa Spider page {}".format(page))
         temp_list = list()
-        url = "https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=0ef4f5a7b2888157f9809c76ef5a3ca3&qbase64=" + base64.b64encode(
+        url = "https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=" + str(self.fofa_api) + "&qbase64=" + base64.b64encode(
             NetworkSegment.encode()).decode() + '&page=' + str(page)
 
         #  print(url)
         '''
-        https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=0ef4f5a7b2888157f9809c76ef5a3ca3&qbase64=xxxxx&page=1
+        https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key= + str(self.fofa_api) + &qbase64=xxxxx&page=1
         '''
         resp = requests.get(url=url, headers=self.headers)
 
@@ -91,7 +94,29 @@ class NetSpider(Spider):
                 self.net_list.append(i[0])  # 只要是ip就添加到列表中
                 domain = ''
             else:
-                domain = i[0].split('.', 1)[1].split('.')[0]
+                # 要探测的目标正好是在其中，比如 self.target = 'nbcc.cn'，那么子域名也就是nbcc.cn，如果目标是nbcc.edu.cn 那么直接就取 不跟下面的edu gov继续判断，那么就是直接略过
+
+                #print("原始爬取的网址为：" + str(i[0]))
+                if self.target in i[0]:
+                    domain = self.target
+                    # print("1-处理过后的网址为：" + str(domain))
+                # 特殊的edu gov的域名处理
+                elif 'edu' in i[0] or 'gov' in i[0]:
+                    domain_temp = i[0].split('.')
+                    if len(domain_temp) >= 4:
+                        domain = ".".join(domain_temp[len(domain_temp)-3:])
+                        # print("2-处理过后的网址为：" + str(domain))
+                    else:
+                        domain = i[0]
+                        # print("3-处理过后的网址为：" + str(domain))
+                else:
+                    domain_temp = i[0].split('.')
+                    if len(domain_temp) >= 3:
+                        domain = ".".join(domain_temp[len(domain_temp)-2:])
+                        # print("4-处理过后的网址为：" + str(domain))
+                    else:
+                        domain = i[0].split('.', 1)[1]
+                        # print("5-处理过后的网址为：" + str(domain))
                 self.net_list.append(i[0])  # 只要是域名就添加到列表中
 
             # if re.match(r'\d+.\d+.\d+', i[0].split('.', 1)[1]):
@@ -126,7 +151,7 @@ class NetSpider(Spider):
         logging.info("Shodan Spider page {}".format(page))
 
         temp_list = list()
-        url = "https://api.shodan.io/shodan/host/search?key=mEEzyNeVeIA6amP8TVjEW9n03uIeyG9r&query=" + NetworkSegment + "&minify=true&page=" + str(page)
+        url = "https://api.shodan.io/shodan/host/search?key=" + self.shodan_api + "&query=" + NetworkSegment + "&minify=true&page=" + str(page)
         resp = requests.get(url=url, headers=self.headers)
         json_data = resp.json()
 
@@ -196,8 +221,7 @@ class NetSpider(Spider):
         domain_word = 'domain="%s"' % self.target
 
         for page in range(1, 2):
-            url = "https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key" \
-                  "=0ef4f5a7b2888157f9809c76ef5a3ca3&qbase64=" + base64.b64encode(
+            url = "https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=" + str(self.fofa_api) + "&qbase64=" + base64.b64encode(
                 domain_word.encode()).decode() + '&page=' + str(page)
 
             # print(url)
@@ -220,7 +244,11 @@ class NetSpider(Spider):
                     self.net_list.append(i[0])  # 只要是ip就添加到列表中
                     domain = ''
                 else:
-                    domain = i[0].split('.', 1)[1]
+                    if self.target in i[0]:
+                        domain = self.target
+                    else:
+                        domain = ''
+
                     self.net_list.append(i[0])  # 只要是域名就添加到列表中
 
                 ip_list.append(i[1])
@@ -285,7 +313,7 @@ class NetSpider(Spider):
     # fofa引擎的探测搜索ip段和域名
     def fofa_ip_search(self, NetworkSegment):
         # print(NetworkSegment)
-        for page in range(1, 2):
+        for page in range(1, 2): # 这里自定义页数
             self.thread_list.append(Thread(target=self.test01, args=(NetworkSegment, page)))
 
         for i in self.thread_list:
@@ -296,7 +324,7 @@ class NetSpider(Spider):
     # shodan引擎的探测搜索ip段和域名
     def shadon_ip_search(self, NetworkSegment):
         # print(NetworkSegment)
-        for page in range(1, 2):
+        for page in range(1, 5):
             self.thread_list.append(Thread(target=self.test02, args=(NetworkSegment, page)))
 
         for i in self.thread_list:
@@ -306,11 +334,10 @@ class NetSpider(Spider):
 
     '''主函数'''
     def main(self):
-        print(1111)
         logging.info("Net Spider Start")
         self.spider()
         return list(set(self.net_list))
 
 
 if '__main__' == __name__:
-    NetSpider(1).main('nbcc.cn')
+    NetSpider('nbcc.cn').main()

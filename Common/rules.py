@@ -89,9 +89,7 @@ common_rules = {
         {'path': '/web-console/index.html', 'status': 200, 'type': 'text/html', 'tag': 'Jboss'},
         {'path': '/admin-console/index.html', 'status': 200, 'type': 'text/html', 'tag': 'Jboss'},
         {'path': '/axis2-admin/', 'status': 200, 'type': 'text/html', 'tag': 'axis2-web'},
-        {'path': '/axis2/services/listServices', 'status': 200, 'type': 'text/html', 'tag': 'axis2-web'},
-        {'path': '/services/listServices', 'status': 200, 'type': 'text/html', 'tag': 'axis2-web'},
-        {'path': '/weaver/bsh.servlet.BshServlet', 'status': 200, 'type': 'text/html'}
+        {'path': '/services/listServices', 'status': 200, 'type': 'text/html', 'tag': 'axis2-web'}
     ],
     # php的探针文件
     'php_probe': [

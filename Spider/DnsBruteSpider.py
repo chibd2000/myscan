@@ -27,6 +27,9 @@ class subDomaindBrute(Spider):
         res.terminate()
         self.dnsbrute_list = fina_res
 
+    def write_file(self, web_lists, target, page):
+        pass
+
     # 调用口
     def main(self):
         logging.info("CtfrBrute Spider Start")

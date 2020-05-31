@@ -1,15 +1,15 @@
 # coding=utf-8
 
-from Spider.Common.common import *
+from Common.common import *
+import openpyxl
 import requests
 import abc
 import re
 import chardet
 import logging
 from threading import Lock
-import openpyxl
 requests.packages.urllib3.disable_warnings()
-logging.basicConfig(level=logging.INFO, format="[%(levelname)s]%(asctime)s %(message)s")
+logging.basicConfig(level=logging.INFO, filename='./Logs/worklog.txt', filemode='a', format="[%(levelname)s]%(asctime)s %(message)s")
 
 '''爬取基类'''
 class Spider(metaclass=abc.ABCMeta):

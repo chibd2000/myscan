@@ -7,10 +7,12 @@ from Spider.DnsBruteSpider import *
 from Spider.DnsDataSpider import *
 from Spider.PortSpider import *
 from Spider.Common import resolve
+
+from Exploit.AliveScan import *
+from Exploit.DirExploit import *
 from Exploit.IpUnauthExploit import *
 from Exploit.HttpUnauthExploit import *
 from Exploit.CmsExploit import *
-from Exploit.SensitiveExploit import *
 from ThridLib.virustotal import *
 from threading import Thread, Lock
 
@@ -84,7 +86,7 @@ class Spider(object):
         task = resolve.bulk_query_a(self.clear_task_list)  # 解析域名地址A记录
         self.clear_task_list = loop.run_until_complete(task)
 
-        # 写文件
+        # 写文件，这里继续写
         workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
         worksheet = workbook.worksheets[2]
         index = 0
@@ -100,6 +102,7 @@ class Spider(object):
 
     '''ip反向域名解析'''
     def ipreserverspider(self):
+        logging.info("IpReserverSpider Start")
         pass
 
     '''端口扫描 多进程异步执行，在洗数据result()之后 去获得该数组中的标识符为target为'yes'的字典对其中的ip进行扫描 然后write_file写入文件（这里是扫描子域名下的ip）'''
@@ -124,16 +127,15 @@ class Spider(object):
                         continue
                     else:
                         temp_ips.append(aaa['ips'])
-                        print("过滤完成 实现 防止多次扫描相同的ip 节省时间")
-                        print("已经扫描过的ip有如下：")
-                        print(temp_ips)
+                        # print("过滤完成 实现 防止多次扫描相同的ip 节省时间")
+                        print("已经扫描过的ip有如下：", temp_ips)
                         print("当前正在扫描的IP为：" + aaa['ips'])
                         bbb = PortScan(self.domain, aaa['ips'])
                         pool.apply_async(func=bbb.main)  # 异步运行,非阻塞
         pool.close()
         pool.join()
 
-    '''洗数据'''
+    '''这里进行清洗数据的操作'''
     def result(self):
         # 第一次 清理 去域名协议
         for i in self.task_list:
@@ -192,13 +194,13 @@ class Spider(object):
 
     '''程序的入口点'''
     def run(self):
-        # self.thread_list.append(Thread(target=self.baiduspider,))
-        # self.thread_list.append(Thread(target=self.ctfrspider,))
+        #self.thread_list.append(Thread(target=self.baiduspider,))
+        #self.thread_list.append(Thread(target=self.ctfrspider,))
         self.thread_list.append(Thread(target=self.netspider,))
-        # self.thread_list.append(Thread(target=self.dnsbrutespider,))
-        # self.thread_list.append(Thread(target=self.dnsspider,))
-        # self.thread_list.append(Thread(target=self.thridspider,))
-        # self.thread_list.append(Thread(target=self.ipreserverspider,))
+        #self.thread_list.append(Thread(target=self.dnsbrutespider,))
+        #self.thread_list.append(Thread(target=self.dnsspider,))
+        #self.thread_list.append(Thread(target=self.thridspider,))
+        #self.thread_list.append(Thread(target=self.ipreserverspider,))
 
         for i in self.thread_list:
             i.start()
@@ -206,24 +208,17 @@ class Spider(object):
         for i in self.thread_list:
             i.join()
 
-        # 洗数据
+        # 清洗整理数据
         print("=================这里是洗数据=================")
-        # self.result()
+        self.result()
 
-        # 解析A记录
+        # 异步解析A记录
         print("=================这里是解析A记录=================")
-        # self.domainreservespider()
+        self.domainreservespider()
 
-        # print("self.task_list最终整理数据为：", self.clear_task_list)
-
-        # self.clear_task_list = [
-        #     {'subdomain': 'vpn.nbcc.cn', 'ips': '42.247.33.25', 'port': None, 'target': 'subdomain'},
-        #     # {'subdomain': 'www.nbcc.cn', 'ips': '183.136.237.217', 'port': None, 'target': 'subdomain'}
-        # ]
-
-        # # 端口扫描，扫描速度太慢，就不用了
-        # print("=================这里是端口扫描=================")
-        # self.ipscanportspider()
+        # 端口扫描，这里的端口扫描自己写的只扫子域名下的ip 可以自行更改target的字段
+        print("=================这里是端口扫描=================")
+        #self.ipscanportspider()
 
         # 最后返回处理好的数据 交给Exploit类
         return self.clear_task_list
@@ -236,7 +231,12 @@ class Exploit(object):
         self.domain = domain
         self.clear_task_list = clear_task_list
 
-    def unauthscan(self):
+    # 这个肯定是第一个先跑的，对前面所有跑完的都进行探测存活
+    def AliveScan(self):
+        print("=================这里是存活扫描=================")
+        AliveScan(self.domain, self.clear_task_list).main()
+
+    def UnauthScan(self):
         p = ThreadPoolExecutor(10)
         for i in self.clear_task_list:
             if i['target'] == 'ip':
@@ -250,32 +250,33 @@ class Exploit(object):
             else:
                 pass
 
-    def cmsscan(self):
+    # 这里扫描只扫描target主键下为subdomain的域名
+    def CmsScan(self):
         p = ThreadPoolExecutor(10)
         for i in self.clear_task_list:
             if i['target'] == 'subdomain':
                 xxx = CmsScan(self.domain, i['subdomain'])
                 p.submit(xxx.main)
 
-    def sensitivefilescan(self):
-        p = ThreadPoolExecutor(10)
-        for i in self.clear_task_list:
-            if i['target'] == 'subdomain':
-                xxx = SensitiveScan(self.domain, i['subdomain'])
-                p.submit(xxx.main)
-
-    def sqlscan(self):
+    def SqlScan(self):
         pass
 
     def run(self):
-        self.thread_list.append(Thread(target=self.unauthscan,))  # 未授权扫描ip和http域名
-        self.thread_list.append(Thread(target=self.sensitivefilescan,))  # 敏感文件扫描
-        # self.thread_list.append(Thread(target=self.cmsscan, ))  # cms扫描
+        # 这里先进行存活扫描，顺序1号
+        self.AliveScan()
 
-        for i in self.thread_list:
-            i.start()
-        for i in self.thread_list:
-            i.join()
+        # 敏感文件的路径探测，顺序2号
+        # self.DirScan()
+
+        # 这两个可以一起进行扫描
+        # self.thread_list.append(Thread(target=self.CmsScan))  # cms扫描
+        # self.thread_list.append(Thread(target=self.UnauthScan))  # 未授权扫描ip和http域名（已经完成）
+        # self.thread_list.append(Thread(target=self.SqlScan)) # sql注入扫描
+
+        # for i in self.thread_list:
+        #     i.start()
+        # for i in self.thread_list:
+        #     i.join()
 
 
 def parse_args():
@@ -297,6 +298,10 @@ if __name__ == '__main__':
     starttime = time.time()
     spider = Spider(args.domain)
     clear_task_list = spider.run()
+    # print(clear_task_list)
+
+    exploit = Exploit(args.domain, clear_task_list)
+    exploit.run()
     print("总共耗时时间为：" + str(time.time() - starttime))
 
     # [
@@ -304,7 +309,6 @@ if __name__ == '__main__':
     #   {"subdomain":"","ips":"2.2.2.2","port":None,target:"yes"}
     # ]
 
-    # exploit = Exploit(args.domain, clear_task_list)
-    # exploit.run()
+
 
 
