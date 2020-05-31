@@ -20,3 +20,7 @@
 3、敏感路径扫描（只探测脆弱的资产，例如solr phpMyadmin weblogic jboss特征路径）<br/>
 4、HTTP/IP未授权探测<br/>
 5、NGINX/APACHE解析漏洞<br/>
+
+参考作者：
+1、broken_5
+2、langzi
