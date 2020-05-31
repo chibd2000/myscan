@@ -10,7 +10,7 @@
 3、FOFA SHODAN 域名爬取 C段爬取<br/>
 4、子域名内容正则匹配域名<br/>
 5、Ctfr证书查询<br/>
-6、Masscan+Nmap端口扫描子域名<br/>
+6、Masscan+Nmap端口扫描子域名解析的IP<br/>
 7、域名DNS解析IP<br/>
 8、selenium爬取DNS数据库<br/>
 
