@@ -15,8 +15,8 @@
 8、selenium爬取DNS数据库<br/>
 
 漏洞扫描（多线程进程）：<br/>
-1、探测存活<br/>
-2、CMS探测<br/>
-3、敏感路径扫描<br/>
+1、探测存活（config文件中设定，默认探测80、443端口）<br/>
+2、CMS探测（CMS探测两种方法，另外探测shiro，thinkphp等脆弱资产）<br/>
+3、敏感路径扫描（只探测脆弱的资产，例如solr phpMyadmin weblogic jboss特征路径）<br/>
 4、HTTP/IP未授权探测<br/>
 5、NGINX/APACHE解析漏洞<br/>
