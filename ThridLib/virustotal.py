@@ -1,5 +1,6 @@
 import time
-import requests
+from Spider.BaseSpider import *
+
 
 '''
 最多查询100条
@@ -44,6 +45,7 @@ class VirusTotal(object):
                 break
 
     def main(self):
+        logging.info("VirusTotalSpider Start")
         self.query()
         return self.subdomainlist
 

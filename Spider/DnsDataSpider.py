@@ -73,7 +73,7 @@ class DnsDataSpider(Spider):
             pass
 
     def main(self):
-        logging.info("DnsdataSpider Start")
+        logging.info("DnsDabs_pathataSpider Start")
         self.spider()
         # self.write_file(self.dnsdatalist, self.target, 2)
         return self.dnsdatalist

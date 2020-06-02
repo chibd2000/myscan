@@ -1,2 +1,0 @@
-{   "ip": "120.79.66.58",   "timestamp": "1590668064", "ports": [ {"port": 443, "proto": "tcp", "status": "open", "reason": "syn-ack", "ttl": 50} ] },
-{finished: 1}

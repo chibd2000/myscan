@@ -220,7 +220,7 @@ class NetSpider(Spider):
         ip_list = list()  # 存储存在的ip网段 /24
         domain_word = 'domain="%s"' % self.target
 
-        for page in range(1, 2):
+        for page in range(1, 3):
             url = "https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=" + str(self.fofa_api) + "&qbase64=" + base64.b64encode(
                 domain_word.encode()).decode() + '&page=' + str(page)
 

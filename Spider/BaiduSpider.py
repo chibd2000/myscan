@@ -60,11 +60,9 @@ class BaiduSpider(Spider):
         return location
 
     def spider(self):
-        logging.info("BaiduSpider Start")
         pages = 2
         web_lists = list()
-        # words = ['inurl:system', 'inurl:register', 'inurl:login', 'inurl:admin', 'inurl:manage', 'inurl:upload', '后台', '登陆', '系统', 'upload']
-        words = ['inurl:upload', '后台', '登陆']
+        words = ['inurl:system', 'inurl:register', 'inurl:login', 'inurl:admin', 'inurl:manage', 'inurl:upload', '后台', '登陆', '系统', 'upload']
         for word in words:
             for page in range(pages):
                 logging.info("BaiduSpider Page {}".format(page))
@@ -91,6 +89,7 @@ class BaiduSpider(Spider):
     ''':主函数'''
     def main(self):
         logging.info("BaiduSpider Start")
+        print("baidu....")
         self.spider()
         return list(set(self.baidu_list))
 

@@ -32,7 +32,7 @@ class subDomaindBrute(Spider):
 
     # 调用口
     def main(self):
-        logging.info("CtfrBrute Spider Start")
+        logging.info("DnsBrute Spider Start")
         self.spider()
         return self.dnsbrute_list
 
