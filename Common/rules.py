@@ -23,6 +23,15 @@ common_rules = {
         {'path': '/static/js/kindeditor/kindeditor-all.js', 'status': 200, 'type': 'application/javascript'},
         {'path': '/static/common/lib/kindeditor/kindeditor-all.js', 'status': 200, 'type': 'application/javascript'},
     ],
+    'WEB-INF': [
+        # WEB-INF 源代码泄漏
+        {'path': '/WEB-INF/web.xml', 'status': 200, 'type': 'xml'},
+        {'path': '/WEB-INF/config.xml', 'status': 200, 'type': 'xml'},
+        {'path': '/WEB-INF/spring.xml', 'status': 200, 'type': 'xml'},
+        {'path': '/WEB-INF/conf/activemq.xml', 'status': 200, 'type': 'xml'},
+        {'path': '/WEB-INF/classes/struts.xml', 'status': 200, 'type': 'xml'},
+    ],
+
     'test_page': [
         {'path': '/test.php', 'status': 200, 'type': 'text/html'},
         {'path': '/1.php', 'status': 200, 'type': 'text/html'},
@@ -34,6 +43,8 @@ common_rules = {
         {'path': '/test.jsp', 'status': 200, 'type': 'text/html'},
         {'path': '/robots.txt/.php', 'status': 200, 'type': 'text/html'},
     ],
+
+    # Spring框架的端点泄露
     'spring': [
         {'path': '/jolokia/list', 'status': 200, 'type': 'application'},
         {'path': '/env', 'status': 200, 'type': 'application'},
@@ -94,23 +105,15 @@ common_rules = {
         {'path': '/services/listServices', 'status': 200, 'type': 'text/html', 'tag': 'axis2-web'},
         {'path': '/weaver/bsh.servlet.BshServlet', 'status': 200, 'type': 'text/html'}
     ],
+
     # php的探针文件
     'php_probe': [
         {'path': '/phpinfo.php', 'status': 200, 'type': 'application'},
         {'path': '/info.php', 'status': 200, 'type': 'application'},
-        {'path': '/pi.php', 'status': 200, 'type': 'application'},
+        {'path': '/sql.php', 'status': 200, 'type': 'application'},
         {'path': '/php.php', 'status': 200, 'type': 'application'},
         {'path': '/i.php', 'status': 200, 'type': 'application'},
-        {'path': '/mysql.php', 'status': 200, 'type': 'application'},
-        {'path': '/sql.php', 'status': 200, 'type': 'application'},
-        {'path': '/test.php', 'status': 200, 'type': 'application'},
-        {'path': '/x.php', 'status': 200, 'type': 'application'},
-        {'path': '/1.php', 'status': 200, 'type': 'application'},
-        {'path': '/tz/tz.php', 'status': 200, 'type': 'application'},
         {'path': '/env.php', 'status': 200, 'type': 'application'},
-        {'path': '/tz.php', 'status': 200, 'type': 'application'},
-        {'path': '/p1.php', 'status': 200, 'type': 'application'},
-        {'path': '/p.php', 'status': 200, 'type': 'application'},
     ],
 
     # asp的探针文件
@@ -126,15 +129,15 @@ common_rules = {
 
     # 后台路径的探测
     'login': [
-        {'path': '/login', 'status': 200, 'type': 'application'},
-        {'path': '/admin', 'status': 200, 'type': 'application'},
-        {'path': '/manage', 'status': 200, 'type': 'application'},
-        {'path': '/system', 'status': 200, 'type': 'application'},
-        {'path': '/master', 'status': 200, 'type': 'application'},
-        {'path': '/admin.php', 'status': 200, 'type': 'application'},
-        {'path': '/admin.asp', 'status': 200, 'type': 'application'},
-        {'path': '/admin.jsp', 'status': 200, 'type': 'application'},
-        {'path': '/admin.aspx', 'status': 200, 'type': 'application'},
+        {'path': '/login', 'status': 200, 'type': 'text/html'},
+        {'path': '/admin', 'status': 200, 'type': 'text/html'},
+        {'path': '/manage', 'status': 200, 'type': 'text/html'},
+        {'path': '/system', 'status': 200, 'type': 'text/html'},
+        {'path': '/master', 'status': 200, 'type': 'text/html'},
+        {'path': '/admin.php', 'status': 200, 'type': 'text/html'},
+        {'path': '/admin.asp', 'status': 200, 'type': 'text/html'},
+        {'path': '/admin.jsp', 'status': 200, 'type': 'text/html'},
+        {'path': '/admin.aspx', 'status': 200, 'type': 'text/html'},
     ],
 
     'other': [

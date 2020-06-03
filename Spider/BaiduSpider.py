@@ -65,7 +65,6 @@ class BaiduSpider(Spider):
         words = ['inurl:system', 'inurl:register', 'inurl:login', 'inurl:admin', 'inurl:manage', 'inurl:upload', '后台', '登陆', '系统', 'upload']
         for word in words:
             for page in range(pages):
-                logging.info("BaiduSpider Page {}".format(page))
                 res = map(self.location, self.keyword(word + " site:*." + self.target, page))
                 for link in res:
                     title, service, respoftitleandserver = self.get_titleAndservice(link)  # 该函数写在基类中
@@ -89,7 +88,6 @@ class BaiduSpider(Spider):
     ''':主函数'''
     def main(self):
         logging.info("BaiduSpider Start")
-        print("baidu....")
         self.spider()
         return list(set(self.baidu_list))
 

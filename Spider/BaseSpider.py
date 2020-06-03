@@ -9,7 +9,8 @@ import chardet
 import logging
 from threading import Lock
 requests.packages.urllib3.disable_warnings()
-logging.basicConfig(level=logging.INFO, filename='./Logs/worklog.txt', filemode='a', format="[%(levelname)s]%(asctime)s %(message)s")
+logging.basicConfig(level=logging.INFO, filemode='a', format="[%(levelname)s]%(asctime)s %(message)s")
+# filename='./Logs/worklog.txt'
 
 '''爬取基类'''
 class Spider(metaclass=abc.ABCMeta):

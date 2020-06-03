@@ -4,7 +4,6 @@
 import nmap
 import multiprocessing
 import json
-import threading
 import openpyxl
 import os
 import requests
@@ -18,9 +17,8 @@ abs_path = os.getcwd() + os.path.sep
 class PortScan(object):
     def __init__(self, domain, _ip):
         self.domain = domain
-        self.scanlists = list()
-        self.ports = list()
-        # self.lock = threading.Lock()
+        self.scanlists = []
+        self.ports = []
         self._ip = _ip
 
     # 写文件操作
@@ -67,8 +65,10 @@ class PortScan(object):
                 ret = nm.scan(scan_ip, port, arguments='-Pn -sS')  # 默认是 not ping 半tcp策略扫描
                 service_name = ret['scan'][scan_ip]['tcp'][int(port)]['name']
                 # print('[*] 主机 ' + scan_ip + ' 的 ' + str(port) + ' 端口服务为: ' + service_name)
+
                 # 一共有三种情况 一种是http 一种是https 一种是 不是http 不是https
-                # 如果扫描出来的协议是 http https的话则如下操作
+
+                # 如果扫描出来的协议是https的话则如下操作
                 if 'http' in service_name or service_name == 'sun-answerbook':
                     if service_name == 'https' or service_name == 'https-alt':
                         scan_url_port = 'https://' + scan_ip + ':' + str(port)
@@ -122,7 +122,6 @@ class PortScan(object):
                             # print(info)
                         except:
                             pass
-
                 # 如果不是 http https则为其他端口默认http请求访问探测
                 else:
                     # 形式为：["47.96.196.217:443    https","47.96.196.217:80    blackice-icecap"]....
@@ -140,17 +139,40 @@ class PortScan(object):
         self.ports.clear()  # 扫一次清理一次
 
     def main(self):
+        print("当前正在扫描的IP为：" + self._ip)
         self.Portscan(self._ip)
         self.Scan(self._ip)
         self.write_file(self.scanlists, self.domain, 5)
 
 
 if __name__ == '__main__':
-    res = list()
-    ip_lists = ['120.79.66.58', '116.85.41.113']
+    clear_task_list = [
+        {'subdomain': '', 'ips': '60.190.19.102', 'port': [], 'target': 'ip'},
+        {'subdomain': 'webvpn.nbcc.cn', 'ips': '42.247.33.26', 'port': None, 'target': 'subdomain'},
+        {'subdomain': 'a004.cache.saaswaf.com', 'ips': '119.188.95.114', 'port': None, 'target': 'webdomain'},
+        {'subdomain': 'vpn.nbcc.cn', 'ips': '42.247.33.25', 'port': None, 'target': 'subdomain'},
+        {'subdomain': 'vpan.nbcc.cn', 'ips': '120.79.66.58', 'port': None, 'target': 'subdomain'},
+        {'subdomain': 'vpsn.nbcc.cn', 'ips': '42.247.33.25', 'port': None, 'target': 'subdomain'},
+        {'subdomain': 'vpsn.nbcc.cn', 'ips': '47.56.199.16', 'port': None, 'target': 'subdomain'},
+        {'subdomain': 'vpsn.nbcc.cn', 'ips': '116.85.41.113', 'port': None, 'target': 'subdomain'}
+
+    ]
+
+    multiprocessing.freeze_support()
+    temp_ips = []  # 用来记录扫描过的ip 防止多次扫描 节省时间
     pool = multiprocessing.Pool(5)
-    for _ip in ip_lists:
-        bbb = PortScan('nbpt.edu.cn', _ip)
-        pool.apply_async(func=bbb.main)
+    for aaa in clear_task_list:
+        flag = 0
+        if aaa['target'] == 'subdomain':
+            if aaa['ips'] != '':
+                # 先进行遍历 验证是否重复扫描
+                for i in temp_ips:
+                    if aaa['ips'] == i:
+                        flag += 1
+                if flag == 0:
+                    temp_ips.append(aaa['ips'])
+                    # print("已经扫描过的ip有如下：", temp_ips)
+                    bbb = PortScan('nbcc.cn', aaa['ips'])
+                    pool.apply_async(func=bbb.main)  # 异步运行,非阻塞
     pool.close()
     pool.join()

@@ -7,7 +7,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 import json
 
-
 # 自己写js没成功，这里用了selenium 所以需要配合google浏览器的驱动了
 class DnsDataSpider(Spider):
     def __init__(self, target):
@@ -32,26 +31,34 @@ class DnsDataSpider(Spider):
 
     # 解析数据，这里用(递归)的方式进行查询
     def get_json_data(self, browser):
-        WebDriverWait(browser, 20, 0.5).until(EC.presence_of_element_located((By.TAG_NAME, "pre")))
-        json_data = json.loads(browser.find_element_by_tag_name('pre').text)
-        if json_data:
-            return json_data
-        else:
-            self.get_json_data(browser)
+        temp = 0
+        browser.implicitly_wait(60)  # 隐式等待
+        try:
+            # print(temp)
+            WebDriverWait(browser, 40, 0.5).until(EC.presence_of_element_located((By.TAG_NAME, "pre")))  # 显式等待 0.5s会进行轮询操作
+            json_data = json.loads(browser.find_element_by_tag_name('pre').text)
+            if json_data:
+                return json_data
+            else:
+                temp += 1
+                self.get_json_data(browser)
+        finally:
+            browser.close()
 
     # 爬取
     def spider(self):
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
         browser = webdriver.Chrome(options=options)
         browser.get('https://dns.bufferover.run/dns?q=.' + self.target)
-        browser.implicitly_wait(60)
 
         # json_data = {"FDNS_A": "", "RDNS": ""}
 
         json_data = self.get_json_data(browser)
+        print(json_data)
 
+        # print(json_data)
         browser.quit()
 
         try:
@@ -73,7 +80,7 @@ class DnsDataSpider(Spider):
             pass
 
     def main(self):
-        logging.info("DnsDabs_pathataSpider Start")
+        logging.info("DnsDataSpider Start")
         self.spider()
         # self.write_file(self.dnsdatalist, self.target, 2)
         return self.dnsdatalist

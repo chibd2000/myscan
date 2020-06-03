@@ -1,10 +1,5 @@
 import time
-from Spider.BaseSpider import *
-
-
-'''
-最多查询100条
-'''
+import requests
 
 
 class VirusTotal(object):
@@ -13,7 +8,7 @@ class VirusTotal(object):
         self.module = 'Intelligence'
         self.addr = 'https://www.virustotal.com/ui/domains/{}/subdomains'
         self.domain = domain
-        self.subdomainlist = list()
+        self.subdomainlist = []
 
     def query(self):
         next_cursor = ''
@@ -25,7 +20,7 @@ class VirusTotal(object):
             if not resp:
                 return
             data = resp.json()
-            subdomains = list()
+            subdomains = []
             datas = data.get('data')
 
             if datas:
@@ -37,7 +32,7 @@ class VirusTotal(object):
                 break
 
             self.subdomainlist.extend(subdomains)
-            print(self.subdomainlist)
+            # print(self.subdomainlist)
             meta = data.get('meta')
             if meta:
                 next_cursor = meta.get('cursor')
@@ -45,10 +40,10 @@ class VirusTotal(object):
                 break
 
     def main(self):
-        logging.info("VirusTotalSpider Start")
+        # logging.info("VirusTotalSpider Start")
         self.query()
         return self.subdomainlist
 
 
 if __name__ == '__main__':
-    VirusTotal('tutorabc.com.cn').main()
+    subdomainlist = VirusTotal('baidu.com').main()
