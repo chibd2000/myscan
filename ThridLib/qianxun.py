@@ -38,6 +38,7 @@ class Qianxun(object):
             re_data = re.findall(r'<a href="(.*?)"\srel', resp.text, flags=re.S)[1:]
             if re_data:
                 self.qianxunlist.extend(re_data)
+                print(re_data)
             else:
                 return
             page += 1
@@ -49,7 +50,7 @@ class Qianxun(object):
 
 
 if __name__ == '__main__':
-    qianxun = Qianxun('tutorabc.com.cn')
+    qianxun = Qianxun('ncist.edu.cn')
     salist = qianxun.main()
     print(salist)
 

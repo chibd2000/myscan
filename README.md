@@ -40,7 +40,7 @@
 
 python batch.py -d xxx.cn
 
-![image](https://s1.ax1x.com/2020/06/03/taihIU.md.png)
+
 
 #参考作者：
 

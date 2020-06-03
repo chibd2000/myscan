@@ -60,9 +60,10 @@ class BaiduSpider(Spider):
         return location
 
     def spider(self):
-        pages = 2
+        pages = 10
         web_lists = list()
-        words = ['inurl:system', 'inurl:register', 'inurl:login', 'inurl:admin', 'inurl:manage', 'inurl:upload', '后台', '登陆', '系统', 'upload']
+        words = ['inurl:system', 'inurl:register', 'inurl:login', 'inurl:admin', 'inurl:manage', 'inurl:upload', '后台', '登陆', '系统', 'upload'
+                 , 'intitle:"Outlook Web App"', 'intitle:"mail"', 'intitle:"webmail"']
         for word in words:
             for page in range(pages):
                 res = map(self.location, self.keyword(word + " site:*." + self.target, page))

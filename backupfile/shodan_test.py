@@ -7,9 +7,8 @@ from Config import config
 import base64
 
 # 这里需要配合fofa搜集到的网段来进行shodan的爬取，所以两个模块一起写，处理函数还是分开写了 test01 test02，为了增加效率 每页的爬取都用一个线程
-class NetSpider(Spider):
+class NetSpider(object):
     def __init__(self, target):
-        super().__init__()
         self.source = 'fofa shodan spider'
         self.headers = {
             "Connection": "keep-alive",
@@ -60,7 +59,7 @@ class NetSpider(Spider):
         workbook.close()
 
     # fofa的线程处理函数
-    def test01(self, NetworkSegment, page):
+    def test01(self, networksegment, page):
         '''
         :param ip_:
         :param page:
@@ -70,7 +69,7 @@ class NetSpider(Spider):
         logging.info("Fofa Spider page {}".format(page))
         temp_list = list()
         url = "https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=" + str(self.fofa_api) + "&qbase64=" + base64.b64encode(
-            NetworkSegment.encode()).decode() + '&page=' + str(page)
+            networksegment.encode()).decode() + '&page=' + str(page)
 
         #  print(url)
         '''
@@ -81,7 +80,7 @@ class NetSpider(Spider):
         json_data = resp.json()
 
         if not json_data['results']:
-            print("{} {} {} 无数据爬取!".format('fofa', NetworkSegment, page))
+            print("{} {} {} 无数据爬取 break!!!".format('fofa', networksegment, page))
             exit(0)
 
         for i in json_data['results']:
@@ -135,7 +134,7 @@ class NetSpider(Spider):
                 'port': i[2],
                 'web_service': service,
                 'port_service': Common_getPortService(i[2]),
-                'search_keyword': NetworkSegment
+                'search_keyword': networksegment
             }
 
             # print(ip_info)
@@ -154,13 +153,22 @@ class NetSpider(Spider):
         resp = requests.get(url=url, headers=self.headers)
         json_data = resp.json()
 
+        # try:
+        #     if not json_data['matches']:
+        #         print(url, "无数据爬取!!!")
+        #         # print("{} {} {} 无数据爬取 break!!!".format('shodan', NetworkSegment, page))
+        # except KeyError:
+        #     print(url, "捕获到KeyError, 爬取失败")
+        #     exit(0)
+        print("================================")
         try:
-            if json_data.get('matches') == []:
-                print("{} {} {} 无数据爬取!".format('shodan', networksegment, page))
+            if not json_data['matches']:
+                # print("{} {} {} {} 无数据爬取 break!!!".format('[+]shodan', url, networksegment, page))
                 exit(0)
-        except KeyError:  # 这样的话 那么就是访问不到 则为API次数用完
-            print("API次数已经用完", url)
+        except KeyError:
+            print("KeyError:", url)
             exit(0)
+        print("================================")
 
         for i in json_data['matches']:
             self.net_list.append(i['ip_str'])  # 只要是ip就添加到列表中

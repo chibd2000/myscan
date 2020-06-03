@@ -38,9 +38,13 @@ class Spider(metaclass=abc.ABCMeta):
     # 获取 title service
     def get_titleAndservice(self, link, port=''):
         if port == 443:
-            link = 'https://' + link
+            link = 'https://{}'.format(link)
+
         if 'http' not in link:
-            link = 'http://' + link
+            if port != '':
+                link = 'http://{}:{}'.format(link, str(port))
+            else:
+                link = 'http://{}'.format(link)
         try:
             resp = requests.get(link, timeout=3, verify=False)
             detectencode = chardet.detect(resp.content)  # 利用chardet模块检测编码

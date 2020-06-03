@@ -1,0 +1,4 @@
+caiwu.nbcc.cn                 	183.136.237.219
+mail.nbcc.cn                  	121.51.130.237, 121.51.8.59
+travel.nbcc.cn                	183.136.237.219
+ykt.nbcc.cn                   	183.136.237.219

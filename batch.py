@@ -195,13 +195,13 @@ class Spider(object):
 
     '''程序的入口点'''
     def run(self):
-        self.thread_list.append(Thread(target=self.baiduspider,))
-        self.thread_list.append(Thread(target=self.ctfrspider,))
+        # self.thread_list.append(Thread(target=self.baiduspider,))
+        # self.thread_list.append(Thread(target=self.ctfrspider,))
         self.thread_list.append(Thread(target=self.netspider,))
         # self.thread_list.append(Thread(target=self.dnsspider,))
-        self.thread_list.append(Thread(target=self.thridspider,))
-        self.thread_list.append(Thread(target=self.ipreserverspider,))
-        self.thread_list.append(Thread(target=self.qianxun))
+        # self.thread_list.append(Thread(target=self.thridspider,))
+        # self.thread_list.append(Thread(target=self.ipreserverspider,))
+        # self.thread_list.append(Thread(target=self.qianxun))
 
         for i in self.thread_list:
             i.start()
@@ -210,20 +210,20 @@ class Spider(object):
             i.join()
 
         #  这里进行单一的查询，要不然直接导致网络通信不佳造成其他模块的无法使用
-        dnsbrute_list = subDomaindBrute(self.domain).main()
-        self.lock.acquire()
-        self.task_list.extend(dnsbrute_list)
-        self.lock.release()
+        # dnsbrute_list = subDomaindBrute(self.domain).main()
+        # self.lock.acquire()
+        # self.task_list.extend(dnsbrute_list)
+        # self.lock.release()
 
         # 清洗整理数据
         self.result()
 
         # 异步解析A记录
-        self.domainreservespider()
+        # self.domainreservespider()
         # print(self.clear_task_list)
 
         # 端口扫描，这里的端口扫描自己写的只扫子域名下的ip 可以自行更改target的字段
-        self.ipscanportspider()
+        # self.ipscanportspider()
 
         # 最后返回处理好的数据 交给Exploit类
         return self.clear_task_list
@@ -282,6 +282,6 @@ if __name__ == '__main__':
     starttime = time.time()
     spider = Spider(args.domain)
     clear_task_list = spider.run()
-    exploit = Exploit(args.domain, clear_task_list)
-    exploit.run()
+    # exploit = Exploit(args.domain, clear_task_list)
+    # exploit.run()
     print("总共耗时时间为：" + str(time.time() - starttime))

@@ -41,18 +41,19 @@ class PortScan(object):
     # 调用masscan识别端口
     def Portscan(self, scan_ip):
         temp_ports = []  # 设定一个临时端口列表
-        os.system(abs_path + 'masscan.exe ' + scan_ip + ' -p 1-65535 -oJ masscan.json --rate 1000')
+        os.system(abs_path + 'masscan.exe ' + scan_ip + ' -p 1-65535 -oJ masscan' + str(scan_ip) + '.json --rate 1000')
 
         # 提取json文件中的端口
-        with open(abs_path + 'masscan.json', 'r') as f:
+        with open(abs_path + 'masscan' + str(scan_ip) + '.json', 'r') as f:
             for line in f:
                 if line.startswith('{ '):
                     temp = json.loads(line[:-2])  # 取出一条完整json形式的数据
                     temp_ports.append(str(temp["ports"][0]["port"]))# 端口取出加入临时端口中
 
         if len(temp_ports) > 25:
-            print("判断防火墙存在 清空列表继续扫描!")
-            temp_ports.clear()  # 如果端口数量大于25，说明可能存在防火墙，属于误报，清空列表
+            print("判断防火墙存在 结束当前进程!")
+            # temp_ports.clear()  # 如果端口数量大于25，说明可能存在防火墙，属于误报，清空列表
+            exit(0)
         else:
             self.ports.extend(temp_ports)  # 小于30则放到总端口列表里
 
