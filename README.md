@@ -40,7 +40,7 @@
 
 python batch.py -d xxx.cn
 
-
+![image](https://github.com/adezz/myscan/blob/master/img/image1.png)
 
 #参考作者：
 
