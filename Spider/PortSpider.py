@@ -9,6 +9,7 @@ import os
 import requests
 import re
 import chardet
+import xlsxwriter
 requests.packages.urllib3.disable_warnings()
 
 abs_path = os.getcwd() + os.path.sep
@@ -41,10 +42,10 @@ class PortScan(object):
     # 调用masscan识别端口
     def Portscan(self, scan_ip):
         temp_ports = []  # 设定一个临时端口列表
-        os.system(abs_path + 'masscan.exe ' + scan_ip + ' -p 1-65535 -oJ masscan' + str(scan_ip) + '.json --rate 1000')
+        os.system(abs_path + 'masscan.exe ' + str(scan_ip) + ' -p 1-65535 -oJ /result/' + str(scan_ip) + '.json --rate 1000')
 
         # 提取json文件中的端口
-        with open(abs_path + 'masscan' + str(scan_ip) + '.json', 'r') as f:
+        with open(abs_path + '/result/masscan' + str(scan_ip) + '.json', 'r') as f:
             for line in f:
                 if line.startswith('{ '):
                     temp = json.loads(line[:-2])  # 取出一条完整json形式的数据
@@ -135,7 +136,7 @@ class PortScan(object):
                     # print(info)
                     # self.scanlists.append(scan_ip + ':' + str(port) + '\t端口服务为: ' + service_name)
         except Exception as e:
-            print(e)
+            # print(e)
             pass
         self.ports.clear()  # 扫一次清理一次
 
@@ -143,7 +144,7 @@ class PortScan(object):
         print("当前正在扫描的IP为：" + self._ip)
         self.Portscan(self._ip)
         self.Scan(self._ip)
-        self.write_file(self.scanlists, self.domain, 5)
+        self.write_file(self.scanlists, self.domain, 1)
 
 
 if __name__ == '__main__':
@@ -153,10 +154,6 @@ if __name__ == '__main__':
         {'subdomain': 'a004.cache.saaswaf.com', 'ips': '119.188.95.114', 'port': None, 'target': 'webdomain'},
         {'subdomain': 'vpn.nbcc.cn', 'ips': '42.247.33.25', 'port': None, 'target': 'subdomain'},
         {'subdomain': 'vpan.nbcc.cn', 'ips': '120.79.66.58', 'port': None, 'target': 'subdomain'},
-        {'subdomain': 'vpsn.nbcc.cn', 'ips': '42.247.33.25', 'port': None, 'target': 'subdomain'},
-        {'subdomain': 'vpsn.nbcc.cn', 'ips': '47.56.199.16', 'port': None, 'target': 'subdomain'},
-        {'subdomain': 'vpsn.nbcc.cn', 'ips': '116.85.41.113', 'port': None, 'target': 'subdomain'}
-
     ]
 
     multiprocessing.freeze_support()
@@ -168,12 +165,12 @@ if __name__ == '__main__':
             if aaa['ips'] != '':
                 # 先进行遍历 验证是否重复扫描
                 for i in temp_ips:
-                    if aaa['ips'] == i:
+                    if aaa == i:
                         flag += 1
                 if flag == 0:
-                    temp_ips.append(aaa['ips'])
+                    temp_ips.append(aaa)
                     # print("已经扫描过的ip有如下：", temp_ips)
-                    bbb = PortScan('nbcc.cn', aaa['ips'])
+                    bbb = PortScan(aaa)
                     pool.apply_async(func=bbb.main)  # 异步运行,非阻塞
     pool.close()
     pool.join()

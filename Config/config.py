@@ -1,16 +1,20 @@
 # 这里存放配置文件、例如线程之类的 还有fofa shodan 的api存放
-# 这里的写法参考Broken_5师傅的WebAliveScan
 
-fofa_api = "0ef4f5a7b2888157f9809c76ef5a3ca3"
-fofa_page = 10 # 这里你自定义要爬取的页数 当没有爬到的时候自动会结束线程
+fofaApi = ''
+shodanApi = ''
+quakeApi = ''
 
+censysId = ''
+censysSecret = ''
 
-shodan_api = "upgSXXMkFU0PvDGWMcG5YyLq9hI3Fc27"
-shodan_page = 10 # 这里你自定义要爬取的页数 当没有爬到的时候自动会结束线程
+virustotalApi = ''  # virustotal.com
+githubApi = ''  # https://github.com/settings/tokens
 
+chinazApi = ''  # http://api.chinaz.com/ApiDetails/Alexa
+securitytrailsApi = ' '  # https://securitytrails.com/corp/api
+binaryedgeApi = ''  # https://app.binaryedge.io/account/api
+threatbookApi = ''  # https://x.threatbook.cn/v5/myApi
 
-censys_api = ""
-censys_page = 2
 
 ip_scan_mode = 'small'
 url_scan_mode = 'default'

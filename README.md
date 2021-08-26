@@ -4,13 +4,13 @@
 
 已经实现的功能：
 
-信息搜集（多线程）：
+信息搜集（多线程+异步IO）：
 
-1、DNS枚举爆破 
+1、DNS枚举爆破 (ksubdomain)
 
-2、百度关键词爬取 
+2、百度/Bing关键词爬取 
 
-3、FOFA SHODAN 域名爬取 C段爬取
+3、FOFA/SHODAN/QUAKE 域名爬取 C段爬取 等。。。。
 
 4、子域名内容正则匹配域名
 
@@ -20,27 +20,47 @@
 
 7、域名DNS解析IP
 
-8、selenium爬取DNS数据库
+8、IP反查域名
 
-9、第三方的接口搜索引擎查询
+9、selenium爬取dns.bufferouver数据库
 
-漏洞扫描（多线程多进程）：
+10、github域名爬取
+
+11、第三方接口引擎查询
+
+12、天眼查股权结构查询
+
+
+
+====清洗数据====
+
+
+
+漏洞扫描（异步IO）：
 
 1、探测存活（config文件中设定，默认探测80、443端口）
 
-2、CMS探测（CMS探测两种方法，另外探测shiro，thinkphp等脆弱资产）
+2、CMS探测 -> 定向EXP利用
 
 3、敏感路径扫描（只探测脆弱的资产，例如solr phpMyadmin weblogic jboss特征路径）
 
 4、HTTP/IP未授权探测
 
-5、NGINX/APACHE解析漏洞
+5、sqlmap调用SQL检测
+
+6、敏感端口反序列化探测
 
 #用法：
 
-python batch.py -d xxx.cn
+python batch.py -d zjhzu.edu.cn
 
-![image](https://s1.ax1x.com/2020/06/03/taihIU.md.png)
+python batch.py -f zjhzu.edu.cn
+
+python batch.py -d zjhzu.edu.cn
+
+python batch.py -d zjhzu.edu.cn
+
+python batch.py -v zjhzu.edu.cn
 
 #参考作者：
 
@@ -52,4 +72,14 @@ python batch.py -d xxx.cn
 
 #总结：
 
-这个是自己学了python后 将近花了1个多星期的时间写的一个脚本，虽然比不过别人写的 但是也算对自己的一个小小的实现吧，再其中参考别人的代码的时候也学到了许多的构思以及想法！
+1、这个是自己学了python后 将近花了1个多星期的时间写的一个脚本，虽然比不过别人写的 但是也算对自己的一个小小的实现吧，再其中参考别人的代码的时候也学到了许多的构思以及想法！
+
+2、前人栽树，后人乘凉，感谢ske大师兄
+
+#参考文章：
+
+1、https://xz.aliyun.com/t/9508
+
+2、https://www.t00ls.net/viewthread.php?tid=62399
+
+3、

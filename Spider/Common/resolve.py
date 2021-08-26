@@ -6,10 +6,7 @@ import aiodns
 import sys
 
 # DNS解析设置
-resolver_nameservers = ['114.114.114.114', '114.114.115.115']
-
-  # 指定查询的DNS域名服务器
-
+resolver_nameservers = ['114.114.114.114', '8.8.8.8']
 resolver_timeout = 5.0  # 解析超时时间
 resolver_lifetime = 30.0  # 解析存活时间
 limit_resolve_conn = 50
@@ -74,12 +71,12 @@ def resolve_callback(future, index, datas):
     try:
         result = future.result()
     except Exception as e:
-        datas[index]['ips'] = '' # 解析错误会默认返回空， 获取报错信息str(e.args)
+        datas[index]['ips'] = ''  # 解析错误会默认返回空， 获取报错信息str(e.args)
     else:
         if isinstance(result, tuple):
             _, answers = result
             if answers:
-                ips = answers[0].host #这里解析到的ip就拿一个
+                ips = answers[0].host  # 这里解析到的ip就拿一个
                 datas[index]['ips'] = str(ips)
             else:
                 datas[index]['ips'] = 'No answers'

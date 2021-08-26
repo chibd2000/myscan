@@ -1,19 +1,18 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# coding=utf-8
 
 from Spider.BaseSpider import *
 
 abs_path = os.getcwd() + os.path.sep
 
+
 class CrtrSpider(Spider):
-    def __init__(self, target):
+    def __init__(self, domain):
         super().__init__()
-        self.crfr_list = list()
-        self.target = target
+        self.domain = domain
 
     def write_file(self, web_lists, target, page):
         workbook = openpyxl.load_workbook(abs_path + str(target) + ".xlsx")
-        worksheet = workbook.worksheets[page] # 打开的是证书的sheet
+        worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
         index = 0
         while index < len(web_lists):
             web = list()
@@ -26,18 +25,15 @@ class CrtrSpider(Spider):
 
     def spider(self):
         subdomains = []
-        resp = requests.get("https://crt.sh/?q=%.{d}&output=json".format(d=self.target))
+        resp = requests.get("https://crt.sh/?q=%.{}&output=json".format(self.target))
         if resp.status_code != 200:
             print("[X] Information not available!")
-            exit(1)
+            return
 
         for (key, value) in enumerate(resp.json()):
-            # subdomains.append(value['name_value'].split('\n'))
             try:
                 subdomain_ssl = value['name_value'].split('\n')
-                self.crfr_list.append(subdomain_ssl[1])
-
-                # 把 ssl证书 和 子域名 放到一个字典中
+                self.resList.append(subdomain_ssl[1])
                 domain_info = {
                     'ssl': subdomain_ssl[0],
                     'submain': subdomain_ssl[1]
@@ -53,13 +49,13 @@ class CrtrSpider(Spider):
 
         # 列表中的字典去重
         subdomains = Common_getUniqueList(subdomains)
-        self.write_file(subdomains, self.target, 1)
-        return list(set(self.crfr_list))
+        self.write_file(subdomains, self.domain, 1)
+        return list(set(self.resList))
 
     def main(self):
         logging.info("Ctfr Spider Start")
-        self.spider()
-        return list(set(self.crfr_list))
+        return self.spider()
+
 
 if '__main__' == __name__:
-    CrtrSpider(1).main('nbcc.cn')
+    CrtrSpider('zjhu.edu.cn').main()
