@@ -7,13 +7,15 @@ from threading import Thread
 from Config import config
 import base64
 
+
 class Request(object):
     def __init__(self, cookie=None):
         self.cookie = cookie
 
     def getRequest(self, url):
         try:
-            resp = requests.get(self.getUrl(url), timeout=2, headers=self._getHeaders(), verify=False, allow_redirects=True)
+            resp = requests.get(self.getUrl(url), timeout=2, headers=self._getHeaders(), verify=False,
+                                allow_redirects=True)
             text = resp.content.decode(encoding=chardet.detect(resp.content)['encoding'])
             title = self._getTitle(text).strip().replace('\r', '').replace('\n', '')
             status = resp.status_code
@@ -36,7 +38,7 @@ class Request(object):
         ua = random.choice(user_agents)
         headers = {
             # "Connection": "keep-alive",
-             # "Cookie": "fofa_token=" + self.cookie,
+            # "Cookie": "fofa_token=" + self.cookie,
             'User-Agent': ua
         }
         return headers
@@ -85,32 +87,30 @@ class Request(object):
 
             return f'http://{domain}'
 
+
 # 这里需要配合fofa搜集到的网段来进行shodan的爬取，所以两个模块一起写，处理函数还是分开写了 test01 test02，为了增加效率 每页的爬取都用一个线程
 class NetSpider(Spider):
-    def __init__(self, target):
+    def __init__(self, domain):
         super().__init__()
-        self.source = 'Fofa & Shodan & Quake Spider'
-        self.headers = {
-            "Connection": "keep-alive",
-            "Cookie": "_fofapro_ars_session=6bb0f9103ad346581b5a26b50ef386bd",
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36 ',
-        }
-        self.target = target
+        self.source = 'Fofa & Shodan & Quake'
+        self.domain = domain
         self.net_list = list()  # 存放所有爬取到的url
         self.web_domain_lists = list()  # 存放域名信息的的列表
         self.web_ip_lists_shodan = list()  # shodan存放ip信息的列表
         self.web_ip_lists_fofa = list()  # fofa存放ip信息的列表
         self.thread_list = list()
+        self.fofaAddr = "https://fofa.so/api/v1/search/all?email={FOFA_EMAIL}&key={API_KEY}&qbase64={B64_DATA}&size=100"
+        self.shodanAddr = "https://api.shodan.io/shodan/host/search?key={API_KEY}&query={QUERY}&minify=true&page={PAGE}"
+        self.quakeAddr = "https://quake.360.cn/api/v3/search/quake_service"
         self.fofaApi = config.fofaApi
+        self.fofaEmail = config.fofaEmail
         self.shodanApi = config.shodanApi
         self.quakeApi = config.quakeApi
         self.request = Request()
 
-    '''保存文件'''
-
+    # 保存文件
     def write_file(self, web_lists, target, page):
         '''
-
         :param web_lists:
         :param target:
         :param page:
@@ -142,23 +142,18 @@ class NetSpider(Spider):
         workbook.close()
 
     # FOFA的线程处理函数
-    def test01(self, networksegment, page):
-
+    def fofaSegmentSpider(self, networksegment, page):
         logging.info("Fofa Spider Page {}".format(page))
         temp_list = list()
-        url = "https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=" + str(
-            self.fofa_api) + "&qbase64=" + base64.b64encode(
-            networksegment.encode()).decode() + '&page=' + str(page)
-
         #  print(url)
         '''
         https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key= + str(self.fofa_api) + &qbase64=xxxxx&page=1
         '''
-        resp = requests.get(url=url, headers=self.headers)
-
-        json_data = resp.json()
+        resp = requests.get(url=self.fofaAddr.format(self.fofaEmail, self.fofaApi, base64.b64encode(
+            networksegment.encode()).decode()), headers=self.headers)
 
         try:
+            json_data = resp.json()
             # 有两种情况
             #   1、API无效 json_data['results'] 直接报错，结果为KeyError: 'results'
             #   2、当前page中没有数据，则API有效 json_data['results']中的值为空列表[]
@@ -172,9 +167,9 @@ class NetSpider(Spider):
             return
 
         for i in json_data['results']:
-            title, service, respoftitleandserver = self.get_titleAndservice(i[0], i[2])  # 请求标题与服务
+            title, service, respContent = self.getTitleAndService(i[0], i[2])  # 请求标题与服务
             self.lock.acquire()
-            self.net_list.extend(self.matchSubdomain(self.target, respoftitleandserver))
+            self.net_list.extend(self.matchSubdomain(self.domain, respContent))
             self.lock.release()
             re_ip = re.search(r'\d+.\d+.\d+:?\d?', i[0])  # 1.1.1.1:80 -> 1.1.1:80  http://1.1.1.1:80 -> 1.1.1.1:80
             if re_ip:
@@ -183,8 +178,8 @@ class NetSpider(Spider):
             else:
                 # 要探测的目标正好是在其中，比如 self.target = 'nbcc.cn'，那么子域名也就是nbcc.cn，如果目标是nbcc.edu.cn 那么直接就取 不跟下面的edu
                 # gov继续判断，那么就是直接略过 print("原始爬取的网址为：" + str(i[0]))
-                if self.target in i[0]:
-                    domain = self.target
+                if self.domain in i[0]:
+                    domain = self.domain
                     # print("1-处理过后的网址为：" + str(domain))
                 # 特殊的edu gov的域名处理
                 elif 'edu' in i[0] or 'gov' in i[0]:
@@ -233,7 +228,7 @@ class NetSpider(Spider):
         self.lock.release()
 
     # SHODAN的线程处理函数
-    def test02(self, networksegment, page):
+    def shodanSegmentSpider(self, networksegment, page):
         logging.info("Shodan Spider page {}".format(page))
 
         temp_list = list()
@@ -274,9 +269,9 @@ class NetSpider(Spider):
                 product = ''
 
             try:
-                title, service, RespOfTitleAndServer = self.get_titleAndservice(hostname, i['port'])
+                title, service, RespOfTitleAndServer = self.getTitleAndService(hostname, i['port'])
                 self.lock.acquire()
-                self.net_list.extend(self.matchSubdomain(self.target, RespOfTitleAndServer))
+                self.net_list.extend(self.matchSubdomain(self.domain, RespOfTitleAndServer))
                 self.lock.release()
                 # title = i['http']['title']
             except:
@@ -312,50 +307,62 @@ class NetSpider(Spider):
         self.web_ip_lists_shodan.extend(temp_list)
         self.lock.release()
 
+    def quakeSegmentSpider(self):
+        pass
+
     # 域名爬取的fofa处理函数
     def spider(self):
+        def fofaDomainSpider(d):
+            pass
+
+        def fofaFaviconSpider(d):
+            pass
+
+        def fofaSSLSpider(d):
+            pass
+
+        def quakeDomainSpider(d):
+            quakeAddr = "https://quake.360.cn/api/v3/search/quake_service"
+            headers = {"X-QuakeToken": "9fd0da05-93f9-49d2-b5e5-d43243268e80",
+                       "Content-Type": "application/json"}
+            params = {'query': 'domain: "{}"'.format(d), 'size': 500, 'ignore_cache': False}
+            resp = requests.post(url=quakeAddr, headers=headers, data=json.dumps(params))
+            print(resp.text)
+
+        def quakeFaviconSpider(d):
+            pass
+
+        def quakeSSLSpider(d):
+            pass
+
+        def shodanDomainSpider(d):
+            pass
+
+        def shodanFaviconSpider(d):
+            pass
+
+        def shodanSSLSpider(d):
+            pass
+
         ip_list = list()  # 存储存在的ip网段 /24
-        domain_word = 'domain="%s"' % self.target
-
-        for page in range(1, config.fofa_page):
-            url = "https://fofa.so/api/v1/search/all?email=admin@chinacycc.com&key=" + str(
-                self.fofa_api) + "&qbase64=" + base64.b64encode(
-                domain_word.encode()).decode() + '&page=' + str(page)
-
-            # 测试打印当前爬取的URL
-            print(url)
-
-            resp = requests.get(url=url, headers=self.headers)
-
+        domain_word = 'domain="%s"' % self.domain
+        try:
+            resp = requests.get(
+                url=self.fofaAddr.format(FOFA_EMAIL=self.fofaEmail, API_KEY=self.fofaApi, B64_DATA=base64.b64encode(
+                    domain_word.encode()).decode()), headers=self.headers)
             json_data = resp.json()
-            # print(json_data)
-
-            try:
-                # 有两种情况
-                #   1、API无效 json_data['results'] 直接报错，结果为KeyError: 'results'
-                #   2、当前page中没有数据，则API有效 json_data['results']中的值为空列表[]
-                temp_data = json_data['results']
-                if len(temp_data) == 0:
-                    print("FOFA domain=xxx 语法已经完成!".format(domain_word, page))
-                    break
-            except KeyError:
-                # KeyError 为 API无效
-                print("API无效，请检查API是否有效！")
-                return
-
             for i in json_data['results']:
-
-                title, service, respoftitleandserver = self.get_titleAndservice(i[0], i[2])
+                title, service, respContent = self.getTitleAndService(i[0], i[2])
                 self.lock.acquire()
-                self.net_list.extend(self.matchSubdomain(self.target, respoftitleandserver))
+                self.net_list.extend(self.matchSubdomain(self.domain, respContent))
                 self.lock.release()
                 re_ip = re.match(r'\d+.\d+.\d+:?\d?', i[0])  # 1.1.1.1:80 -> 1.1.1:80
                 if re_ip:
                     self.net_list.append(i[0])  # 只要是ip就添加到列表中
                     domain = ''
                 else:
-                    if self.target in i[0]:
-                        domain = self.target
+                    if self.domain in i[0]:
+                        domain = self.domain
                     else:
                         domain = ''
 
@@ -366,7 +373,7 @@ class NetSpider(Spider):
                 if 'http' in i[0]:
                     sub_domain = i[0].split('//')[1]  # https://www.baidu.com => www.baidu.com
 
-                sub_domain_info = {
+                subDomainInfo = {
                     'spider': 'FOFA',
                     'subdomain': sub_domain,
                     'title': title,
@@ -378,41 +385,44 @@ class NetSpider(Spider):
                     'search_keyword': domain_word
                 }
 
-                print(sub_domain_info)
+                print(subDomainInfo)
 
-                self.web_domain_lists.append(sub_domain_info)
+                self.web_domain_lists.append(subDomainInfo)
+        except Exception as e:
+            pass
 
         self.web_domain_lists = Common_getUniqueList(self.web_domain_lists)
         self.lock.acquire()
-        self.write_file(self.web_domain_lists, self.target, 3)
+        self.write_file(self.web_domain_lists, self.domain, 3)
         self.lock.release()
 
         # ip_net = ip_list  #  临时保存需要爬取的C段
 
-        # 开始对ip的网段进行爬取
-        ip_list = Common_getIpSegment(ip_list)  # 对ip进行过滤
-        # print("=" * 30)
-        print(ip_list)
-        # print("=" * 30)
-        fofa_ip_list = ['ip="%s/24"' % i for i in ip_list]
-        shodan_ip_list = ['net:"%s/24"' % i for i in ip_list]
-        fofa_ip_list.extend(shodan_ip_list)
+        # # 开始对ip的网段进行爬取
+        # ip_list = Common_getIpSegment(ip_list)  # 对ip进行过滤
+        # # print("=" * 30)
+        # print(ip_list)
+        # # print("=" * 30)
+        # fofa_ip_list = ['ip="%s/24"' % i for i in ip_list]
+        # shodan_ip_list = ['net:"%s/24"' % i for i in ip_list]
+        # fofa_ip_list.extend(shodan_ip_list)
 
-        p = ThreadPoolExecutor(2)  # 因为是C段，所以这里使用线程池来进行分配
-        for i in fofa_ip_list:
-            if 'ip=' in i:
-                # continue
-                p.submit(self.fofa_ip_search, i)  # 这里只查 ip="
-                # pass
-            else:
-                p.submit(self.shadon_ip_search, i)  # 这里只查 net="
-                # pass
+        # p = ThreadPoolExecutor(2)  # 因为是C段，所以这里使用线程池来进行分配
+        # for i in fofa_ip_list:
+        #     if 'ip=' in i:
+        #         # continue
+        #         p.submit(self.fofa_ip_search, i)  # 这里只查 ip="
+        #         # pass
+        #     else:
+        #         p.submit(self.shadon_ip_search, i)  # 这里只查 net="
+        # pass
 
-        p.shutdown()  # 所有计划运行完毕，关闭结束线程池
+        # 所有计划运行完毕，关闭结束线程池
+        # p.shutdown()
 
         # 最后的FOFA和SHODAN的结果进行去重
-        self.write_file(self.web_ip_lists_fofa, self.target, 3)
-        self.write_file(self.web_ip_lists_shodan, self.target, 4)
+        # self.write_file(self.web_ip_lists_fofa, self.domain, 3)
+        # self.write_file(self.web_ip_lists_shodan, self.domain, 4)
 
         # results = [obj.result() for obj in web_ip_all_list]
         # for result in results:
@@ -452,5 +462,7 @@ class NetSpider(Spider):
         return list(set(self.net_list))
 
 
-if '__main__' == __name__:
-    NetSpider('zjhzu.edu.cn').main()
+if __name__ == '__main__':
+    start = time.time()
+    NetSpider('zjhu.edu.cn').main()
+    print(time.time() - start)

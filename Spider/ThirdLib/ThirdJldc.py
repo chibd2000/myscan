@@ -10,6 +10,7 @@ class Jldc(ThirdBase):
         super().__init__()
         self.domain = domain
         self.addr = "https://jldc.me/anubis/subdomains/{}"
+        self.source = 'jidc'
 
     def spider(self):
         print('Load Jidc api ...')
@@ -21,12 +22,12 @@ class Jldc(ThirdBase):
                 for _ in results:
                     self.resList.append(resp)
             else:
-                print('Jidc API No Subdomains.')
+                print('Jldc API No Subdomains.')
         except Exception as e:
-            print('[-] curl Jidc api error. {}'.format(e.args))
+            print('[-] curl Jldc api error. {}'.format(e.args))
 
         self.resList = list(set(self.resList))
-        print('[{}] {}'.format(len(self.resList), self.resList))
+        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         return self.resList
 
 

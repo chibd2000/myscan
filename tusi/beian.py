@@ -15,7 +15,7 @@ def get_beian(url):
         if not url_href[0].startswith('--'):
             urls = url_href[2:]
             print(urls)
-    except  Exception as e:
+    except Exception as e:
         print(e)
 
 
@@ -30,9 +30,9 @@ def get_crt(url):
             for url in text:
                 domain = url['name_value'].replace("*.", "")
                 print(domain)
-    except  Exception as e:
+    except Exception as e:
         print(e)
 
 
 if __name__ == '__main__':
-    get_crt("baidu.com")
+    get_crt("geely.com")

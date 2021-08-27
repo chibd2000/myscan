@@ -5,15 +5,14 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-import json
+
 
 # 自己写js没成功，这里用了selenium 所以需要配合google浏览器的驱动了
 class DnsDataSpider(Spider):
-    def __init__(self, target):
+    def __init__(self, domain):
         super().__init__()
-        self.source = 'Dns Data spider'
-        self.target = target
-        self.dnsdatalist = list()
+        self.source = 'DnsBuffer'
+        self.domain = domain
 
     # 写文件
     def write_file(self, web_lists, target, page):
@@ -35,7 +34,8 @@ class DnsDataSpider(Spider):
         browser.implicitly_wait(60)  # 隐式等待
         try:
             # print(temp)
-            WebDriverWait(browser, 40, 0.5).until(EC.presence_of_element_located((By.TAG_NAME, "pre")))  # 显式等待 0.5s会进行轮询操作
+            WebDriverWait(browser, 40, 0.5).until(
+                EC.presence_of_element_located((By.TAG_NAME, "pre")))  # 显式等待 0.5s会进行轮询操作
             json_data = json.loads(browser.find_element_by_tag_name('pre').text)
             if json_data:
                 return json_data
@@ -51,7 +51,7 @@ class DnsDataSpider(Spider):
         options.add_argument('--ignore-certificate-errors')
         # options.add_argument('--headless')
         browser = webdriver.Chrome(options=options)
-        browser.get('https://dns.bufferover.run/dns?q=.' + self.target)
+        browser.get('https://dns.bufferover.run/dns?q=.' + self.domain)
 
         # json_data = {"FDNS_A": "", "RDNS": ""}
 
@@ -66,7 +66,7 @@ class DnsDataSpider(Spider):
                 if i == '':
                     continue
                 else:
-                    self.dnsdatalist.extend(i.split(','))
+                    self.resList.extend(i.split(','))
         except:
             pass
 
@@ -75,7 +75,7 @@ class DnsDataSpider(Spider):
                 if j == '':
                     continue
                 else:
-                    self.dnsdatalist.extend(j.split(','))
+                    self.resList.extend(j.split(','))
         except:
             pass
 
@@ -83,7 +83,7 @@ class DnsDataSpider(Spider):
         logging.info("DnsDataSpider Start")
         self.spider()
         # self.write_file(self.dnsdatalist, self.target, 2)
-        return self.dnsdatalist
+        return self.resList
 
 
 if __name__ == '__main__':

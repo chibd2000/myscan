@@ -6,7 +6,7 @@ import re
 
 abs_path = os.getcwd() + os.path.sep
 
-'''他山之石subDomainsdBrute模块'''
+'''subDomainsdBrute模块'''
 class subDomaindBrute(Spider):
     def __init__(self, target):
         super().__init__()

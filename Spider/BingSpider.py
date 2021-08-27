@@ -1,12 +1,13 @@
-import requests
-import re
+
+from Spider.BaseSpider import *
 from urllib.parse import quote, urlparse
 import threading
 from bs4 import BeautifulSoup
 
 
-class BingSpider():
-    def __init__(self):
+class BingSpider(Spider):
+    def __init__(self, domain):
+        super().__init__()
         self.source = 'BingSpider'  #
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36"}

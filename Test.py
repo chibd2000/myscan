@@ -3,8 +3,6 @@
 # @Time     : 2021-08-25 1:14
 
 import asyncio
-import aiohttp
-import aiodns
 import time
 
 

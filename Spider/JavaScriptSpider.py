@@ -76,7 +76,7 @@ class JSSpider(Spider):
                 results = list(map(self.location, self.keyword(word + " site:*." + self.target, page)))
                 print(results)
                 for link in results:
-                    title, service, RespOfTitleAndServer = self.get_titleAndservice(link)  # 该函数写在基类中
+                    title, service, RespOfTitleAndServer = self.getTitleAndService(link)  # 该函数写在基类中
                     self.baidu_list.extend(self.matchSubdomain(self.target, RespOfTitleAndServer))
                     self.baidu_list.append(Common_getUrl(link))
                     web_info = {'spider': '百度', 'keyword': word, 'link': link, 'title': title}

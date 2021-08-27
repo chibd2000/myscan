@@ -6,7 +6,7 @@ import github
 abs_path = os.getcwd() + os.path.sep
 
 
-class GitSpider(Spider):
+class GithubSpider(Spider):
     def __init__(self, target):
         super().__init__()
         self.source = 'BaiduSpider'  #
@@ -63,7 +63,7 @@ class GitSpider(Spider):
                 results = list(map(self.location, self.keyword(word + " site:*." + self.target, page)))
                 print(results)
                 for link in results:
-                    title, service, RespOfTitleAndServer = self.get_titleAndservice(link)  # 该函数写在基类中
+                    title, service, RespOfTitleAndServer = self.getTitleAndService(link)  # 该函数写在基类中
 
                     self.lock.acquire()
                     self.baidu_list.extend(self.matchSubdomain(self.target, RespOfTitleAndServer))

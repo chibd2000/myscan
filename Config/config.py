@@ -1,6 +1,8 @@
 # 这里存放配置文件、例如线程之类的 还有fofa shodan 的api存放
 
+fofaEmail = ''
 fofaApi = ''
+
 shodanApi = ''
 quakeApi = ''
 

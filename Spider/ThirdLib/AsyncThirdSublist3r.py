@@ -20,12 +20,12 @@ class Sublist3r(ThirdBase):
                         for _ in eval(text):
                             self.resList.append(_)
                     else:
-                        print('Sublist3r API No Subdomains.')
+                        print('[-] Sublist3r API No Subdomains.')
         except Exception as e:
             print('[-] curl api.sublist3r.com api error. {}'.format(e.args))
 
         self.resList = list(set(self.resList))
-        print('[{}]  [{}] {}'.format(self.source, len(self.resList), self.resList))
+        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         return self.resList
 
 

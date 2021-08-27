@@ -34,7 +34,7 @@ class Qianxun(ThirdBase):
             if '*' in value:
                 self.resList.remove(value)
         self.resList = list(set(self.resList))
-        print('[{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
+        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         return self.resList
 
 

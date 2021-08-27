@@ -6,7 +6,7 @@ class Chaziyu(ThirdBase):
         super().__init__()
         self.domain = domain
         self.addr = "https://chaziyu.com/{}"
-        self.third = "chaziyu"
+        self.source = "chaziyu"
 
     async def spider(self):
         print('Load chaziyu api ...')
@@ -21,12 +21,12 @@ class Chaziyu(ThirdBase):
                         for _ in results:
                             self.resList.append(_)
                     else:
-                        print('chaziyu API No Subdomains.')
+                        print('[-] chaziyu API No Subdomains.')
         except Exception as e:
             print('[-] curl chaziyu.com api error. {}'.format(e.args))
 
         self.resList = list(set(self.resList))
-        print('[{}] [{}] {}'.format(self.third, len(self.resList), self.resList))
+        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         return self.resList
 
 

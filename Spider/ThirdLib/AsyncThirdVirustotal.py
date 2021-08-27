@@ -18,18 +18,18 @@ class Virustotal(ThirdBase):
                                        timeout=self.reqTimeout) as response:
                     text = await response.text(encoding='utf-8')
                     if response.status == 403:
-                        print('VirusTotal API Permission error.')
+                        print('[-] VirusTotal API Permission error.')
                     elif response.status == 200:
                         ret_json = json.loads(text)
                         if 'subdomains' in ret_json.keys():
                             self.resList = ret_json['subdomains']
                     else:
-                        print('VirusTotal API No Subdomains.')
+                        print('[-] VirusTotal API No Subdomains.')
         except Exception as e:
             print('[-] curl virustotal.com api error.')
 
         self.resList = list(set(self.resList))
-        print('[{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
+        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         return self.resList
 
 

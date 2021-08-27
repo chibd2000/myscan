@@ -33,7 +33,6 @@ gIpSegmentInfo = {}  # 存储资产IP区段分布以及资产IP在指定的区�
 gSubDomainParams = []  # 存储可注入探测参数列表 ["http://www.baidu.com/?id=1111*"]
 gAsnInfo = []  # ASN记录
 gJavaScriptParams = []  # 存储js文件中的js敏感接口
-lock = threading.Lock()
 
 
 # Spider
@@ -46,17 +45,9 @@ class Spider(object):
         self.lock = threading.Lock()
 
     # Engine Spider
-    def EngineSpider(self):
-        baidu_list = BaiduSpider(self.domain).main()
-        self.taskList.extend(baidu_list)
-
-    # Bing Spider
-    def bingSpider(self):
-        global lock
-        bing_list = BaiduSpider(self.domain).main()
-        self.lock.acquire()
-        self.taskList.extend(bing_list)
-        self.lock.release()
+    def engineSpider(self):
+        baiduList = BaiduSpider(self.domain).main()
+        self.taskList.extend(baiduList)
 
     # HTTP SSL Ctfr
     def ctfrSpider(self):
@@ -71,11 +62,6 @@ class Spider(object):
         self.lock.acquire()
         self.taskList.extend(net_list)
         self.lock.release()
-
-    # dnf.buffer
-    def dnsSpider(self):
-        dnsdatalist = DnsDataSpider(self.domain).main()
-        self.taskList.extend(dnsdatalist)
 
     def thirdSpider(self):
         sys.path.append(thirdLib)
@@ -132,10 +118,10 @@ class Spider(object):
 
     # github spider
     def githubSpider(self):
-        logging.info("IpReserverSpider Start")
-        gitList = GitSpider(self.domain).main()
+        logging.info("GithubSpider Start")
+        gitLeakList = GithubSpider(self.domain).main()
         self.lock.acquire()
-        self.taskList.extend(gitList)
+        self.taskList.extend(gitLeakList)
         self.lock.release()
         pass
 
@@ -167,8 +153,7 @@ class Spider(object):
         def checkCdn():
             pass
 
-            # 参考ske大师兄的写法
-
+        # 参考ske大师兄的写法
         def runKSubdomain():
             ksubdomains = []
             ksubdomain_folder = './ksubdomain'
@@ -181,7 +166,6 @@ class Spider(object):
                         each_line_split = each_line.split('=>')
                         subdomain = each_line_split[0].strip()  # 子域名
                         ksubdomains.append(subdomain)
-
                 os.remove(ksubdomain_file)  # 删除临时文件
             except Exception as e:
                 ksubdomains = []
@@ -255,11 +239,12 @@ class Spider(object):
         self.thirdSpider()
         print("=================")
         print('[{}] {}'.format(len(self.taskList), self.taskList))
+        print("=================")
 
-        # self.threadList.append(Thread(target=self.EngineSpider,))
-        # self.threadList.append(Thread(target=self.ctfrSpider,))
-        # self.threadList.append(Thread(target=self.netSpider, ))
-        # self.threadList.append(Thread(target=self.dnsSpider,))
+        self.threadList.append(Thread(target=self.engineSpider,))
+        self.threadList.append(Thread(target=self.ctfrSpider,))
+        self.threadList.append(Thread(target=self.netSpider, ))
+        self.threadList.append(Thread(target=self.githubSpider,))
 
         # for _ in self.threadList:
         #     _.start()
@@ -270,12 +255,12 @@ class Spider(object):
         # 清洗整理数据
         # flushResult()
 
-        # 异步解析A记录
-        # self.domainReserveSpider()
+        # doamin2ip
+        # self.domain2ip()
         # print(self.clear_task_list)
 
-        # IP反解析域名
-        # self.ip2DomainSpider()
+        # ip2domain
+        # self.ip2domain()
         # print(self.clear_task_list)
 
         # 端口扫描，这里的端口扫描自己写的只扫子域名下的ip 可以自行更改target的字段
@@ -314,7 +299,7 @@ class Exploit(object):
         pass
 
     def DeserilizeScan(self):
-        # SqlScan(gSubDomainParams).main()
+        # asyncio.open_connection()
         pass
 
     def jsLeakScan(self):
