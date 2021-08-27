@@ -27,7 +27,7 @@ class subDomaindBrute(Spider):
         res.terminate()
         self.dnsbrute_list = fina_res
 
-    def write_file(self, web_lists, target, page):
+    def write_file(self, web_lists, page):
         pass
 
     # 调用口

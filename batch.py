@@ -29,10 +29,12 @@ if sys.platform == 'win32':
 
 abs_path = os.getcwd() + os.path.sep  # 路径
 thirdLib = abs_path + '/Spider/ThirdLib/'
-gIpSegmentInfo = {}  # 存储资产IP区段分布以及资产IP在指定的区段出现的次数  {"111.111.111.0/24":1,"111.111.222.0/24":1}
-gSubDomainParams = []  # 存储可注入探测参数列表 ["http://www.baidu.com/?id=1111*"]
-gAsnInfo = []  # ASN记录
+
+gWebParams = []  # 存储可注入探测参数列表 ["http://www.baidu.com/?id=1111*"]
 gJavaScriptParams = []  # 存储js文件中的js敏感接口
+
+gIpSegmentInfo = {}  # 存储资产IP区段分布以及资产IP在指定的区段出现的次数  {"111.111.111.0/24":1,"111.111.222.0/24":1}
+gAsnInfo = []  # ASN记录
 
 
 # Spider
@@ -51,16 +53,24 @@ class Spider(object):
 
     # HTTP SSL Ctfr
     def ctfrSpider(self):
-        ctfr_list = CrtrSpider(self.domain).main()
+        cftr = CtfrSpider(self.domain)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        t = loop.create_task(cftr.main())
+        ctfrList = loop.run_until_complete(t)
         self.lock.acquire()
-        self.taskList.extend(ctfr_list)
+        self.taskList.extend(ctfrList)
         self.lock.release()
 
     # FOFA/Shodan/Quake360
     def netSpider(self):
-        net_list = NetSpider(self.domain).main()
+        net = NetSpider(self.domain)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        t = loop.create_task(net.main())
+        netList = loop.run_until_complete(t)
         self.lock.acquire()
-        self.taskList.extend(net_list)
+        self.taskList.extend(netList)
         self.lock.release()
 
     def thirdSpider(self):
@@ -233,24 +243,24 @@ class Spider(object):
         # self.lock.release()
 
         # 大师兄ske用的ksubdomain 自己后面跟着一起
-        print("=================")
+        print("======KSubdomain======")
         # runKSubdomain()
+        print("======thirdLibSpider======")
+        # self.thirdSpider()
         print("=================")
-        self.thirdSpider()
-        print("=================")
-        print('[{}] {}'.format(len(self.taskList), self.taskList))
-        print("=================")
+        # print('[{}] {}'.format(len(self.taskList), self.taskList))
+        print("======EngineSpider======")
 
-        self.threadList.append(Thread(target=self.engineSpider,))
+        # self.threadList.append(Thread(target=self.engineSpider,))
         self.threadList.append(Thread(target=self.ctfrSpider,))
-        self.threadList.append(Thread(target=self.netSpider, ))
-        self.threadList.append(Thread(target=self.githubSpider,))
+        # self.threadList.append(Thread(target=self.netSpider, ))
+        # self.threadList.append(Thread(target=self.githubSpider,))
 
-        # for _ in self.threadList:
-        #     _.start()
-        #
-        # for _ in self.threadList:
-        #     _.join()
+        for _ in self.threadList:
+            _.start()
+
+        for _ in self.threadList:
+            _.join()
 
         # 清洗整理数据
         # flushResult()

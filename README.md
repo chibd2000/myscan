@@ -60,24 +60,18 @@ python batch.py -d zjhzu.edu.cn
 
 python batch.py -v zjhzu.edu.cn
 
-#参考作者：
-
-1、broken_5
-
-2、langzi
-
-3、ske
-
 #总结：
 
 1、这个是自己学了python后 将近花了1个多星期的时间写的一个脚本，虽然比不过别人写的 但是也算对自己的一个小小的实现吧，再其中参考别人的代码的时候也学到了许多的构思以及想法！
 
 2、前人栽树，后人乘凉，感谢ske大师兄
 
-#参考文章：
+#参考文章和项目：
 
 1、https://xz.aliyun.com/t/9508
 
 2、https://www.t00ls.net/viewthread.php?tid=62399
 
-3、
+3、https://github.com/0x727/ShuiZe_0x727/
+
+4、https://github.com/shmilylty/OneForAll

@@ -42,7 +42,7 @@ class Spider(metaclass=abc.ABCMeta):
         self.resList = []
 
     @abc.abstractmethod
-    def write_file(self, web_lists, target, page):
+    def writeFile(self, web_lists, page):
         pass
 
     @abc.abstractmethod

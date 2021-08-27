@@ -2,55 +2,61 @@
 
 from Spider.BaseSpider import *
 
-abs_path = os.getcwd() + os.path.sep
 
-
-class CrtrSpider(Spider):
+class CtfrSpider(Spider):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
+        self.addr = 'https://crt.sh/?q=%.{}&output=json'
+        self.source = 'ctfr'
 
-    def write_file(self, web_lists, target, page):
-        workbook = openpyxl.load_workbook(abs_path + str(target) + ".xlsx")
+    def writeFile(self, web_lists, page):
+        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
         worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
         index = 0
         while index < len(web_lists):
             web = list()
             web.append(web_lists[index]['ssl'])
-            web.append(web_lists[index]['submain'])
+            web.append(web_lists[index]['subdomain'])
             worksheet.append(web)
             index += 1
-        workbook.save(abs_path + str(target) + ".xlsx")
+        workbook.save(abs_path + str(self.domain) + ".xlsx")
         workbook.close()
 
     def spider(self):
-        subdomains = []
-        resp = requests.get("https://crt.sh/?q=%.{}&output=json".format(self.target))
-        if resp.status_code != 200:
-            print("[X] Information not available!")
-            return
+        sslInfo = []
+        try:
+            resp = requests.get(self.addr.format(self.domain))
+            if resp.status_code != 200:
+                print("[-] crt.sh not available!")
+                return
 
-        for (key, value) in enumerate(resp.json()):
-            try:
-                subdomain_ssl = value['name_value'].split('\n')
-                self.resList.append(subdomain_ssl[1])
-                domain_info = {
-                    'ssl': subdomain_ssl[0],
-                    'submain': subdomain_ssl[1]
-                }
-            except:
-                domain_info = {
-                    'ssl': 'None',
-                    'submain': subdomain_ssl[0]
-                }
-
+            for (key, value) in enumerate(resp.json()):
+                subdomainSSL = value['name_value'].split('\n')
+                if len(subdomainSSL) == 2:
+                    self.resList.append(subdomainSSL[1])
+                    domainInfo = {
+                        'ssl': subdomainSSL[0],
+                        'subdomain': subdomainSSL[1]
+                    }
+                else:
+                    domainInfo = {
+                        'ssl': 'None',
+                        'subdomain': subdomainSSL[0]
+                    }
                 # 一起放到列表中进行存储
-            subdomains.append(domain_info)
+                sslInfo.append(domainInfo)
+        except Exception as e:
+            print('[-] curl crt api error. {}'.format(e.args))
 
         # 列表中的字典去重
-        subdomains = Common_getUniqueList(subdomains)
-        self.write_file(subdomains, self.domain, 1)
-        return list(set(self.resList))
+        sslInfo = Common_getUniqueList(sslInfo)
+        self.writeFile(sslInfo, 1)
+
+        # 返回结果
+        self.resList = list(set(self.resList))
+        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
+        return self.resList
 
     def main(self):
         logging.info("Ctfr Spider Start")
@@ -58,4 +64,4 @@ class CrtrSpider(Spider):
 
 
 if '__main__' == __name__:
-    CrtrSpider('zjhu.edu.cn').main()
+    CtfrSpider('nbcc.cn').main()

@@ -26,7 +26,7 @@ class Securitytrails(ThirdBase):
             print('[-] curl securitytrails api error. {}'.format(e.args))
 
         self.resList = list(set(self.resList))
-        print('[{}] {}'.format(len(self.resList), self.resList))
+        print('[+] [securitytrails] [{}] {}'.format(len(self.resList), self.resList))
         return self.resList
 
 

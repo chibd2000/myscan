@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO, filemode='a', format="[%(levelname)s]%(a
 requests.packages.urllib3.disable_warnings()
 
 
-# ske大师兄/oneforall
+#
 class ThirdBase(object):
     source = "ThirdBase"
 
