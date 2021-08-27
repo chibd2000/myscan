@@ -4,9 +4,8 @@ import logging
 import json
 import time
 import re
-import asyncio
-import aiohttp
-from Config.config import *
+from spider.config import *
+from core.asyncfetch import *
 import sys
 if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -17,7 +16,7 @@ requests.packages.urllib3.disable_warnings()
 
 #
 class ThirdBase(object):
-    source = "ThirdBase"
+    source = "BaseThird"
 
     def __init__(self):
         self.headers = {

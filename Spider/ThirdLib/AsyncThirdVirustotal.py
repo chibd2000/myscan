@@ -1,5 +1,5 @@
 # coding=utf-8
-from Spider.ThirdLib.Third import *
+from spider.thirdLib.third import *
 
 
 class Virustotal(ThirdBase):
@@ -14,7 +14,8 @@ class Virustotal(ThirdBase):
         print('Load VirusTotal api ...')
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(url=self.addr.format(self.api, self.domain), headers=self.headers, verify_ssl=False,
+                async with session.get(url=self.addr.format(self.api, self.domain), headers=self.headers,
+                                       verify_ssl=False,
                                        timeout=self.reqTimeout) as response:
                     text = await response.text(encoding='utf-8')
                     if response.status == 403:

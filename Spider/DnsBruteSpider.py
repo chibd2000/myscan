@@ -1,5 +1,6 @@
 # coding=utf-8
-from Spider.BaseSpider import *
+from spider.BaseSpider import *
+
 import subprocess
 import os
 import re

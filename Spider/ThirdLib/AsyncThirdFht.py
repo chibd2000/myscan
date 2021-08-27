@@ -1,5 +1,6 @@
 # coding=utf-8
-from Spider.ThirdLib.Third import *
+from spider.thirdLib.third import *
+
 
 
 class Fht(ThirdBase):

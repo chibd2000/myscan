@@ -1,8 +1,8 @@
 # coding=utf-8
 
-from Spider.BaseSpider import *
+from spider.BaseSpider import *
 from threading import Thread
-from Config import config
+from spider import config
 from bs4 import BeautifulSoup
 import base64
 import codecs
@@ -12,19 +12,19 @@ import mmh3
 
 class HackRequest(object):
     def __init__(self, domain, cookie=None, hash=None, md5=None):
+        self.domain = domain
         self.cookie = cookie
         self.iconHash = hash
         self.iconMD5 = md5
-        self.domain = domain
 
-    def getRequest(self, url):
+    async def getRequest(self, url):
         try:
-            resp = requests.get(self.getUrl(url), timeout=2, headers=self._getHeaders(), verify=False,
-                                allow_redirects=True)
-            text = resp.content.decode(encoding=chardet.detect(resp.content)['encoding'])
-            title = self._getTitle(text).strip().replace('\r', '').replace('\n', '')
-            status = resp.status_code
-            return title, status, resp
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as resp:
+                    text = await resp.text()
+                    title = self._getTitle(text).strip().replace('\r', '').replace('\n', '')
+                    status = resp.status
+                    return title, status, resp
         except Exception as e:
             return e
 
@@ -127,7 +127,7 @@ class NetSpider(Spider):
         self.fofaEmail = config.fofaEmail
         self.shodanApi = config.shodanApi
         self.quakeApi = config.quakeApi
-        self.request = HackRequest()
+        self.request = HackRequest(domain)
         self.csegmentList = []
         self.faviconList = []
 
@@ -135,10 +135,10 @@ class NetSpider(Spider):
     def writeFile(self, web_lists, page):
         """
     [
-        [{'spider': 'fofa', 'subdomain': '123.123.123.124:22', 'title': '', 'ip': '123.123.123.124', 'domain': '', 'port': '22', 'web_service': '', 'port_service': 'SSH', 'search_keyword': 'ip="123.123.123.123/24" && port="22"'},
-         {'spider': 'fofa', 'subdomain': '123.123.123.123:22', 'title': '', 'ip': '123.123.123.123', 'domain': '', 'port': '22', 'web_service': '', 'port_service': 'SSH', 'search_keyword': 'ip="123.123.123.123/24" && port="22"'}],
-        [{'spider': 'fofa', 'subdomain': 'https://www.5890788.com', 'title': '', 'ip': '123.123.123.123', 'domain': '5890788.com', 'port': '443', 'web_service': '', 'port_service': 'HTTPS', 'search_keyword': 'ip="123.123.123.123/24" && port="443"'}]
-    ]
+        [
+        {'spider': 'fofa', 'subdomain': '123.123.123.124:22', 'title': '', 'ip': '123.123.123.124', 'domain': '', 'port': '22', 'web_service': '', 'port_service': 'SSH', 'search_keyword': 'ip="123.123.123.123/24" && port="22"'},
+        {'spider': 'fofa', 'subdomain': '123.123.123.123:22', 'title': '', 'ip': '123.123.123.123', 'domain': '', 'port': '22', 'web_service': '', 'port_service': 'SSH', 'search_keyword': 'ip="123.123.123.123/24" && port="22"'}
+         ]
         """
         workbook = openpyxl.load_workbook(os.getcwd() + os.path.sep + str(self.domain) + ".xlsx")
         worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
@@ -205,7 +205,7 @@ class NetSpider(Spider):
         except Exception as e:
             pass
 
-        self.web_domain_lists = Common_getUniqueList(self.web_domain_lists)
+        self.web_domain_lists = getUniqueList(self.web_domain_lists)
         self.lock.acquire()
         self.writeFile(self.web_domain_lists, 3)
         self.lock.release()
@@ -309,9 +309,85 @@ class NetSpider(Spider):
     def quakeSegmentSpider(self, networksegment, page):
         pass
 
-    def shodanSegmentSpider(self):
-        shodanIpList = []
-        return shodanIpList
+    # shodan的线程处理函数
+    def shodanSegmentSpider(self, networksegment, page):
+        logging.info("Shodan Spider page {}".format(page))
+        try:
+            temp_list = list()
+            resp = requests.get(url=self.shodanAddr.format(API_KEY=self.shodanApi, QUERY=networksegment, PAGE=page),
+                                headers=self.headers)
+            # 数据进行格式化
+            json_data = resp.json()
+
+            # 有两种情况
+            #   1、API无效 json_data['results'] 直接报错，结果为KeyError: 'results'
+            #   2、当前page中没有数据，则API有效 json_data['results']中的值为空列表[]
+            temp_data = json_data['matches']
+            if len(temp_data) == 0:
+                print("{} {} {} 无数据爬取!".format('shodan', networksegment, page))
+                return
+
+            for i in json_data['matches']:
+                self.net_list.append(i['ip_str'])  # 只要是ip就添加到列表中
+
+                try:
+                    hostname = i['hostnames'][0]
+                    self.net_list.append(hostname)
+                except KeyError as e:
+                    hostname = ''
+
+                #  获取其中的所有主键
+                try:
+                    product = i['product']
+                except KeyError as e:
+                    product = ''
+
+                try:
+                    title, service, RespOfTitleAndServer = self.getTitleAndService(hostname, i['port'])
+                    self.lock.acquire()
+                    self.net_list.extend(self.matchSubdomain(self.domain, RespOfTitleAndServer))
+                    self.lock.release()
+                    # title = i['http']['title']
+                except Exception as e:
+                    title = ''
+
+                try:
+                    hostname = i['hostnames'][0]
+                except KeyError as e:
+                    hostname = ''
+
+                try:
+                    domains = ','.join(i['domains'])
+                except KeyError as e:
+                    domains = ''
+
+                ip_info = {
+                    'spider': 'Shodan',
+                    'subdomain': hostname,
+                    'title': title,
+                    'ip': i['ip_str'],
+                    'domain': domains,
+                    'port': i['port'],
+                    'web_service': product,
+                    'port_service': getPortService(i['port']),
+                    'search_keyword': networksegment
+                }
+
+                # 这里打印 进行测试数据
+                print(ip_info)
+
+                temp_list.append(ip_info)
+
+        except IOError as e:
+            print('[-] curl shodan.io error. {}'.format(e.args))
+
+        except KeyError as e:
+            # KeyError 为 API无效
+            print("API次数已经用完 | API无效！")
+            return
+        self.lock.acquire()
+        self.web_ip_lists_shodan.extend(temp_list)
+        self.lock.release()
 
     # SSL证书查询函数
     def fofaSSLSpider(self):
@@ -327,108 +403,13 @@ class NetSpider(Spider):
 
     # Favicon查询函数
     def fofaFaviconSpider(self):
-        resp = requests.get('https://www.baidu.com/')
-
-        favicon = codecs.encode(resp.content, 'base64')
-        hash = mmh3.hash(favicon)
-        print('\nShodan search query: http.favicon.hash:' + str(hash))
-
-        print('icon_hash=%s' % hash)
+        pass
 
     def quakeFaviconSpider(self):
-        resp = requests.get('https://www.baidu.com/')
-
-        favicon = codecs.encode(resp.content, 'base64')
-        hash = mmh3.hash(favicon)
-        print('\nShodan search query: http.favicon.hash:' + str(hash))
-
-        print('icon_hash=%s' % hash)
+        pass
 
     def shodanFaviconSpider(self):
-        resp = requests.get('https://www.baidu.com/')
-
-        favicon = codecs.encode(resp.content, 'base64')
-        hash = mmh3.hash(favicon)
-        print('\nShodan search query: http.favicon.hash:' + str(hash))
-
-        print('icon_hash=%s' % hash)
-
-    # SHODAN的线程处理函数
-    def shodanSegmentSpider(self, networksegment, page):
-        logging.info("Shodan Spider page {}".format(page))
-
-        try:
-            temp_list = list()
-            resp = requests.get(url=self.shodanAddr.format(API_KEY=self.shodanApi, QUERY=networksegment, PAGE=page),
-                                headers=self.headers)
-            # 数据进行格式化
-            json_data = resp.json()
-
-            # 有两种情况
-            #   1、API无效 json_data['results'] 直接报错，结果为KeyError: 'results'
-            #   2、当前page中没有数据，则API有效 json_data['results']中的值为空列表[]
-            temp_data = json_data['matches']
-            if len(temp_data) == 0:
-                print("{} {} {} 无数据爬取!".format('shodan', networksegment, page))
-                return
-        except KeyError as e:
-            # KeyError 为 API无效
-            print("API次数已经用完 | API无效！")
-            return
-
-        for i in json_data['matches']:
-            self.net_list.append(i['ip_str'])  # 只要是ip就添加到列表中
-
-            try:
-                hostname = i['hostnames'][0]
-                self.net_list.append(hostname)
-            except KeyError as e:
-                hostname = ''
-
-            #  获取其中的所有主键
-            try:
-                product = i['product']
-            except KeyError as e:
-                product = ''
-
-            try:
-                title, service, RespOfTitleAndServer = self.getTitleAndService(hostname, i['port'])
-                self.lock.acquire()
-                self.net_list.extend(self.matchSubdomain(self.domain, RespOfTitleAndServer))
-                self.lock.release()
-                # title = i['http']['title']
-            except Exception as e:
-                title = ''
-
-            try:
-                hostname = i['hostnames'][0]
-            except KeyError as e:
-                hostname = ''
-
-            try:
-                domains = ','.join(i['domains'])
-            except KeyError as e:
-                domains = ''
-
-            ip_info = {
-                'spider': 'Shodan',
-                'subdomain': hostname,
-                'title': title,
-                'ip': i['ip_str'],
-                'domain': domains,
-                'port': i['port'],
-                'web_service': product,
-                'port_service': getPortService(i['port']),
-                'search_keyword': networksegment
-            }
-
-            # 这里打印 进行测试数据
-            print(ip_info)
-
-            temp_list.append(ip_info)
-        self.lock.acquire()
-        self.web_ip_lists_shodan.extend(temp_list)
-        self.lock.release()
+        pass
 
     # 域名爬取的fofa处理函数
     def spider(self):

@@ -75,3 +75,5 @@ python batch.py -v zjhzu.edu.cn
 3、https://github.com/0x727/ShuiZe_0x727/
 
 4、https://github.com/shmilylty/OneForAll
+
+5、https://github.com/laramies/theHarvester  

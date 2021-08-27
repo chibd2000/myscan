@@ -10,10 +10,10 @@ import codecs
 import hashlib
 requests.packages.urllib3.disable_warnings()
 
-resp = requests.get('https://www.geely.com/favicon.ico')
-# favicon = codecs.encode(resp.content, "base64")
-# hash = mmh3.hash(favicon)
-# print(hash)
+resp = requests.get('http://binyue-uat.geely.com:8080/favicon.ico')
+favicon = codecs.encode(resp.content, "base64")
+hash = mmh3.hash(favicon)
+print(hash)
 m1 = hashlib.md5()
 m1.update(resp.content)
 theMD5 = m1.hexdigest()

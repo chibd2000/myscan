@@ -1,6 +1,7 @@
 # coding=utf-8
 
-from Spider.BaseSpider import *
+from spider.BaseSpider import *
+
 
 
 class CtfrSpider(Spider):

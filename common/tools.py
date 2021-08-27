@@ -69,8 +69,9 @@ port_rules = {
     'Hadoop': '50070'
 }
 
+
 # 判断a链接的是否为80端口域名
-def Common_getUrl(link):
+def getUrl(link):
     for web_rule in url_rules:
         if web_rule in link:
             if 'http' in link:
@@ -81,7 +82,7 @@ def Common_getUrl(link):
 
 
 # 列表中的字典 键值重复清理
-def Common_getUniqueList(L):
+def getUniqueList(L):
     (output, temp) = ([], [])
     for l in L:
         for k, v in l.items():
@@ -123,7 +124,7 @@ def getPortService(port):
 
 
 # 创建图表
-def Common_createXlxs(target):
+def createXlsx(target):
     workbook = xlsxwriter.Workbook(target + ".xlsx")
 
     worksheet1 = workbook.add_worksheet('爬虫')
@@ -210,9 +211,7 @@ def Common_createXlxs(target):
     workbook.close()
 
 
-'''递归获取父域名'''
-
-
+# 递归获取父域名
 def Common_getTopDomainName(Subdomain, FatherUrl):
     temp_url = FatherUrl.split('.', 1)[1]
     if Subdomain == temp_url:
@@ -221,9 +220,7 @@ def Common_getTopDomainName(Subdomain, FatherUrl):
         return Common_getTopDomainName(Subdomain, temp_url)
 
 
-'''功能：简单的判断下当 端口为443,80的时候返回的格式为http?s:// + ....，否则其他端口的话每个url都返回两次'''
-
-
+# 简单的判断下当 端口为443,80的时候返回的格式为http?s:// + ....，否则其他端口的话每个url都返回两次
 def Common_url_by_port(domain, port):
     protocols = ['http://', 'https://']
     if port == 443:

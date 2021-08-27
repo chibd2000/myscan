@@ -2,7 +2,7 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-26 0:13
 
-from Spider.ThirdLib.Third import *
+from spider.thirdLib.third import *
 
 
 class Alien(ThirdBase):
@@ -15,16 +15,18 @@ class Alien(ThirdBase):
     async def spider(self):
         print('Load otx.alienvault.com api ...')
         try:
+            # async with aiohttp.ClientSession() as session:
+            #     async with session.get(url=self.addr.format(self.domain), headers=self.headers, verify_ssl=False,
+            #                            timeout=self.reqTimeout) as response:
+            #         text = await response.json(encoding='utf-8')
             async with aiohttp.ClientSession() as session:
-                async with session.get(url=self.addr.format(self.domain), headers=self.headers, verify_ssl=False,
-                                       timeout=self.reqTimeout) as response:
-                    text = await response.text(encoding='utf-8')
-                    res = json.loads(text)['passive_dns']
-                    if res:
-                        for _ in res:
-                            self.resList.append(_.get('hostname'))
-                    else:
-                        print('[-] alienvault API No Subdomains.')
+                text = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), json=True)
+                res = text['passive_dns']
+                if res:
+                    for _ in res:
+                        self.resList.append(_.get('hostname'))
+                else:
+                    print('[-] alienvault API No Subdomains.')
         except Exception as e:
             print('[-] curl otx.alienvault.com api error. {}'.format(e.args))
 

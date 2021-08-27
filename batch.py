@@ -1,21 +1,21 @@
 # coding=utf-8
 
-from Spider.BaiduSpider import *
-from Spider.BingSpider import *
-from Spider.CtfrSpider import *
-from Spider.NetSpider import *
-from Spider.DnsBruteSpider import *
-from Spider.DnsDataSpider import *
-from Spider.PortSpider import *
-from Spider.GithubSpider import *
+from spider.BaiduSpider import *
+from spider.BingSpider import *
+from spider.CtfrSpider import *
+from spider.NetSpider import *
+from spider.DnsBruteSpider import *
+from spider.DnsDataSpider import *
+from spider.PortSpider import *
+from spider.GithubSpider import *
 
-from Spider.Common import resolve
+from common import resolve
 
-from Exploit.AliveScan import *
-from Exploit.IpUnauthExploit import *
-from Exploit.HttpUnauthExploit import *
-from Exploit.CmsExploit import *
-from Exploit.SQLInjectExploit import *
+from exploit.AliveScan import *
+from exploit.IpUnauthExploit import *
+from exploit.HttpUnauthExploit import *
+from exploit.CmsExploit import *
+from exploit.SQLInjectExploit import *
 from threading import Thread
 
 import os
@@ -47,11 +47,28 @@ class Spider(object):
         self.lock = threading.Lock()
 
     # Engine Spider
-    def engineSpider(self):
-        baiduList = BaiduSpider(self.domain).main()
-        self.taskList.extend(baiduList)
+    def baiduSpider(self):
+        baidu = BaiduSpider(self.domain)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        t = loop.create_task(baidu.main())
+        netList = loop.run_until_complete(t)
+        self.lock.acquire()
+        self.taskList.extend(netList)
+        self.lock.release()
 
-    # HTTP SSL Ctfr
+    # bing Spider
+    def bingSpider(self):
+        bing = BingSpider(self.domain)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        t = loop.create_task(bing.main())
+        netList = loop.run_until_complete(t)
+        self.lock.acquire()
+        self.taskList.extend(netList)
+        self.lock.release()
+
+    # SSL
     def ctfrSpider(self):
         cftr = CtfrSpider(self.domain)
         loop = asyncio.new_event_loop()
@@ -159,11 +176,9 @@ class Spider(object):
 
     # main start
     def run(self):
-
         def checkCdn():
-            pass
+            randomStr = "abcdefghijklmn"
 
-        # 参考ske大师兄的写法
         def runKSubdomain():
             ksubdomains = []
             ksubdomain_folder = './ksubdomain'
@@ -242,17 +257,24 @@ class Spider(object):
         # self.task_list.extend(dnsbrute_list)
         # self.lock.release()
 
-        # 大师兄ske用的ksubdomain 自己后面跟着一起
+        # 1、checkCdn
+        checkCdn()
+
+        # 2、大师兄ske用的ksubdomain 自己后面跟着一起
         print("======KSubdomain======")
         # runKSubdomain()
+
+        # 3、第三方接口查询
         print("======thirdLibSpider======")
         # self.thirdSpider()
         print("=================")
         # print('[{}] {}'.format(len(self.taskList), self.taskList))
-        print("======EngineSpider======")
 
-        # self.threadList.append(Thread(target=self.engineSpider,))
-        self.threadList.append(Thread(target=self.ctfrSpider,))
+        # 4、SSL/engine/netSpace/github查询
+        print("======EngineSpider======")
+        self.threadList.append(Thread(target=self.baiduSpider(), ))
+        # self.threadList.append(Thread(target=self.bingSpider(), ))
+        # self.threadList.append(Thread(target=self.ctfrSpider,))
         # self.threadList.append(Thread(target=self.netSpider, ))
         # self.threadList.append(Thread(target=self.githubSpider,))
 
@@ -262,23 +284,21 @@ class Spider(object):
         for _ in self.threadList:
             _.join()
 
-        # 清洗整理数据
+        # 5、清洗整理数据
         # flushResult()
 
-        # doamin2ip
+        # 6、doamin2ip
         # self.domain2ip()
         # print(self.clear_task_list)
 
-        # ip2domain
+        # 7、ip2domain
         # self.ip2domain()
         # print(self.clear_task_list)
 
-        # 端口扫描，这里的端口扫描自己写的只扫子域名下的ip 可以自行更改target的字段
-        # 当走到这里的时候 真正的数据以及格式都是完整的一段数据
-        # 之后就开始漏洞利用了
+        # 8、端口扫描，这里的端口扫描自己写的只扫子域名下的ip 可以自行更改target的字段（当走到这里的时候 真正的数据以及格式都是完整的一段数据之后就开始漏洞利用了）
         # self.ipPortSpider()
 
-        # print(self.clear_task_list)
+        # print(self.clearTaskList)
 
         # 最后返回处理好的数据 交给Exploit类
         return self.clearTaskList
@@ -286,29 +306,35 @@ class Spider(object):
 
 # Exploit
 class Exploit(object):
-    def __init__(self, domain, clear_task_list):
+    def __init__(self, domain, clearTaskList):
         self.thread_list = list()
         self.domain = domain
-        self.clear_task_list = clear_task_list
+        self.clearTaskList = clearTaskList
 
     def AliveScan(self):
-        AliveScan(self.domain, self.clear_task_list).main()
+        AliveScan(self.domain, self.clearTaskList).main()
 
-    def IpUnauthScan(self):
-        IpUnauth(self.domain, self.clear_task_list).main()
+    def UnauthPortScan(self):
+        # [{"subdomain": "www.zjhu.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
+        queue = asyncio.Queue(-1)
+        for aTask in self.clearTaskList:
+            aIp = aTask.get('ip')
+            aPortList = aTask.get('port')
+            for port in aPortList:
+                queue.put("{}:{}".format(aIp, port))  # IP+端口, 接下里就是异步socket探测banner来进行相关利用即可.
+        IpUnauth(self.domain, queue).main()
 
-    def HttpUnauthScan(self):
-        HttpUnauth(self.domain, self.clear_task_list).main()
+    def unauthLeakHttpScan(self):
+        HttpUnauth(self.domain, self.clearTaskList).main()
 
-    def CmsScan(self):
-        CmsScan(self.domain, self.clear_task_list).main()
+    def cmsLeakScan(self):
+        CmsScan(self.domain, self.clearTaskList).main()
 
-    def SqlScan(self):
-        global gSubDomainParams
+    def sqlLeakScan(self):
         # SqlScan(gSubDomainParams).main()
         pass
 
-    def DeserilizeScan(self):
+    def portLeakScan(self):
         # asyncio.open_connection()
         pass
 
@@ -324,7 +350,7 @@ class Exploit(object):
         # self.thread_list.append(Thread(target=self.CmsScan))  # cms/框架扫描
         # self.thread_list.append(Thread(target=self.IpUnauthScan))  # 未授权扫描ip
         # self.thread_list.append(Thread(target=self.HttpUnauthScan))  # 未授权扫描http域名
-        # self.thread_list.append(Thread(target=self.SqlScan)) # sql注入扫描
+        # self.thread_list.append(Thread(target=self.SqlScan)) # SQL注入扫描
 
         for i in self.thread_list:
             i.start()
@@ -347,12 +373,13 @@ if __name__ == '__main__':
     print('''
         Come From HengGe's Team ^.^
     ''')
-    args = parse_args()
-    if not os.path.exists(abs_path + args.domain + ".xlsx"):
-        Common_createXlxs(args.domain)
     starttime = time.time()
-    spider = Spider(args.domain)
-    clear_task_list = spider.run()
-    # exploit = Exploit(args.domain, clear_task_list)
-    # exploit.run()
+    args = parse_args()
+    if args.domain:
+        if not os.path.exists(abs_path + args.domain + ".xlsx"):
+            createXlsx(args.domain)
+        spider = Spider(args.domain)
+        clear_task_list = spider.run()
+        # exploit = Exploit(args.domain, clear_task_list)
+        # exploit.run()
     print("总共耗时时间为：" + str(time.time() - starttime))

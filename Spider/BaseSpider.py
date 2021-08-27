@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from Common.common import *
+from common.tools import *
 import openpyxl
 import requests
 import abc
@@ -11,7 +11,13 @@ import time
 import random
 import base64
 import json
+import asyncio
+import aiohttp
 from threading import Lock
+
+import sys
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 requests.packages.urllib3.disable_warnings()
 logging.basicConfig(level=logging.INFO, filemode='a', format="[%(levelname)s]%(asctime)s %(message)s")
@@ -21,7 +27,7 @@ logging.basicConfig(level=logging.INFO, filemode='a', format="[%(levelname)s]%(a
 
 
 class Spider(metaclass=abc.ABCMeta):
-    source = 'spider'
+    source = 'BaseSpider'
 
     def __init__(self):
         self.headers = {
@@ -54,7 +60,7 @@ class Spider(metaclass=abc.ABCMeta):
         pass
 
     # 获取 title service
-    def getTitleAndService(self, link, port=''):
+    async def getTitleAndService(self, link, port=''):
         if port == 443:
             link = 'https://{}'.format(link)
 
@@ -64,17 +70,21 @@ class Spider(metaclass=abc.ABCMeta):
             else:
                 link = 'http://{}'.format(link)
         try:
-            resp = requests.get(link, timeout=3, verify=False)
-            detectencode = chardet.detect(resp.content)  # 利用chardet模块检测编码
-            title = re.findall(r'<title>(.*?)</title>', resp.content.decode(detectencode["encoding"]), re.S)[0].strip(
-                ' ').strip('\r\n').strip('\n').strip('\r')
+
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url=link, headers=self.headers,
+                                       verify_ssl=False,
+                                       timeout=self.reqTimeout) as response:
+                    text = await response.text(encoding='utf-8')
+                    title = re.findall(r'<title>(.*?)</title>', text, re.S)[0].strip(
+                        ' ').strip('\r\n').strip('\n').strip('\r')
 
             try:
-                service = resp.headers.get('Server')
+                service = response.headers.get('Server')
             except:
                 service = ''
             try:
-                content = resp.text
+                content = text
             except:
                 content = ''
             return title, service, content

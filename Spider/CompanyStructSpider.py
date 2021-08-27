@@ -1,7 +1,8 @@
 # coding=utf-8
 # @Author   : HengGe's team
 # @Time     : 2021-08-25 1:15
-from Spider.BaseSpider import *
+from spider.BaseSpider import *
+
 import concurrent.futures
 from tldextract import extract
 

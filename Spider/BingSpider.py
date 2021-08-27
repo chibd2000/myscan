@@ -1,22 +1,29 @@
+# coding=utf-8
 
-from Spider.BaseSpider import *
+from spider.BaseSpider import *
 from urllib.parse import quote, urlparse
 import threading
 from bs4 import BeautifulSoup
 
 
 class BingSpider(Spider):
+    def writeFile(self, web_lists, page):
+        pass
+
+    def spider(self):
+        pass
+
+    def main(self):
+        pass
+
     def __init__(self, domain):
         super().__init__()
         self.source = 'BingSpider'  #
-        self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36"}
+        self.domain = domain
         # site:domain inurl:admin inurl:login inurl:system 后台 系统
         self.wds = ['admin', 'login', 'system', 'register', 'upload', '后台', '系统', '登录']
         self.PAGES = 5  # 默认跑5页
-        # print('Please wait a few time ...')
         self.TIMEOUT = 10
-        self.bingSubdomains = []
         self.links = []
 
     def get_subdomain(self, host, each_wd, i):  # host 既可以是域名也可以是IP
@@ -42,11 +49,23 @@ class BingSpider(Spider):
                     title = li_a.get_text()  # 标题
                     subdomain = urlparse(link).netloc  # 子域名
                     print('[{}] [page: {}]: {} {} {}'.format(q, page, link, title, subdomain))
-                    self.bingSubdomains.append(subdomain)
+                    self.resList.append(subdomain)
                     self.links.append([each_wd, link, title])
             except Exception as e:
                 print(e.args)
                 # pass
+
+                # headers = {
+                #     'Host': self.hostname,
+                #     'Cookie': 'SRCHHPGUSR=ADLT=DEMOTE&NRSLT=50',
+                #     'Accept-Language': 'en-us,en',
+                #     'User-agent': Core.get_user_agent()
+                # }
+                # base_url = f'https://{self.server}/search?q=%40"{self.word}"&count=50&first=xx'
+                # urls = [base_url.replace("xx", str(num)) for num in range(0, self.limit, 50) if num <= self.limit]
+                # responses = await AsyncFetcher.fetch_all(urls, headers=headers, proxy=self.proxy)
+                # for response in responses:
+                #     self.total_results += response
 
     # 爬子域名
     def run_subdomain(self, domain):
@@ -58,4 +77,10 @@ class BingSpider(Spider):
         for t in threads:
             t.join()
 
-        return list(set(self.bingSubdomains)), self.links
+        print(list(set(self.resList)), self.links)
+        return list(set(self.resList)), self.links
+
+
+if __name__ == '__main__':
+    a = BingSpider('nbcc.cn')
+    a.run_subdomain('nbcc.cn')

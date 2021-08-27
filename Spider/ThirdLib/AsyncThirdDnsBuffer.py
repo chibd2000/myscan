@@ -1,7 +1,8 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-26 21:25
-from Spider.ThirdLib.Third import *
+from spider.thirdLib.third import *
+
 
 
 class Bufferover(ThirdBase):

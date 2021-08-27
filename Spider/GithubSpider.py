@@ -1,6 +1,9 @@
+# coding=utf-8
+
 from urllib.parse import quote
 
-from Spider.BaseSpider import *
+from spider.BaseSpider import *
+
 import github
 
 abs_path = os.getcwd() + os.path.sep

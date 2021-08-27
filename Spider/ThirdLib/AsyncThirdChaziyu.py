@@ -1,4 +1,6 @@
-from Spider.ThirdLib.Third import *
+# coding=utf-8
+
+from spider.thirdLib.third import *
 
 
 class Chaziyu(ThirdBase):

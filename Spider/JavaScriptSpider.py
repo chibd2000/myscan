@@ -1,6 +1,7 @@
 # coding=utf-8
 
-from Spider.BaseSpider import *
+from spider.BaseSpider import *
+
 from urllib.parse import quote
 
 # 一个搜索引擎爬取的过程：
