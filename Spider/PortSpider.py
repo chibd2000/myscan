@@ -10,9 +10,11 @@ import requests
 import re
 import chardet
 import xlsxwriter
+
 requests.packages.urllib3.disable_warnings()
 
 abs_path = os.getcwd() + os.path.sep
+
 
 # 端口扫描的实现
 class PortScan(object):
@@ -42,14 +44,15 @@ class PortScan(object):
     # 调用masscan识别端口
     def Portscan(self, scan_ip):
         temp_ports = []  # 设定一个临时端口列表
-        os.system(abs_path + 'masscan.exe ' + str(scan_ip) + ' -p 1-65535 -oJ /result/' + str(scan_ip) + '.json --rate 1000')
+        os.system(
+            abs_path + 'masscan.exe ' + str(scan_ip) + ' -p 1-65535 -oJ /result/' + str(scan_ip) + '.json --rate 1000')
 
         # 提取json文件中的端口
         with open(abs_path + '/result/masscan' + str(scan_ip) + '.json', 'r') as f:
             for line in f:
                 if line.startswith('{ '):
                     temp = json.loads(line[:-2])  # 取出一条完整json形式的数据
-                    temp_ports.append(str(temp["ports"][0]["port"]))# 端口取出加入临时端口中
+                    temp_ports.append(str(temp["ports"][0]["port"]))  # 端口取出加入临时端口中
 
         if len(temp_ports) > 25:
             print("判断防火墙存在 结束当前进程!")
@@ -81,7 +84,9 @@ class PortScan(object):
                             resp = requests.get(scan_url_port, timeout=3, verify=False)
                             # 获取网站的页面编码并且应用
                             detectencode = chardet.detect(resp.content)  # 利用chardet模块检测编码
-                            response = re.findall(r'<title>(.*?)</title>', resp.content.decode(detectencode['encoding']), re.S)  # re.S的作用 匹配的时候扩展到整个字符串(包括换行这些\n)
+                            response = re.findall(r'<title>(.*?)</title>',
+                                                  resp.content.decode(detectencode['encoding']),
+                                                  re.S)  # re.S的作用 匹配的时候扩展到整个字符串(包括换行这些\n)
                             if response:  # 如果访问的时候正则匹配到<title>标签
                                 # 将页面解码为utf-8，获取中文标题
                                 # 如果访问的时候正则匹配到title标签
@@ -107,7 +112,9 @@ class PortScan(object):
                             resp = requests.get(scan_url_port, timeout=3, verify=False)
                             # 获取网站的页面编码并且应用
                             detectencode = chardet.detect(resp.content)  # 利用chardet模块检测编码
-                            response = re.findall(r'<title>(.*?)</title>', resp.content.decode(detectencode['encoding']), re.S)  # re.S的作用 匹配的时候扩展到整个字符串(包括换行这些\n)
+                            response = re.findall(r'<title>(.*?)</title>',
+                                                  resp.content.decode(detectencode['encoding']),
+                                                  re.S)  # re.S的作用 匹配的时候扩展到整个字符串(包括换行这些\n)
                             if response:  # 如果访问的时候正则匹配到<title>标签
                                 # 将页面解码为utf-8，获取中文标题
                                 # 如果访问的时候正则匹配到title标签

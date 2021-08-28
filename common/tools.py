@@ -9,76 +9,81 @@ url_rules = {'.com.cn', '.org.cn', '.net.cn', '.com', '.cn', '.cc', '.net', '.or
              '.name', '.io', '.top', '.me', '.club', '.tv', '.uk', '.hk'}
 
 port_rules = {
-    'FTP': '21',
-    'SSH': '22',
-    'Telnet': '23',
-    'SMTP': '25',
-    'DNS': '53',
-    'DHCP': '68',
-    'HTTP': '80',
-    'TFTP': '69',
-    'HTTP': '8080',
-    'POP3': '995',
-    'NetBIOS': '139',
-    'IMAP': '143',
-    'HTTPS': '443',
-    'SNMP': '161',
-    'LDAP': '489',
-    'SMB': '445',
-    'SMTPS': '465',
-    'Linux R RPE': '512',
-    'Linux R RLT': '513',
-    'Linux R cmd': '514',
-    'Rsync': '873',
-    'IMAPS': '993',
-    'Proxy': '1080',
-    'JavaRMI': '1099',
-    'Lotus': '1352',
-    'MSSQL': '1433',
-    'MSSQL': '1434',
-    'Oracle': '1521',
-    'PPTP': '1723',
-    'cPanel': '2082',
-    'CPanel': '2083',
-    'Zookeeper': '2181',
-    'Docker': '2375',
-    'Zebra': '2604',
-    'MySQL': '3306',
-    'Kangle': '3312',
-    'RDP': '3389',
-    'SVN': '3690',
-    'Rundeck': '4440',
-    'GlassFish': '4848',
-    'PostgreSql': '5432',
-    'PcAnywhere': '5632',
-    'VNC': '5900',
-    'CouchDB': '5984',
-    'varnish': '6082',
-    'Redis': '6379',
-    'Weblogic': '9001',
-    'Kloxo': '7778',
-    'Zabbix': '8069',
-    'RouterOS': '8291',
-    'Elasticsearch': '9200',
-    'Elasticsearch': '9300',
-    'Zabbix': '10050',
-    'Zabbix': '10051',
-    'Memcached': '11211',
-    'MongoDB': '27017',
-    'MongoDB': '28017',
-    'Hadoop': '50070'
+    'FTP': ['21'],
+    'SSH': ['22'],
+    'Telnet': ['23'],
+    'SMTP': ['25'],
+    'DNS': ['53'],
+    'DHCP': ['68'],
+    'HTTP': ['80', '8080', '81'],
+    'TFTP': ['69'],
+    'POP3': ['995'],
+    'NetBIOS': ['139'],
+    'IMAP': ['143'],
+    'HTTPS': ['443'],
+    'SNMP': ['161'],
+    'LDAP': ['489'],
+    'SMB': ['445'],
+    'SMTPS': ['465'],
+    'Linux R RPE': ['512'],
+    'Linux R RLT': ['513'],
+    'Linux R cmd': ['514'],
+    'Rsync': ['873'],
+    'IMAPS': ['993'],
+    'Proxy': ['1080'],
+    'JavaRMI': ['1099'],
+    'Lotus': ['1352'],
+    'MSSQL': ['1433', '1434'],
+    'Oracle': ['1521'],
+    'PPTP': ['1723'],
+    'cPanel': ['2082'],
+    'CPanel': ['2083'],
+    'Zookeeper': ['2181'],
+    'Docker': ['2375'],
+    'Zebra': ['2604'],
+    'MySQL': ['3306'],
+    'Kangle': ['3312'],
+    'RDP': ['3389'],
+    'SVN': ['3690'],
+    'Rundeck': ['4440'],
+    'GlassFish': ['4848'],
+    'PostgreSql': ['5432'],
+    'PcAnywhere': ['5632'],
+    'VNC': ['5900'],
+    'CouchDB': ['5984'],
+    'varnish': ['6082'],
+    'Redis': ['6379'],
+    'Weblogic': ['9001'],
+    'Kloxo': ['7778'],
+    'Zabbix': ['8069', '10050', '10051'],
+    'RouterOS': ['8291'],
+    'Elasticsearch': ['9200', '9300'],
+    'Memcached': ['11211'],
+    'MongoDB': ['27017','28017'],
+    'Hadoop': ['50070']
 }
 
 
-# 判断a链接的是否为80端口域名
-def getUrl(link):
-    for web_rule in url_rules:
-        if web_rule in link:
-            if 'http' in link:
-                return link.split(web_rule)[0] + web_rule
+def getUrl(domain):
+    if 'http://' in domain or 'https://' in domain:
+        return f'{domain}'
+    else:
+        if ':443' in domain:
+            return f'https://{domain}'
 
-                # # 这里的代码到时候需要改成 写入数据库的代码
-                # print(link.split(web_rule)[0] + web_rule)
+        if ':80' in domain:
+            return f'http://{domain}'
+
+        return f'http://{domain}'
+# # 判断a链接的是否为80端口域名
+# def getUrl(link):
+#     for web_rule in url_rules:
+#         if web_rule in link:
+#             if 'http' in link:
+#                 return link.split(web_rule)[0] + web_rule
+#
+#                 # # 这里的代码到时候需要改成 写入数据库的代码
+#                 # print(link.split(web_rule)[0] + web_rule)
 
 
 # 列表中的字典 键值重复清理
@@ -97,13 +102,13 @@ def getUniqueList(L):
 
 
 # ip段识别
-def Common_getIpSegment(L):
+def getIpSegment(ipList: list):
     ll = []
-    for l in L:
+    for l in ipList:
         l = l.split(".")
         l[-1] = "0"
         joinl = ".".join(l)
-        if (joinl not in ll):
+        if joinl not in ll:
             ll.append(joinl)
     return ll
 
@@ -118,8 +123,9 @@ def Common_getTwoUniqueList(L):
 # 根据port识别服务
 def getPortService(port):
     for k, v in port_rules.items():
-        if v == port:
-            return k
+        for b in v:
+            if b == port:
+                return k
     return 'Unknown'
 
 
@@ -148,7 +154,7 @@ def createXlsx(target):
     worksheet3.write_row('A1', headings3)
 
     worksheet4 = workbook.add_worksheet('Fofa空间搜索引擎')
-    headings4 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', '查询语句']
+    headings4 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn','查询语句']
     worksheet4.set_column('A:A', 12)
     worksheet4.set_column('B:B', 28)
     worksheet4.set_column('C:C', 37)
@@ -157,7 +163,8 @@ def createXlsx(target):
     worksheet4.set_column('F:F', 8)
     worksheet4.set_column('G:G', 25)
     worksheet4.set_column('H:H', 8)
-    worksheet4.set_column('I:I', 24)
+    worksheet4.set_column('I:I', 8)
+    worksheet4.set_column('J:J', 24)
     worksheet4.write_row('A1', headings4)
 
     worksheet5 = workbook.add_worksheet('Shodan空间搜索引擎')

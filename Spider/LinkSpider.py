@@ -6,24 +6,15 @@ from bs4 import BeautifulSoup
 from spider.BaseSpider import *
 
 
-
 class LinkSpider(Spider):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
 
     def get_links(self):
-        '''
-        需要的有常规的注入点
-            1. category.php?id=17
-            2. https://www.yamibuy.com/cn/brand.php?id=566
-        伪静态
-            1. info/1024/4857.htm
-            2. http://news.hnu.edu.cn/zhyw/2017-11-11/19605.html
-            3. http://www.labothery-tea.cn/chanpin/2018-07-12/4.html
-        :param url:
-        :return:
-        '''
+        # 1、https://www.yamibuy.com/cn/brand.php?id=566
+        # 2、http://www.labothery-tea.cn/chanpin/2018-07-12/4.html
+
 
         # if 'gov.cn' in self.url:
         #     return 0
@@ -40,7 +31,7 @@ class LinkSpider(Spider):
         htht = []
         try:
             headers = {
-                'User-Agent': random.choice(headerss),
+                'User-Agent': 'random.choice(headerss)',
                 'Accept': 'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Cache-Control': 'max-age=0',
                 'Accept-Charset': 'GBK,utf-8;q=0.7,*;q=0.3',

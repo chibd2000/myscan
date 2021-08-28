@@ -24,7 +24,7 @@
 
 8、IP反查域名
 
-9、selenium爬取dns.bufferouver数据库
+9、爬取dns.bufferouver数据库
 
 10、github域名爬取
 
@@ -34,7 +34,7 @@
 
 中间环节：清洗数据
 
-漏洞扫描（异步IO）：
+漏洞扫描（多进程、多线程、异步IO）：
 
 1、探测存活（config文件中设定，默认探测80、443端口）
 
@@ -62,11 +62,11 @@ python batch.py -v zjhzu.edu.cn
 
 #总结：
 
-1、这个是自己学了python后 将近花了1个多星期的时间写的一个脚本，虽然比不过别人写的 但是也算对自己的一个小小的实现吧，再其中参考别人的代码的时候也学到了许多的构思以及想法！
+1、学习
 
-2、前人栽树，后人乘凉，感谢ske大师兄
+2、前人栽树，后人乘凉，感谢ske大师兄和其他人的项目
 
-#参考文章和项目：
+#参考文章：
 
 1、https://xz.aliyun.com/t/9508
 
@@ -76,4 +76,6 @@ python batch.py -v zjhzu.edu.cn
 
 4、https://github.com/shmilylty/OneForAll
 
-5、https://github.com/laramies/theHarvester  
+5、https://github.com/laramies/theHarvester
+
+6、https://github.com/knownsec/ksubdomain

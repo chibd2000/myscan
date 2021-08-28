@@ -3,7 +3,6 @@
 from spider.BaseSpider import *
 
 
-
 class CtfrSpider(Spider):
     def __init__(self, domain):
         super().__init__()
@@ -51,8 +50,7 @@ class CtfrSpider(Spider):
             print('[-] curl crt api error. {}'.format(e.args))
 
         # 列表中的字典去重
-        sslInfo = Common_getUniqueList(sslInfo)
-        self.writeFile(sslInfo, 1)
+        self.writeFile(getUniqueList(sslInfo), 1)
 
         # 返回结果
         self.resList = list(set(self.resList))

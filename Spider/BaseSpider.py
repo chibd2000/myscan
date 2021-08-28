@@ -1,6 +1,5 @@
 # coding=utf-8
 
-from common.tools import *
 import openpyxl
 import requests
 import abc
@@ -11,9 +10,10 @@ import time
 import random
 import base64
 import json
-import asyncio
-import aiohttp
+from core.asynchttp import *
 from threading import Lock
+from common.tools import *
+from spider.common.config import *
 
 import sys
 if sys.platform == 'win32':
@@ -31,8 +31,7 @@ class Spider(metaclass=abc.ABCMeta):
 
     def __init__(self):
         self.headers = {
-            'Accept': 'text/html,application/xhtml+xml,'
-                      'application/xml;q=0.9,*/*;q=0.8',
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
             'Accept-Encoding': 'gzip, deflate',
             'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
             'Cache-Control': 'max-age=0',
@@ -60,27 +59,36 @@ class Spider(metaclass=abc.ABCMeta):
         pass
 
     # 获取 title service
-    async def getTitleAndService(self, link, port=''):
-        if port == 443:
-            link = 'https://{}'.format(link)
-
-        if 'http' not in link:
-            if port != '':
-                link = 'http://{}:{}'.format(link, str(port))
-            else:
-                link = 'http://{}'.format(link)
+    async def getTitleAndService(self, session, link):
         try:
-
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url=link, headers=self.headers,
-                                       verify_ssl=False,
-                                       timeout=self.reqTimeout) as response:
-                    text = await response.text(encoding='utf-8')
-                    title = re.findall(r'<title>(.*?)</title>', text, re.S)[0].strip(
-                        ' ').strip('\r\n').strip('\n').strip('\r')
-
+            async with session.get(url=link, headers=self.headers,
+                                   verify_ssl=False,
+                                   timeout=self.reqTimeout) as response:
+                text = await response.text(encoding='utf-8')
+                title = re.findall(r'<title>(.*?)</title>', text, re.S)[0].strip(
+                    ' ').strip('\r\n').strip('\n').strip('\r')
             try:
                 service = response.headers.get('Server')
+            except:
+                service = ''
+            try:
+                content = text
+            except:
+                content = ''
+            return title, service, content
+        except:
+            title = ''
+            return title, '', ''
+
+    # 获取 title service
+    def getTitleAndService2(self, link, port):
+        try:
+            resp = requests.get(url=link, verify=False)
+            text = resp.content.decode('utf-8')
+            title = re.findall(r'<title>(.*?)</title>', text, re.S)[0].strip(
+                ' ').strip('\r\n').strip('\n').strip('\r')
+            try:
+                service = resp.headers.get('Server')
             except:
                 service = ''
             try:

@@ -28,19 +28,35 @@ class AsyncFetcher:
 
     @staticmethod
     async def fetch(session, url, params='', json=False) -> Union[str, dict, list]:
-        # This fetch method solely focuses on get requests
         try:
             if params != '':
                 sslcontext = ssl.create_default_context(cafile=certifi.where())
                 async with session.get(url, ssl=sslcontext, params=params) as response:
                     await asyncio.sleep(2)
                     return await response.text() if json is False else await response.json()
-
             else:
                 sslcontext = ssl.create_default_context(cafile=certifi.where())
                 async with session.get(url, ssl=sslcontext) as response:
                     await asyncio.sleep(2)
                     return await response.text() if json is False else await response.json()
+        except Exception as e:
+            print(f'An exception has occurred: {e.args}')
+            return ''
+
+    @staticmethod
+    async def fetch2(session, url, params=''):
+        try:
+            if params != '':
+                sslcontext = ssl.create_default_context(cafile=certifi.where())
+                async with session.get(url, ssl=sslcontext, params=params) as response:
+                    await asyncio.sleep(2)
+                    return response
+
+            else:
+                sslcontext = ssl.create_default_context(cafile=certifi.where())
+                async with session.get(url, ssl=sslcontext) as response:
+                    await asyncio.sleep(2)
+                    return response
         except Exception as e:
             print(f'An exception has occurred: {e.args}')
             return ''
@@ -62,6 +78,22 @@ class AsyncFetcher:
                     async with session.post(url, data=data, ssl=sslcontext, params=params) as resp:
                         await asyncio.sleep(3)
                         return await resp.text() if json is False else await resp.json()
+        except Exception as e:
+            print(f'An exception has occurred: {e.args}')
+            return ''
+
+    @staticmethod
+    async def postFetch2(session, url, data='', params='', json=False):
+        try:
+            if params == '':
+                async with session.post(url, data=data) as resp:
+                    await asyncio.sleep(3)
+                    return await resp.text() if json is False else await resp.json()
+            else:
+                sslcontext = ssl.create_default_context(cafile=certifi.where())
+                async with session.post(url, data=data, ssl=sslcontext, params=params) as resp:
+                    await asyncio.sleep(3)
+                    return await resp.text() if json is False else await resp.json()
         except Exception as e:
             print(f'An exception has occurred: {e.args}')
             return ''
