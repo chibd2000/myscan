@@ -2,7 +2,8 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-25 23:46
 
-from Spider.ThirdLib.Third import *
+from spider.thirdLib.third import *
+
 
 
 class Chinaz(ThirdBase):

@@ -1,4 +1,6 @@
-from Spider.ThirdLib.Third import *
+# coding=utf-8
+
+from spider.thirdLib.third import *
 
 
 class Certspotter(ThirdBase):
@@ -10,7 +12,8 @@ class Certspotter(ThirdBase):
     def spider(self):
         print('Load certspotter api ...')
         try:
-            resp = requests.get(url=self.addr.format(self.domain), headers=self.headers, verify=False, timeout=self.reqTimeout)
+            resp = requests.get(url=self.addr.format(self.domain), headers=self.headers, verify=False,
+                                timeout=self.reqTimeout)
             text = resp.text
             if 'not_allowed_by_plan' not in text:
                 for _ in eval(text):

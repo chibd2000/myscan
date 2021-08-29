@@ -7,7 +7,7 @@ class Virustotal(ThirdBase):
         super().__init__()
         self.addr = 'https://www.virustotal.com/vtapi/v2/domain/report?apikey={}&domain={}'
         self.domain = domain
-        self.api = virustotalApi
+        self.api = config.virustotalApi
         self.source = "virustotal"
 
     async def spider(self):

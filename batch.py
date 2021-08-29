@@ -3,11 +3,14 @@
 from spider.BaiduSpider import *
 from spider.BingSpider import *
 from spider.CtfrSpider import *
-from spider.NetSpider import *
+from spider.NetSpaceSpider import *
 from spider.DnsBruteSpider import *
 from spider.DnsDataSpider import *
 from spider.PortSpider import *
 from spider.GithubSpider import *
+from spider.JavaScriptSpider import *
+from spider.WebParamLinkSpider import *
+from spider.StructSpider import *
 
 from common import resolve
 
@@ -35,6 +38,8 @@ gJavaScriptParamList = []  # 存储js文件中的js敏感接口
 
 gIpSegmentDict = {}  # 存储资产IP区段分布以及资产IP在指定的区段出现的次数  {"111.111.111.0/24":1,"111.111.222.0/24":1}
 gAsnList = []  # ASN记录
+gIpList = []
+gTopDomain = []  # top域名记录
 
 
 # Spider
@@ -42,7 +47,7 @@ class Spider(object):
     def __init__(self, domain):
         self.domain = domain  # 要爬取的域名
         self.threadList = list()  # 线程启动列表
-        self.taskList = list()  # 用来存储所有匹配到的域名
+        self.domainList = list()  # 用来存储所有匹配到的域名
         self.clearTaskList = list()  # 存储整理过后的域名 [{"subdomain": "www.ncist.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
         self.lock = threading.Lock()
 
@@ -54,7 +59,7 @@ class Spider(object):
         t = loop.create_task(baidu.main())
         resList = loop.run_until_complete(t)
         self.lock.acquire()
-        self.taskList.extend(resList)
+        self.domainList.extend(resList)
         self.lock.release()
 
     # bing Spider
@@ -65,7 +70,7 @@ class Spider(object):
         t = loop.create_task(bing.main())
         resList = loop.run_until_complete(t)
         self.lock.acquire()
-        self.taskList.extend(resList)
+        self.domainList.extend(resList)
         self.lock.release()
 
     # ssl Spider
@@ -76,19 +81,19 @@ class Spider(object):
         t = loop.create_task(cftr.main())
         ctfrList = loop.run_until_complete(t)
         self.lock.acquire()
-        self.taskList.extend(ctfrList)
+        self.domainList.extend(ctfrList)
         self.lock.release()
 
     # FOFA/Shodan/Quake360
     def netSpider(self):
-        global gAsnList
+        global gAsnList, gIpList
         net = NetSpider(self.domain)
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         t = loop.create_task(net.main())
-        netList, gAsnList, cSegmentList = loop.run_until_complete(t)
+        netList, gAsnList, gIpList = loop.run_until_complete(t)
         self.lock.acquire()
-        self.taskList.extend(netList)
+        self.domainList.extend(netList)
         self.lock.release()
 
     def thirdSpider(self):
@@ -112,8 +117,8 @@ class Spider(object):
                 taskList.append(loop.create_task(doMethod(self.domain)))
         resList = loop.run_until_complete(asyncio.gather(*taskList))
         for _ in resList:
-            self.taskList.extend(_)
-        self.taskList = list(set(self.taskList))
+            self.domainList.extend(_)
+        self.domainList = list(set(self.domainList))
 
     # asyncio domain2ip
     def domain2ip(self):
@@ -146,11 +151,11 @@ class Spider(object):
 
     # github spider
     def githubSpider(self):
-        logging.info("GithubSpider Start")
-        gitLeakList = GithubSpider(self.domain).main()
-        self.lock.acquire()
-        self.taskList.extend(gitLeakList)
-        self.lock.release()
+        # logging.info("GithubSpider Start")
+        # gitLeakList = GithubSpider(self.domain).main()
+        # self.lock.acquire()
+        # self.domainList.extend(gitLeakList)
+        # self.lock.release()
         pass
 
     # port spider
@@ -251,6 +256,7 @@ class Spider(object):
                         info['target'] = 'ip'
                         info['subdomain'] = ''
                         self.clearTaskList.append(info)
+
         def getLinks(domain):
             pass
             # 1、https://www.yamibuy.com/cn/brand.php?id=566
@@ -442,7 +448,8 @@ class Spider(object):
         # self.lock.release()
 
         # 1、checkCdn
-        checkCdn(self.domain)
+        print("======checkCdn======")
+        # checkCdn(self.domain)
 
         # 2、大师兄ske用的ksubdomain 自己后面跟着一起
         print("======KSubdomain======")
@@ -452,13 +459,11 @@ class Spider(object):
         print("======thirdLibSpider======")
         # self.thirdSpider()
         print("=================")
-        # print('[{}] {}'.format(len(self.taskList), self.taskList))
-
         # 4、SSL/engine/netSpace/github查询
         print("======EngineSpider======")
         # self.threadList.append(Thread(target=self.baiduSpider, ))
         # self.threadList.append(Thread(target=self.bingSpider,))
-        # self.threadList.append(Thread(target=self.ctfrSpider,))
+        self.threadList.append(Thread(target=self.ctfrSpider,))
         self.threadList.append(Thread(target=self.netSpider, ))
         # self.threadList.append(Thread(target=self.githubSpider,))
 
@@ -468,6 +473,12 @@ class Spider(object):
         for _ in self.threadList:
             _.join()
 
+        print("=============")
+        print(gAsnList)
+        print("=============")
+        print(gIpList)
+        print("=============")
+        print('[{}] {}'.format(len(self.domainList), self.domainList))
         # 5、清洗整理数据
         # flushResult()
 

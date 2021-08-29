@@ -1,8 +1,10 @@
 # coding=utf-8
+from lxml import etree
 
 from spider.BaseSpider import *
 from core.hackrequest import *
-from threading import Thread
+from urllib.parse import quote, urlparse
+
 from spider.common import config
 import base64
 
@@ -21,18 +23,18 @@ class NetSpider(Spider):
         self.fofaEmail = config.fofaEmail
         self.shodanApi = config.shodanApi
         self.quakeApi = config.quakeApi
-        self.request = HackRequest(domain)
         self.asnList = []
         self.ipList = []
         self._init()
 
     def _init(self):
         self._getFaviconAndMD5()
-        self.fofaKeywordList = ['domain="{}"'.format(self.domain), 'ssl="{}"'.format(self.domain),
-                                'icon_hash="{}"'.format(self.iconHash)]
-        self.quakeKeywordList = ['domain:"{}"'.format(self.domain), 'ssl:"{}"'.format(self.domain),
-                                 'favicon:"{}"'.format(self.iconMD5)]
-        self.shodanKeywordList = ['domain:"{}"'.format(self.domain), 'ssl:"{}"'.format(self.domain),
+        self._getBeianCompany()
+        self.fofaKeywordList = ['domain="{}"'.format(self.domain), 'cert="{}"'.format(self.beian),
+                                'host="{}"'.format(self.domain), 'icon_hash="{}"'.format(self.iconHash)]
+        self.quakeKeywordList = ['domain:"{}"'.format(self.domain), 'cert:"{}"'.format(self.beian),
+                                 'host="{}"'.format(self.domain), 'favicon:"{}"'.format(self.iconMD5)]
+        self.shodanKeywordList = ['hostname:"{}"'.format(self.domain), 'ssl:"{}"'.format(self.beian),
                                   'http.favicon.hash:{}'.format(self.iconHash)]
 
     def _getFaviconAndMD5(self):
@@ -47,6 +49,7 @@ class NetSpider(Spider):
             print('get iconHash: ', self.iconHash)
             print('get iconMD5: ', self.iconMD5)
         except Exception as e:
+
             print('_getFaviconAndMD5 first failed, error is {}'.format(e.args))
             print('_getFaviconAndMD5 second ...')
             try:
@@ -63,6 +66,20 @@ class NetSpider(Spider):
                 self.iconHash = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
                 self.iconMD5 = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
                 print('_getFaviconAndMD5 second failed, error is {}'.format(e.args))
+
+    def _getBeianCompany(self):
+        try:
+            beianAddr = 'https://icp.chinaz.com/home/info?host={}'
+            response = requests.get(url=beianAddr.format(self.domain), headers=self.headers)
+            html = etree.HTML(response.text)
+            compangyName = html.xpath('/html/body/div/div[3]/div[1]/p[3]/text()')
+            if compangyName == '':
+                compangyName = 'xxxxxxxxxxxxxxx'
+            self.beian = compangyName[0]
+        except IndexError as e:
+            print('curl beian no company, {}'.format(e.args))
+        except Exception as e:
+            print(e)
 
     # 保存文件
     def writeFile(self, web_lists: list, page: int):
@@ -91,16 +108,12 @@ class NetSpider(Spider):
         workbook.close()
 
     async def fofaDomainSpider(self):
-        domainList = []
         try:
             async with aiohttp.ClientSession(headers=self.headers) as session:
                 for keyword in self.fofaKeywordList:
-                    res = await AsyncFetcher.fetch(session=session, url=self.fofaAddr.format(FOFA_EMAIL=self.fofaEmail,
-                                                                                             API_KEY=self.fofaApi,
-                                                                                             B64_DATA=base64.b64encode(
-                                                                                                 keyword.encode()).decode()),
-                                                   json=True)
-                    print(res)
+                    domainList = []
+                    res = await AsyncFetcher.fetch(session=session, url=self.fofaAddr.format(FOFA_EMAIL=self.fofaEmail, API_KEY=self.fofaApi, B64_DATA=base64.b64encode(keyword.encode()).decode()),json=True)
+
                     for i in res['results']:
                         if 'http' in i[0]:
                             sub_domain = i[0].split('//')[1]  # https://www.baidu.com => www.baidu.com
@@ -127,35 +140,79 @@ class NetSpider(Spider):
                         self.asnList.append(i[7])
                         self.resList.append(sub_domain)
                         domainList.append(subdomainInfo)
-                domainList = getUniqueList(domainList)
-                self.writeFile(domainList, 3)
+                    domainList = getUniqueList(domainList)
+                    self.writeFile(domainList, 3)
         except Exception as e:
             pass
 
     async def quakeDomainSpider(self):
-        domain_word = 'domain:"%s"' % self.domain
-
-        headers = {"X-QuakeToken": self.quakeApi,
-                   "Content-Type": "application/json"}
-        params = {'query': domain_word, 'size': 500, 'ignore_cache': False}
-
+        headers = {"X-QuakeToken": self.quakeApi, "Content-Type": "application/json"}
         try:
             async with aiohttp.ClientSession(headers=headers) as session:
-                res = await AsyncFetcher.postFetch2(session=session,
-                                                    url=self.fofaAddr.format(FOFA_EMAIL=self.fofaEmail,
-                                                                             API_KEY=self.fofaApi,
-                                                                             B64_DATA=base64.b64encode(
-                                                                                 domain_word.encode()).decode()),
-                                                    data=params, json=True)
-                # .....
-                print(res)
-                #
-
+                for keyword in self.quakeKeywordList:
+                    domainList = []
+                    params = {'query': keyword, 'size': 10, 'ignore_cache': False}
+                    res = await AsyncFetcher.postFetch2(session=session, url=self.quakeAddr, data=json.dumps(params), json=True)
+                    for i in res['data']:
+                        portService = getPortService(i['port'])
+                        subdomainInfo = {
+                            'spider': 'QUAKE',
+                            'subdomain': i['service']['http']['host'],
+                            'title': i['service']['http']['title'],
+                            'ip': i['ip'],
+                            'domain': '',
+                            'port': i['port'],
+                            'web_service': i['service']['http']['server'],
+                            'port_service': portService,
+                            'asn': i['asn'],
+                            'search_keyword': keyword
+                        }
+                        print(subdomainInfo)
+                        self.ipList.append(i['ip'])
+                        self.asnList.append(i['asn'])
+                        self.resList.append(i['service']['http']['host'])
+                        domainList.append(subdomainInfo)
+                    domainList = getUniqueList(domainList)
+                    self.writeFile(domainList, 4)
         except Exception as e:
             pass
 
-    def shodanDomainSpider(self):
-        pass
+    async def shodanDomainSpider(self):
+        try:
+            async with aiohttp.ClientSession(headers=self.headers) as session:
+                for keyword in self.fofaKeywordList:
+                    domainList = []
+                    res = await AsyncFetcher.fetch(session=session, url=self.shodanAddr.format(API_KEY=self.shodanApi, QUERY=quote(keyword)), json=True)
+                    for i in res['results']:
+                        if 'http' in i[0]:
+                            sub_domain = i[0].split('//')[1]  # https://www.baidu.com => www.baidu.com
+                        else:
+                            sub_domain = i[0]
+                        if i[6] == '':
+                            portService = getPortService(i[4])
+                        else:
+                            portService = i[6]
+                        subdomainInfo = {
+                            'spider': 'SHODAN',
+                            'subdomain': sub_domain,
+                            'title': i[1],
+                            'ip': i[2],
+                            'domain': i[3],
+                            'port': i[4],
+                            'web_service': i[5],
+                            'port_service': portService,
+                            'asn': i[7],
+                            'search_keyword': keyword
+                        }
+                        print(subdomainInfo)
+                        self.ipList.append(i[2])
+                        self.asnList.append(i[7])
+                        self.resList.append(sub_domain)
+                        domainList.append(subdomainInfo)
+                    domainList = getUniqueList(domainList)
+                    self.writeFile(domainList, 5)
+        except Exception as e:
+            pass
 
     # C段查询函数
     def fofaSegmentSpider(self, networksegment, page):
@@ -318,50 +375,29 @@ class NetSpider(Spider):
             print("API次数已经用完 | API无效！")
             return
 
-    # SSL证书查询函数
-    async def fofaSSLSpider(self):
-        pass
-
-    async def quakeSSLSpider(self):
-        pass
-
-    async def shodanSSLSpider(self):
-        pass
-
-    # Favicon查询函数
-    async def fofaFaviconSpider(self):
-        # AsyncFetcher.fetch()
-        pass
-
-    async def quakeFaviconSpider(self):
-        pass
-
-    async def shodanFaviconSpider(self):
-        pass
-
-    # fofa引擎的探测搜索ip段和域名
-    def fofa_ip_search(self, networksegment):
-        # print(NetworkSegment)
-        for page in range(1, config.fofa_page):  # 这里自定义页数
-            self.thread_list.append(Thread(target=self.test01, args=(networksegment, page)))
-
-        for i in self.thread_list:
-            i.start()
-
-        for i in self.thread_list:
-            i.join()
-
-    # shodan引擎的探测搜索ip段和域名
-    def shadon_ip_search(self, networksegment):
-        # print(NetworkSegment)
-        for page in range(1, config.shodan_page):
-            self.thread_list.append(Thread(target=self.test02, args=(networksegment, page)))
-
-        for i in self.thread_list:
-            i.start()
-
-        for i in self.thread_list:
-            i.join()
+    # # fofa引擎的探测搜索ip段和域名
+    # def fofa_ip_search(self, networksegment):
+    #     # print(NetworkSegment)
+    #     for page in range(1, config.fofa_page):  # 这里自定义页数
+    #         self.thread_list.append(Thread(target=self.test01, args=(networksegment, page)))
+    #
+    #     for i in self.thread_list:
+    #         i.start()
+    #
+    #     for i in self.thread_list:
+    #         i.join()
+    #
+    # # shodan引擎的探测搜索ip段和域名
+    # def shadon_ip_search(self, networksegment):
+    #     # print(NetworkSegment)
+    #     for page in range(1, config.shodan_page):
+    #         self.thread_list.append(Thread(target=self.test02, args=(networksegment, page)))
+    #
+    #     for i in self.thread_list:
+    #         i.start()
+    #
+    #     for i in self.thread_list:
+    #         i.join()
 
     # async def fofaSpider(self):
     #     await self.fofaDomainSpider()
@@ -380,7 +416,13 @@ class NetSpider(Spider):
 
     # 域名爬取的fofa处理函数
     async def spider(self):
-        await self.fofaDomainSpider()
+        loop = asyncio.get_event_loop()
+        taskList = [loop.create_task(self.quakeDomainSpider()), loop.create_task(self.fofaDomainSpider())]
+        await asyncio.gather(*taskList)
+
+        # loop.create_task(self.quakeDomainSpider()),
+        # loop.create_task(self.shodanDomainSpider())
+
         # await self.fofaDomainSpider()
         # await self.quakeDomainSpider()
         # 最后返回的是1、子域名:list 2、asn:list 3、ip存活段:dict
@@ -425,6 +467,7 @@ class NetSpider(Spider):
     async def main(self):
         logging.info("Net Spider Start")
         await self.spider()
+        self.resList, self.asnList, self.ipList = list(set(self.resList)), list(set(self.asnList)), list(set(self.ipList))
         return self.resList, self.asnList, self.ipList
 
 

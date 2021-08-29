@@ -1,6 +1,6 @@
 # coding=utf-8
 from spider.thirdLib.third import *
-from spider.common import config
+
 
 
 class Censys(ThirdBase):

@@ -4,6 +4,7 @@ fofaEmail = '496347658@qq.com'
 fofaApi = '627c0a4e86e7111baf74c731f8e77f14'
 
 shodanApi = 'E00hXnOQ4ep8aM309o5QsCH1JyArnAr8'
+
 quakeApi = '9fd0da05-93f9-49d2-b5e5-d43243268e80'
 
 censysId = 'Chiling123'

@@ -4,8 +4,8 @@ import logging
 import json
 import time
 import re
-from spider.config import *
-from core.asyncfetch import *
+from spider.common import config
+from core.asynchttp import *
 import sys
 if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())

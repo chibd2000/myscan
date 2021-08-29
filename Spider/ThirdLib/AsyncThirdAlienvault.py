@@ -13,7 +13,7 @@ class Alien(ThirdBase):
         self.source = "alienvault"
 
     async def spider(self):
-        print('Load otx.alienvault.com api ...')
+        print('Load alienvault api ...')
         try:
             # async with aiohttp.ClientSession() as session:
             #     async with session.get(url=self.addr.format(self.domain), headers=self.headers, verify_ssl=False,

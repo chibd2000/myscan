@@ -13,11 +13,10 @@ from urllib.parse import quote
 
 abs_path = os.getcwd() + os.path.sep
 
-
 class JSSpider(Spider):
     def __init__(self, target):
         super().__init__()
-        self.source = 'BaiduSpider'  #
+        self.source = 'JavaScriptSpider'  #
         self.target = target
         self.header = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

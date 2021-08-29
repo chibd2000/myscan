@@ -2,7 +2,8 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-26 0:10
 
-from Spider.ThirdLib.Third import *
+from spider.thirdLib.third import *
+
 
 
 class Threatbook(ThirdBase):

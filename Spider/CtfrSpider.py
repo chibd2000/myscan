@@ -23,31 +23,24 @@ class CtfrSpider(Spider):
         workbook.save(abs_path + str(self.domain) + ".xlsx")
         workbook.close()
 
-    def spider(self):
+    async def spider(self):
         sslInfo = []
         try:
-            resp = requests.get(self.addr.format(self.domain))
-            if resp.status_code != 200:
-                print("[-] crt.sh not available!")
-                return
+            async with aiohttp.ClientSession(headers=self.headers) as session:
+                result = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), json=True)
+                for (key, value) in enumerate(result):
+                    subdomainSSL = value['name_value'].split('\n')
+                    if len(subdomainSSL) == 2:
+                        domainInfo = {'ssl': subdomainSSL[0], 'subdomain': subdomainSSL[1]}
+                        self.resList.append(subdomainSSL[1])
+                    else:
+                        domainInfo = {'ssl': 'None', 'subdomain': subdomainSSL[0]}
+                        self.resList.append(subdomainSSL[0])
 
-            for (key, value) in enumerate(resp.json()):
-                subdomainSSL = value['name_value'].split('\n')
-                if len(subdomainSSL) == 2:
-                    self.resList.append(subdomainSSL[1])
-                    domainInfo = {
-                        'ssl': subdomainSSL[0],
-                        'subdomain': subdomainSSL[1]
-                    }
-                else:
-                    domainInfo = {
-                        'ssl': 'None',
-                        'subdomain': subdomainSSL[0]
-                    }
-                # 一起放到列表中进行存储
-                sslInfo.append(domainInfo)
+                    # 一起放到列表中进行存储
+                    sslInfo.append(domainInfo)
         except Exception as e:
-            print('[-] curl crt api error. {}'.format(e.args))
+            print('[-] curl crt.sh error. {}'.format(e.args))
 
         # 列表中的字典去重
         self.writeFile(getUniqueList(sslInfo), 1)
@@ -55,11 +48,11 @@ class CtfrSpider(Spider):
         # 返回结果
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
-        return self.resList
 
-    def main(self):
+    async def main(self):
         logging.info("Ctfr Spider Start")
-        return self.spider()
+        await self.spider()
+        return self.resList
 
 
 if '__main__' == __name__:

@@ -2,7 +2,6 @@
 from spider.thirdLib.third import *
 
 
-
 class Qianxun(ThirdBase):
     def __init__(self, domain):
         super().__init__()
@@ -22,7 +21,7 @@ class Qianxun(ThirdBase):
                     async with session.post(url=self.addr, data=params, headers=self.headers,
                                             verify_ssl=False, timeout=self.reqTimeout) as response:
                         text = await response.text(encoding='utf-8')
-                        re_data = re.findall(r'<a href="(.*?)"\srel', text, flags=re.S)[1:]
+                        re_data = re.findall(r'<a href="http[s]?://(.*?)"\srel', text, flags=re.S)[1:]
                         if re_data:
                             self.resList.extend(re_data)
                         else:
@@ -47,4 +46,4 @@ async def do(domain):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    res = loop.run_until_complete(do('nbcc.cn'))
+    res = loop.run_until_complete(do('geely.com'))

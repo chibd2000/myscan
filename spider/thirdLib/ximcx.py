@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from Spider.ThirdLib.Third import *
+from spider.thirdLib.third import *
 
 
 class Ximcx(ThirdBase):
@@ -13,7 +13,8 @@ class Ximcx(ThirdBase):
         print('Load ximcx api ...')
         self.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         try:
-            resp = requests.post(url=self.addr, data={'domain': self.domain}, headers=self.headers, verify=False, timeout=self.reqTimeout)
+            resp = requests.post(url=self.addr, data={'domain': self.domain}, headers=self.headers, verify=False,
+                                 timeout=self.reqTimeout)
             text = resp.text
             results = json.loads(text)
             code = results['code']

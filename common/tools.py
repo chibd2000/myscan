@@ -153,8 +153,8 @@ def createXlsx(target):
     worksheet3.set_column('B:B', 23)
     worksheet3.write_row('A1', headings3)
 
-    worksheet4 = workbook.add_worksheet('Fofa空间搜索引擎')
-    headings4 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn','查询语句']
+    worksheet4 = workbook.add_worksheet('Fofa')
+    headings4 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
     worksheet4.set_column('A:A', 12)
     worksheet4.set_column('B:B', 28)
     worksheet4.set_column('C:C', 37)
@@ -167,54 +167,69 @@ def createXlsx(target):
     worksheet4.set_column('J:J', 24)
     worksheet4.write_row('A1', headings4)
 
-    worksheet5 = workbook.add_worksheet('Shodan空间搜索引擎')
-    headings5 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', '查询语句']
+    worksheet5 = workbook.add_worksheet('Quake')
+    headings5 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
     worksheet5.set_column('A:A', 12)
     worksheet5.set_column('B:B', 28)
     worksheet5.set_column('C:C', 37)
     worksheet5.set_column('D:D', 22)
     worksheet5.set_column('E:E', 17)
     worksheet5.set_column('F:F', 8)
-    worksheet5.set_column('G:G', 20)
+    worksheet5.set_column('G:G', 25)
     worksheet5.set_column('H:H', 8)
-    worksheet5.set_column('I:I', 24)
+    worksheet5.set_column('I:I', 8)
+    worksheet5.set_column('J:J', 24)
     worksheet5.write_row('A1', headings5)
 
-    worksheet6 = workbook.add_worksheet('子域名端口扫描')
-    headings6 = ['ip', '端口', '协议', '服务', '标题']
-    worksheet6.set_column('A:A', 19)
+    worksheet6 = workbook.add_worksheet('Shodan')
+    headings6 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
+    worksheet6.set_column('A:A', 12)
     worksheet6.set_column('B:B', 28)
-    worksheet6.set_column('C:C', 21)
-    worksheet6.set_column('D:D', 25)
-    worksheet6.set_column('E:E', 20)
+    worksheet6.set_column('C:C', 37)
+    worksheet6.set_column('D:D', 22)
+    worksheet6.set_column('E:E', 17)
+    worksheet6.set_column('F:F', 8)
+    worksheet6.set_column('G:G', 20)
+    worksheet6.set_column('H:H', 8)
+    worksheet6.set_column('I:I', 24)
     worksheet6.write_row('A1', headings6)
 
-    worksheet7 = workbook.add_worksheet('ip反查域名')
-    headings7 = ['ip', '域名']
-    worksheet7.set_column('A:A', 12)
+    worksheet7 = workbook.add_worksheet('子域名端口扫描')
+    headings7 = ['ip', '端口', '协议', '服务', '标题']
+    worksheet7.set_column('A:A', 19)
     worksheet7.set_column('B:B', 28)
+    worksheet7.set_column('C:C', 21)
+    worksheet7.set_column('D:D', 25)
+    worksheet7.set_column('E:E', 20)
     worksheet7.write_row('A1', headings7)
 
-    worksheet8 = workbook.add_worksheet('备案查询')
-    headings8 = ['域名', '主备案号']
+    worksheet8 = workbook.add_worksheet('ip反查域名')
+    headings8 = ['ip', '域名']
     worksheet8.set_column('A:A', 12)
     worksheet8.set_column('B:B', 28)
     worksheet8.write_row('A1', headings8)
 
-    worksheet9 = workbook.add_worksheet('存活网站标题')
-    headings9 = ['网址', '状态码', '标题', 'X-Powered-By']
-    worksheet9.set_column('A:A', 35)
-    worksheet9.set_column('B:B', 8)
-    worksheet9.set_column('C:C', 28)
-    worksheet9.set_column('D:D', 28)
+    worksheet9 = workbook.add_worksheet('备案查询')
+    headings9 = ['域名', '主备案号']
+    worksheet9.set_column('A:A', 12)
+    worksheet9.set_column('B:B', 28)
     worksheet9.write_row('A1', headings9)
 
-    worksheet10 = workbook.add_worksheet('漏洞扫描')
-    headings10 = ['漏洞名', 'url', '状态']
-    worksheet10.set_column('A:A', 12)
-    worksheet10.set_column('B:B', 28)
+    worksheet10 = workbook.add_worksheet('存活网站标题')
+    headings10 = ['网址', '状态码', '标题', 'X-Powered-By']
+    worksheet10.set_column('A:A', 35)
+    worksheet10.set_column('B:B', 8)
     worksheet10.set_column('C:C', 28)
+    worksheet10.set_column('D:D', 28)
     worksheet10.write_row('A1', headings10)
+
+    worksheet11 = workbook.add_worksheet('漏洞扫描')
+    headings11 = ['漏洞名', 'url', '状态']
+    worksheet11.set_column('A:A', 12)
+    worksheet11.set_column('B:B', 28)
+    worksheet11.set_column('C:C', 28)
+    worksheet11.write_row('A1', headings11)
+
     workbook.close()
 
 
