@@ -9,21 +9,19 @@ class Ximcx(ThirdBase):
         self.addr = 'http://sbd.ximcx.cn/DomainServlet'
         self.domain = domain
 
-    def spider(self):
+    async def spider(self):
         print('Load ximcx api ...')
         self.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         try:
-            resp = requests.post(url=self.addr, data={'domain': self.domain}, headers=self.headers, verify=False,
-                                 timeout=self.reqTimeout)
-            text = resp.text
-            results = json.loads(text)
-            code = results['code']
-            if code == 0:
-                for _ in results['data']:
-                    subdomain = _['domain']
-                    self.resList.append(subdomain)
-            else:
-                print('ximcx API No Subdomains.')
+            async with aiohttp.ClientSession(headers=self.headers) as session:
+                results = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain),json=True)
+                code = results['code']
+                if code == 0:
+                    for _ in results['data']:
+                        subdomain = _['domain']
+                        self.resList.append(subdomain)
+                else:
+                    print('ximcx API No Subdomains.')
         except Exception as e:
             print('[-] curl ximcx api error. {}'.format(e.args))
 
@@ -32,12 +30,12 @@ class Ximcx(ThirdBase):
         return self.resList
 
 
-# def do(domain):
-#     query = Ximcx(domain)
-#     return query.spider()
+async def do(domain):
+    ximcx = Ximcx(domain)
+    res = await ximcx.spider()
+    return res
 
 
 if __name__ == '__main__':
-    # res = do('baidu.com')  # ok
-    # print(res)
-    pass
+    loop = asyncio.get_event_loop()
+    res = loop.run_until_complete(do('zjhu.edu.cn'))

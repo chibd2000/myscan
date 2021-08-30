@@ -1,7 +1,6 @@
 # coding=utf-8
 
 from spider.BaseSpider import *
-
 from urllib.parse import quote, urlparse
 from lxml import etree
 # 一个搜索引擎爬取的过程：

@@ -10,7 +10,7 @@ import codecs
 import hashlib
 requests.packages.urllib3.disable_warnings()
 
-resp = requests.get('http://binyue-uat.geely.com:8080/favicon.ico')
+resp = requests.get('https://zjhu.edu.cn/favicon.ico')
 favicon = codecs.encode(resp.content, "base64")
 hash = mmh3.hash(favicon)
 print(hash)

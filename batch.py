@@ -91,7 +91,7 @@ class Spider(object):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         t = loop.create_task(net.main())
-        netList, gAsnList, gIpList = loop.run_until_complete(t)
+        netList, gAsnList, gIpList, self.clearTaskList = loop.run_until_complete(t)
         self.lock.acquire()
         self.domainList.extend(netList)
         self.lock.release()
@@ -441,29 +441,28 @@ class Spider(object):
             #     print(e.args)
             # return None
 
-        # 这里进行单一的查询，要不然直接导致带宽不够直接造成其他模块的无法使用
-        # dnsbrute_list = subDomaindBrute(self.domain).main()
-        # self.lock.acquire()
-        # self.task_list.extend(dnsbrute_list)
-        # self.lock.release()
-
         # 1、checkCdn
         print("======checkCdn======")
         # checkCdn(self.domain)
 
         # 2、大师兄ske用的ksubdomain 自己后面跟着一起
+        # 这里进行单一的查询，要不然直接导致带宽不够直接造成其他模块的无法使用
+        # dnsbrute_list = subDomaindBrute(self.domain).main()
+        # self.lock.acquire()
+        # self.task_list.extend(dnsbrute_list)
+        # self.lock.release()
         print("======KSubdomain======")
         # runKSubdomain()
 
         # 3、第三方接口查询
         print("======thirdLibSpider======")
         # self.thirdSpider()
-        print("=================")
+
         # 4、SSL/engine/netSpace/github查询
         print("======EngineSpider======")
         # self.threadList.append(Thread(target=self.baiduSpider, ))
         # self.threadList.append(Thread(target=self.bingSpider,))
-        self.threadList.append(Thread(target=self.ctfrSpider,))
+        # self.threadList.append(Thread(target=self.ctfrSpider,))
         self.threadList.append(Thread(target=self.netSpider, ))
         # self.threadList.append(Thread(target=self.githubSpider,))
 
@@ -482,7 +481,7 @@ class Spider(object):
         # 5、清洗整理数据
         # flushResult()
 
-        # 6、doamin2ip
+        # 6、domain2ip
         # self.domain2ip()
         # print(self.clear_task_list)
 

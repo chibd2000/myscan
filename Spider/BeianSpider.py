@@ -121,4 +121,4 @@ class BeianSpider(Spider):
 
 
 if __name__ == '__main__':
-    BeianSpider("geely.com")
+    BeianSpider("zjhu.edu.cn")

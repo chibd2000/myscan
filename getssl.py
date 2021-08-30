@@ -10,6 +10,8 @@ s = socket.socket()
 s.settimeout(1)
 c = ssl.wrap_socket(s, cert_reqs=ssl.CERT_REQUIRED, ca_certs='./cacert.pem')
 c.settimeout(10)
-c.connect(('www.geely.com', 443))
+c.connect(('150.158.186.39', 3443))
 cert = c.getpeercert()
 print(cert)
+# SSLCertVerificationError 存在
+#

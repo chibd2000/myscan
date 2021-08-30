@@ -4,7 +4,6 @@
 from spider.thirdLib.third import *
 
 
-
 class Bufferover(ThirdBase):
     def __init__(self, domain):
         super().__init__()
@@ -28,7 +27,7 @@ class Bufferover(ThirdBase):
             #     return resList
             # else:
             #     print('bufferover API No Subdomains.')
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(headers=self.headers) as session:
                 proxies = 'http://{}'.format(proxy)
                 resList = []
                 async with session.get(url=self.addr.format(self.domain), verify_ssl=False, timeout=10,
@@ -41,7 +40,7 @@ class Bufferover(ThirdBase):
                             resList.append(subdomain)
                         return resList
                     else:
-                        print('api.proxyscrape.com No proxy.')
+                        print('[-] bufferover API No Subdomains.')
         except Exception as e:
             print('[-] curl dns.bufferover.run api error. {}'.format(e.args))
 
@@ -49,7 +48,7 @@ class Bufferover(ThirdBase):
         async def getProxy():
             url = 'https://api.proxyscrape.com/?request=displayproxies&proxytype=http&country=all&anonymity=all&ssl=yes&timeout=2000'
             try:
-                async with aiohttp.ClientSession() as session:
+                async with aiohttp.ClientSession(headers=self.headers) as session:
                     async with session.get(url=url, verify_ssl=False, timeout=10,
                                            proxy='http://127.0.0.1:7890') as response:
                         text = await response.text(encoding='utf-8')

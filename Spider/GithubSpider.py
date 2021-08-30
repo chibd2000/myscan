@@ -5,8 +5,6 @@ from github import Github
 from github import GithubException
 from spider.common import config
 
-abs_path = os.getcwd() + os.path.sep
-
 
 class GithubSpider(Spider):
     def __init__(self, domain):

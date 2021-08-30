@@ -5,24 +5,23 @@
 from spider.thirdLib.third import *
 
 
-
 class Securitytrails(ThirdBase):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
         self.addr = 'https://api.securitytrails.com/v1/domain/{}/subdomains'
 
-    def spider(self):
+    async def spider(self):
         print('Load securitytrails api ...')
         try:
-            resp = requests.get(url=self.addr.format(self.domain), headers=self.headers, verify=False, timeout=self.reqTimeout)
-            text = resp.text
-            results = re.findall(r'<th scope="row ">\d+</th>\n<td>(.*)</td>'.format(self.domain), text, re.S | re.I)
-            if results:
-                for _ in results:
-                    self.resList.append(resp)
-            else:
-                print('securitytrails API No Subdomains.')
+            async with aiohttp.ClientSession() as session:
+                text = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain))
+                results = re.findall(r'<th scope="row ">\d+</th>\n<td>(.*)</td>'.format(self.domain), text, re.S | re.I)
+                if results:
+                    for _ in results:
+                        self.resList.append(_)
+                else:
+                    print('securitytrails API No Subdomains.')
         except Exception as e:
             print('[-] curl securitytrails api error. {}'.format(e.args))
 

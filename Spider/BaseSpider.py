@@ -10,12 +10,16 @@ import time
 import random
 import base64
 import json
+import os
 from core.asynchttp import *
 from threading import Lock
-from common.tools import *
 from spider.common.config import *
+from common.tools import *
+
+abs_path = os.getcwd() + os.path.sep  # 路径
 
 import sys
+
 if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 

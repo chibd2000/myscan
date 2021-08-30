@@ -1,9 +1,5 @@
 # coding=utf-8
 import xlsxwriter
-import re
-import os
-
-abs_path = os.getcwd() + os.path.sep
 
 url_rules = {'.com.cn', '.org.cn', '.net.cn', '.com', '.cn', '.cc', '.net', '.org', '.info', '.fun', '.one', '.xyz',
              '.name', '.io', '.top', '.me', '.club', '.tv', '.uk', '.hk'}
@@ -124,7 +120,7 @@ def Common_getTwoUniqueList(L):
 def getPortService(port):
     for k, v in port_rules.items():
         for b in v:
-            if b == port:
+            if int(b) == int(port):
                 return k
     return 'Unknown'
 

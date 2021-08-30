@@ -5,7 +5,6 @@
 from spider.thirdLib.third import *
 
 
-
 class Chinaz(ThirdBase):
     def __init__(self, domain):
         super().__init__()
@@ -13,7 +12,7 @@ class Chinaz(ThirdBase):
         self.addr = "https://api.sublist3r.com/search.php?domain={}"
 
     async def spider(self):
-        print('Load sublist3r api ...')
+        print('Load chinaz api ...')
         try:
             res = requests.get(url=self.addr.format(self.domain), headers=self.headers, verify=False,
                                timeout=self.reqTimeout)
@@ -22,9 +21,9 @@ class Chinaz(ThirdBase):
                 for subdomain in eval(text):
                     self.resList.append(subdomain)
             else:
-                print('sublist3r API No Subdomains.')
+                print('chinaz API No Subdomains.')
         except Exception as e:
-            print('[-] curl sublist3r api error. {}'.format(e.args))
+            print('[-] curl chinaz.com api error. {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[{}] {}'.format(len(self.resList), self.resList))
@@ -33,9 +32,9 @@ class Chinaz(ThirdBase):
 
 # async def do(domain):
 #     pass
-    # sublist3r = Sublist3r(domain)
-    # res = await sublist3r.spider()
-    # return res
+# sublist3r = Sublist3r(domain)
+# res = await sublist3r.spider()
+# return res
 
 
 if __name__ == '__main__':

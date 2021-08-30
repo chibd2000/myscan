@@ -35,4 +35,4 @@ def get_crt(url):
 
 
 if __name__ == '__main__':
-    get_crt("geely.com")
+    get_crt("zjhu.edu.cn")
