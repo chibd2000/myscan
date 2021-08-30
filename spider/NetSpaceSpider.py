@@ -26,7 +26,7 @@ class NetSpider(Spider):
         self.quakeApi = config.quakeApi
         self.asnList = []
         self.ipList = []
-        self.webList = []
+        self.clearTaskList = {}
         self._init()
 
     def _init(self):
@@ -34,6 +34,7 @@ class NetSpider(Spider):
         self._getBeianCompany()
         self.fofaKeywordList = ['domain="{}"'.format(self.domain), 'cert="{}"'.format(self.beian),
                                 'host="{}"'.format(self.domain), 'icon_hash="{}"'.format(self.iconHash)]
+        # self.quakeKeywordList = ['cert:"{}"'.format(self.beian)]
         self.quakeKeywordList = ['domain:"{}"'.format(self.domain), 'cert:"{}"'.format(self.beian),
                                  'host="{}"'.format(self.domain), 'favicon:"{}"'.format(self.iconMD5)]
         self.shodanKeywordList = ['hostname:"{}"'.format(self.domain), 'ssl:"{}"'.format(self.domain),
@@ -42,28 +43,33 @@ class NetSpider(Spider):
     def _getFaviconAndMD5(self):
         try:
             resp = requests.get(getUrl(self.domain) + '/favicon.ico')
-            m1 = hashlib.md5()
-            m1.update(resp.content)
-            theMD5 = m1.hexdigest()
-            favicon = codecs.encode(resp.content, 'base64')
-            self.iconHash = mmh3.hash(favicon)
-            self.iconMD5 = theMD5
-            print('get iconHash: ', self.iconHash)
-            print('get iconMD5: ', self.iconMD5)
-        except Exception as e:
-
-            print('_getFaviconAndMD5 first failed, error is {}'.format(e.args))
-            print('_getFaviconAndMD5 second ...')
-            try:
-                resp_ = requests.get(getUrl('www.' + self.domain) + '/favicon.ico')
-                m1_ = hashlib.md5()
-                m1_.update(resp_.content)
-                theMD5 = m1_.hexdigest()
-                favicon = codecs.encode(resp_.content, 'base64')
+            if resp.status_code == 200:
+                m1 = hashlib.md5()
+                m1.update(resp.content)
+                theMD5 = m1.hexdigest()
+                favicon = codecs.encode(resp.content, 'base64')
                 self.iconHash = mmh3.hash(favicon)
                 self.iconMD5 = theMD5
                 print('get iconHash: ', self.iconHash)
                 print('get iconMD5: ', self.iconMD5)
+            else:
+                raise Exception
+        except Exception as e:
+            print('_getFaviconAndMD5 first failed, error is {}'.format(e.args))
+            print('_getFaviconAndMD5 second ...')
+            try:
+                resp_ = requests.get(getUrl('www.' + self.domain) + '/favicon.ico')
+                if resp_.status_code == 200:
+                    m1_ = hashlib.md5()
+                    m1_.update(resp_.content)
+                    theMD5 = m1_.hexdigest()
+                    favicon = codecs.encode(resp_.content, 'base64')
+                    self.iconHash = mmh3.hash(favicon)
+                    self.iconMD5 = theMD5
+                    print('get iconHash: ', self.iconHash)
+                    print('get iconMD5: ', self.iconMD5)
+                else:
+                    raise Exception
             except Exception as e:
                 self.iconHash = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
                 self.iconMD5 = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
@@ -143,7 +149,7 @@ class NetSpider(Spider):
                             'asn': i[7],
                             'search_keyword': keyword
                         }
-                        print(subdomainInfo)
+                        # print(subdomainInfo)
                         self.ipList.append(i[2])
                         self.asnList.append(i[7])
                         self.resList.append(subdomain)
@@ -155,36 +161,56 @@ class NetSpider(Spider):
 
     async def quakeDomainSpider(self):
         headers = {"X-QuakeToken": self.quakeApi, "Content-Type": "application/json"}
-        try:
-            async with aiohttp.ClientSession(headers=headers) as session:
-                for keyword in self.quakeKeywordList:
-                    domainList = []
-                    params = {'query': keyword, 'size': 10000, 'ignore_cache': False}
-                    res = await AsyncFetcher.postFetch2(session=session, url=self.quakeAddr, data=json.dumps(params),
-                                                        json=True)
-                    for i in res['data']:
-                        portService = getPortService(i['port'])
+        async with aiohttp.ClientSession(headers=headers) as session:
+            for keyword in self.quakeKeywordList:
+                domainList = []
+                params = {'query': keyword, 'size': 2000, 'ignore_cache': False}
+                res = await AsyncFetcher.postFetch2(session=session, url=self.quakeAddr, data=json.dumps(params), json=True)
+                for banner in res['data']:
+                    httpModule = banner['service'].get('name', '')  # http， http-simple-new
+                    if 'http' in httpModule:
+                        http = banner['service'].get('http')
+                        if http:
+                            subdomainInfo = {
+                                'spider': 'QUAKE',
+                                'subdomain': http['host'],
+                                'title': http['title'],
+                                'ip': banner['ip'],
+                                'domain': '',
+                                'port': banner['port'],
+                                'web_service': http['server'],
+                                'port_service': getPortService(banner['port']),
+                                'asn': banner['asn'],
+                                'search_keyword': keyword
+                            }
+                            # print(subdomainInfo)
+                            if banner['ip'] == http['host']:
+                                self.ipList.append(banner['ip'])
+                                self.asnList.append(banner['asn'])
+                            else:
+                                self.ipList.append(banner['ip'])
+                                self.asnList.append(banner['asn'])
+                                self.resList.append(http['host'])
+                            domainList.append(subdomainInfo)
+                    else:
                         subdomainInfo = {
                             'spider': 'QUAKE',
-                            'subdomain': i['service']['http']['host'],
-                            'title': i['service']['http']['title'],
-                            'ip': i['ip'],
+                            'subdomain': '',
+                            'title': '',
+                            'ip': banner['ip'],
                             'domain': '',
-                            'port': i['port'],
-                            'web_service': i['service']['http']['server'],
-                            'port_service': portService,
-                            'asn': i['asn'],
+                            'port': banner['port'],
+                            'web_service': '',
+                            'port_service': getPortService(banner['port']),
+                            'asn': banner['asn'],
                             'search_keyword': keyword
                         }
-                        print(subdomainInfo)
-                        self.ipList.append(i['ip'])
-                        self.asnList.append(i['asn'])
-                        self.resList.append(i['service']['http']['host'])
+                        self.ipList.append(banner['ip'])
+                        self.asnList.append(banner['asn'])
                         domainList.append(subdomainInfo)
-                    domainList = getUniqueList(domainList)
-                    self.writeFile(domainList, 4)
-        except Exception as e:
-            print(e.args, e.__traceback__)
+
+                domainList = getUniqueList(domainList)
+                self.writeFile(domainList, 4)
 
     async def shodanDomainSpider(self):
 
@@ -219,7 +245,7 @@ class NetSpider(Spider):
                             'search_keyword': keyword
                         }
                         # print(subdomainInfo)
-                        self.ipList.append(http['host'])
+                        self.ipList.append(banner['ip_str'])
                         self.asnList.append(banner['asn'][2:])
                         for _ in banner['hostnames']:
                             self.resList.append(_)
@@ -479,12 +505,14 @@ class NetSpider(Spider):
     #     await self.shodanSSLSpider()
     #     await self.shodanFaviconSpider()
 
-    # 域名爬取的fofa处理函数
+    # 域名爬取处理函数
     async def spider(self):
         loop = asyncio.get_event_loop()
-        taskList = [loop.create_task(self.shodanDomainSpider())]
-        # loop.create_task(self.quakeDomainSpider()),
-        # loop.create_task(self.fofaDomainSpider()),
+        taskList = [
+            loop.create_task(self.shodanDomainSpider()),
+            loop.create_task(self.quakeDomainSpider()),
+            loop.create_task(self.fofaDomainSpider())
+        ]
         await asyncio.gather(*taskList)
 
         # loop.create_task(self.quakeDomainSpider()),
@@ -534,15 +562,8 @@ class NetSpider(Spider):
     async def main(self):
         logging.info("Net Spider Start")
         await self.spider()
-        self.resList, self.asnList, self.ipList = list(set(self.resList)), list(set(self.asnList)), list(
-            set(self.ipList))
-
-        # webList
-        # [
-        # {"subdomain": "www.ncist.edu.cn","ip": "1.1.1.1","port":[7777,8888]},
-        # {"subdomain": "","ip": "2.2.2.2","port":[80]}
-        # ]
-        return self.resList, self.asnList, self.ipList, self.webList
+        self.resList, self.asnList, self.ipList = list(set(self.resList)), list(set(self.asnList)), list(set(self.ipList))
+        return self.resList, self.asnList, self.ipList
 
 
 if __name__ == '__main__':

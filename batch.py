@@ -91,7 +91,7 @@ class Spider(object):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         t = loop.create_task(net.main())
-        netList, gAsnList, gIpList, self.clearTaskList = loop.run_until_complete(t)
+        netList, gAsnList, gIpList = loop.run_until_complete(t)
         self.lock.acquire()
         self.domainList.extend(netList)
         self.lock.release()
@@ -158,6 +158,24 @@ class Spider(object):
         # self.lock.release()
         pass
 
+    # github spider
+    def ksubdomainSpider(self):
+        ksubdomainList = []
+        ksubdomain_folder = './ksubdomain'
+        ksubdomain_file = '{}/{}.txt'.format(ksubdomain_folder, self.domain)
+
+        os.system('./ksubdomain/ksubdomain -d {} -o {}'.format(self.domain, ksubdomain_file))
+        try:
+            with open(ksubdomain_file, 'rt') as f:
+                for each_line in f.readlines():
+                    each_line_split = each_line.split('=>')
+                    subdomain = each_line_split[0].strip()  # 子域名
+                    ksubdomainList.append(subdomain)
+            os.remove(ksubdomain_file)  # 删除临时文件
+            self.domainList.extend(ksubdomainList)
+        except Exception as e:
+            ksubdomains = []
+
     # port spider
     def ipPortSpider(self):
         # logging.info("PortScan Start")
@@ -180,82 +198,66 @@ class Spider(object):
         pool.close()
         pool.join()
 
+    def flushResult(self):
+        # 第一次 清理 去域名协议
+        for i in self.task_list:
+            if 'http' in i:
+                self.task_list[self.task_list.index(i)] = i.split('//')[1]
+
+        # 第二次 清理去重 去重复值
+        self.task_list = list(set(self.task_list))
+
+        # 第三次 可视化格式数据拼接
+        # 拼接的格式如：[{"subdomain": "www.ncist.edu.cn","ips": "1.1.1.1","port":[7777,8888],"target","yes"}]
+        ip_port = {}
+        for aa in self.task_list:
+            i = aa.split(':')
+            if ':' in aa:
+                if str(i[0]) in ip_port.keys():
+                    ip_port[str(i[0])].append(str(i[1]))
+                else:
+                    ip_port[str(i[0])] = [str(i[1])]
+
+        for aa in self.task_list:
+            info = dict()
+            # 第一种情况：子域名 非正常ip 非正常域名
+            if self.domain in aa:
+                info['subdomain'] = aa
+                info['ips'] = ''
+                info['port'] = None
+                info['target'] = 'subdomain'  # 作为子域名的一个标识符
+                self.clearTaskList.append(info)
+
+            # 第二种情况：非正常子域名 非正常ip 正常域名
+            elif self.domain not in aa and not re.match(r'\d+.\d+.\d+:?\d?', aa):
+                info['subdomain'] = aa
+                info['ips'] = ''
+                info['port'] = None
+                info['target'] = 'webdomain'
+                self.clearTaskList.append(info)
+
+            # 第三种情况：非正常子域名 非正常域名 正常ip
+            else:
+                i = aa.split(':')
+                if ':' in aa:
+                    ip = i[0]
+                    info['subdomain'] = ''
+                    info['ips'] = ip
+                    info['port'] = ip_port[ip]
+                    info['target'] = 'ip'
+                    self.clearTaskList.append(info)
+                else:
+                    ip = i[0]
+                    info['ips'] = ip
+                    info['port'] = list()
+                    info['target'] = 'ip'
+                    info['subdomain'] = ''
+                    self.clearTaskList.append(info)
+
     # main start
     def run(self):
         def checkCdn(domain):
             randomStr = "abcdefghijklmn"
-
-        def runKSubdomain(domain):
-            ksubdomains = []
-            ksubdomain_folder = './ksubdomain'
-            ksubdomain_file = '{}/{}.txt'.format(ksubdomain_folder, domain)
-
-            os.system('./ksubdomain/ksubdomain -d {} -o {}'.format(domain, ksubdomain_file))
-            try:
-                with open(ksubdomain_file, 'rt') as f:
-                    for each_line in f.readlines():
-                        each_line_split = each_line.split('=>')
-                        subdomain = each_line_split[0].strip()  # 子域名
-                        ksubdomains.append(subdomain)
-                os.remove(ksubdomain_file)  # 删除临时文件
-            except Exception as e:
-                ksubdomains = []
-
-        def flushResult():
-            # 第一次 清理 去域名协议
-            for i in self.task_list:
-                if 'http' in i:
-                    self.task_list[self.task_list.index(i)] = i.split('//')[1]
-
-            # 第二次 清理去重 去重复值
-            self.task_list = list(set(self.task_list))
-
-            # 第三次 可视化格式数据拼接
-            # 拼接的格式如：[{"subdomain": "www.ncist.edu.cn","ips": "1.1.1.1","port":[7777,8888],"target","yes"}]
-            ip_port = {}
-            for aa in self.task_list:
-                i = aa.split(':')
-                if ':' in aa:
-                    if str(i[0]) in ip_port.keys():
-                        ip_port[str(i[0])].append(str(i[1]))
-                    else:
-                        ip_port[str(i[0])] = [str(i[1])]
-
-            for aa in self.task_list:
-                info = dict()
-                # 第一种情况：子域名 非正常ip 非正常域名
-                if self.domain in aa:
-                    info['subdomain'] = aa
-                    info['ips'] = ''
-                    info['port'] = None
-                    info['target'] = 'subdomain'  # 作为子域名的一个标识符
-                    self.clearTaskList.append(info)
-
-                # 第二种情况：非正常子域名 非正常ip 正常域名
-                elif self.domain not in aa and not re.match(r'\d+.\d+.\d+:?\d?', aa):
-                    info['subdomain'] = aa
-                    info['ips'] = ''
-                    info['port'] = None
-                    info['target'] = 'webdomain'
-                    self.clearTaskList.append(info)
-
-                # 第三种情况：非正常子域名 非正常域名 正常ip
-                else:
-                    i = aa.split(':')
-                    if ':' in aa:
-                        ip = i[0]
-                        info['subdomain'] = ''
-                        info['ips'] = ip
-                        info['port'] = ip_port[ip]
-                        info['target'] = 'ip'
-                        self.clearTaskList.append(info)
-                    else:
-                        ip = i[0]
-                        info['ips'] = ip
-                        info['port'] = list()
-                        info['target'] = 'ip'
-                        info['subdomain'] = ''
-                        self.clearTaskList.append(info)
 
         def getLinks(domain):
             pass
@@ -452,17 +454,17 @@ class Spider(object):
         # self.task_list.extend(dnsbrute_list)
         # self.lock.release()
         print("======KSubdomain======")
-        # runKSubdomain()
+        self.ksubdomainSpider()
 
         # 3、第三方接口查询
         print("======thirdLibSpider======")
-        # self.thirdSpider()
+        self.thirdSpider()
 
         # 4、SSL/engine/netSpace/github查询
         print("======EngineSpider======")
         # self.threadList.append(Thread(target=self.baiduSpider, ))
         # self.threadList.append(Thread(target=self.bingSpider,))
-        # self.threadList.append(Thread(target=self.ctfrSpider,))
+        self.threadList.append(Thread(target=self.ctfrSpider,))
         self.threadList.append(Thread(target=self.netSpider, ))
         # self.threadList.append(Thread(target=self.githubSpider,))
 

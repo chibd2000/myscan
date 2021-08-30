@@ -2,9 +2,7 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-29 3:05
 
-from spider.thirdLib.third import *
 
-# coding=utf-8
 from spider.thirdLib.third import *
 
 
