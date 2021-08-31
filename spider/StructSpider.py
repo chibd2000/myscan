@@ -8,7 +8,7 @@ from tldextract import extract
 
 
 class CompanyStructSpider(Spider):
-    def write_file(self, web_lists, target, page):
+    def writeFile(self, web_lists, page):
         pass
 
     def spider(self):
@@ -44,7 +44,7 @@ class CompanyStructSpider(Spider):
             f.write(key + '\n')
 
     def page_list(self, id):
-        url = 'https://aiqicha.baidu.com:443/compdata/navigationListAjax?pid=' + id
+        url = 'https://aiqicha.baidu.com/compdata/navigationListAjax?pid=' + id
         try:
             burp0_cookies = {"BIDUPSID": "16D4BDA34A6BCEF90158A6794CEE2ECD", "PSTM": "1618912368",
                              "BAIDUID": "16D4BDA34A6BCEF9473327AF8F2CE8B7:FG=1",
@@ -125,7 +125,7 @@ class CompanyStructSpider(Spider):
             mu = extract(website[0])
             self.root_domain.add(mu.domain + '.' + mu.suffix)
             self.save(xinxi)
-        except  Exception as e:
+        except Exception as e:
             print(e, url)
 
     def get_name(self, name):

@@ -98,6 +98,7 @@
             b'elasticsearch': [b'cluster_name.*elasticsearch'],
             b'rabbitmq': [b'^amqp\x00\x00\t\x01'],
             b'zookeeper': [b'^zookeeper version: '],
-            b'jdwp': [b'xxxxxxxxxxxxxxx'],
-            b'log4j': [b'xxxxxxxxxxx']
+            b'jdwp': [b'^xxxxxxxxxxxxxxx'],
+            b'log4j': [b'^xxxxxxxxxxx'],
+            b'ajp': [b'^xxxxxxxxxxx'],
         }

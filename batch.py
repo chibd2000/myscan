@@ -31,7 +31,7 @@ if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 abs_path = os.getcwd() + os.path.sep  # 路径
-thirdLib = abs_path + '/Spider/ThirdLib/'
+thirdLib = abs_path + 'spider/thirdLib/'
 
 gWebParamsList = []  # 存储可注入探测参数列表 ["http://www.baidu.com/?id=1111*"]
 gJavaScriptParamList = []  # 存储js文件中的js敏感接口
@@ -39,7 +39,8 @@ gJavaScriptParamList = []  # 存储js文件中的js敏感接口
 gIpSegmentDict = {}  # 存储资产IP区段分布以及资产IP在指定的区段出现的次数  {"111.111.111.0/24":1,"111.111.222.0/24":1}
 gAsnList = []  # ASN记录
 gIpList = []
-gTopDomain = []  # top域名记录
+gTopDomainList = []  # top域名记录
+gIpPortList = []
 
 
 # Spider
@@ -50,6 +51,25 @@ class Spider(object):
         self.domainList = list()  # 用来存储所有匹配到的域名
         self.clearTaskList = list()  # 存储整理过后的域名 [{"subdomain": "www.ncist.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
         self.lock = threading.Lock()
+
+    # github spider
+    def ksubdomainSpider(self):
+        ksubdomainList = []
+        ksubdomain_folder = './ksubdomain'
+        ksubdomain_file = '{}/{}.txt'.format(ksubdomain_folder, self.domain)
+
+        os.system(r'./ksubdomain/ksubdomain -d {} -o {}'.format(self.domain, ksubdomain_file))
+        try:
+            with open(ksubdomain_file, 'rt') as f:
+                for each_line in f.readlines():
+                    each_line_split = each_line.split('=>')
+                    subdomain = each_line_split[0].strip()  # 子域名
+                    ksubdomainList.append(subdomain)
+            os.remove(ksubdomain_file)  # 删除临时文件
+            print('[+] [{}] [{}] {}'.format('ksubdomain', len(ksubdomainList), ksubdomainList))
+            self.domainList.extend(ksubdomainList)
+        except Exception as e:
+            ksubdomains = []
 
     # baidu Spider
     def baiduSpider(self):
@@ -71,29 +91,6 @@ class Spider(object):
         resList = loop.run_until_complete(t)
         self.lock.acquire()
         self.domainList.extend(resList)
-        self.lock.release()
-
-    # ssl Spider
-    def ctfrSpider(self):
-        cftr = CtfrSpider(self.domain)
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        t = loop.create_task(cftr.main())
-        ctfrList = loop.run_until_complete(t)
-        self.lock.acquire()
-        self.domainList.extend(ctfrList)
-        self.lock.release()
-
-    # FOFA/Shodan/Quake360
-    def netSpider(self):
-        global gAsnList, gIpList
-        net = NetSpider(self.domain)
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        t = loop.create_task(net.main())
-        netList, gAsnList, gIpList = loop.run_until_complete(t)
-        self.lock.acquire()
-        self.domainList.extend(netList)
         self.lock.release()
 
     def thirdSpider(self):
@@ -120,6 +117,29 @@ class Spider(object):
             self.domainList.extend(_)
         self.domainList = list(set(self.domainList))
 
+    # ssl Spider
+    def ctfrSpider(self):
+        cftr = CtfrSpider(self.domain)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        t = loop.create_task(cftr.main())
+        ctfrList = loop.run_until_complete(t)
+        self.lock.acquire()
+        self.domainList.extend(ctfrList)
+        self.lock.release()
+
+    # FOFA/Shodan/Quake360
+    def netSpider(self):
+        global gAsnList, gIpList, gIpPortList
+        net = NetSpider(self.domain)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        t = loop.create_task(net.main())
+        netList, gAsnList, gIpList, gIpPortList = loop.run_until_complete(t)
+        self.lock.acquire()
+        self.domainList.extend(netList)
+        self.lock.release()
+
     # asyncio domain2ip
     def domain2ip(self):
         # logging.info("DomainReserve Start")
@@ -128,7 +148,6 @@ class Spider(object):
         task = resolve.bulk_query_a(self.clearTaskList)  # 解析域名地址A记录
         self.clearTaskList = loop.run_until_complete(task)
 
-        # 写文件，这里继续写
         workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
         worksheet = workbook.worksheets[2]
         index = 0
@@ -146,8 +165,42 @@ class Spider(object):
 
     # resolve ip2domain
     def ip2domain(self):
-        # logging.info("IpReserverSpider Start")
-        pass
+        logging.info("ip2domainSpider Start")
+        global gIpList
+        ip2domain_dict = {}
+        for ip in gIpList:
+            try:
+                res = requests.get(url='http://api.webscan.cc/?action=query&ip={}'.format(ip), timeout=10, verify=False)
+                text = res.text
+                if text != 'null':
+                    results = eval(text)
+                    domains = []
+                    for aDomain in results:
+                        domains.append(aDomain['domain'])
+                    # domains = cmp.findall(text)
+                    if domains:
+                        ip2domain_dict[ip] = domains
+                        print('[{}] {}'.format(ip, domains))
+                        if self.domain:
+                            for each in domains:
+                                if _domain in each and domain not in each:
+                                    newDomains.append(each)
+            except Exception as e:
+                print('[error] ip2domain: {}'.format(e.args))
+
+        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
+        worksheet = workbook.worksheets[4]
+        index = 0
+        while index < len(ip2domain_dict):
+            web = list()
+            web.append(ip2domain_dict[index]['spider'])
+            web.append(ip2domain_dict[index]['keyword'])
+            web.append(ip2domain_dict[index]['link'])
+            web.append(ip2domain_dict[index]['title'])
+            worksheet.append(web)
+            index += 1
+        workbook.save(abs_path + str(self.domain) + ".xlsx")
+        workbook.close()
 
     # github spider
     def githubSpider(self):
@@ -157,24 +210,6 @@ class Spider(object):
         # self.domainList.extend(gitLeakList)
         # self.lock.release()
         pass
-
-    # github spider
-    def ksubdomainSpider(self):
-        ksubdomainList = []
-        ksubdomain_folder = './ksubdomain'
-        ksubdomain_file = '{}/{}.txt'.format(ksubdomain_folder, self.domain)
-
-        os.system('./ksubdomain/ksubdomain -d {} -o {}'.format(self.domain, ksubdomain_file))
-        try:
-            with open(ksubdomain_file, 'rt') as f:
-                for each_line in f.readlines():
-                    each_line_split = each_line.split('=>')
-                    subdomain = each_line_split[0].strip()  # 子域名
-                    ksubdomainList.append(subdomain)
-            os.remove(ksubdomain_file)  # 删除临时文件
-            self.domainList.extend(ksubdomainList)
-        except Exception as e:
-            ksubdomains = []
 
     # port spider
     def ipPortSpider(self):
@@ -208,7 +243,7 @@ class Spider(object):
         self.task_list = list(set(self.task_list))
 
         # 第三次 可视化格式数据拼接
-        # 拼接的格式如：[{"subdomain": "www.ncist.edu.cn","ips": "1.1.1.1","port":[7777,8888],"target","yes"}]
+        # 拼接的格式如：[{"subdomain": "www.zjhu.edu.cn","ips": "1.1.1.1","port":[7777,8888],"target","yes"}]
         ip_port = {}
         for aa in self.task_list:
             i = aa.split(':')
@@ -223,7 +258,7 @@ class Spider(object):
             # 第一种情况：子域名 非正常ip 非正常域名
             if self.domain in aa:
                 info['subdomain'] = aa
-                info['ips'] = ''
+                info['ip'] = ''
                 info['port'] = None
                 info['target'] = 'subdomain'  # 作为子域名的一个标识符
                 self.clearTaskList.append(info)
@@ -231,7 +266,7 @@ class Spider(object):
             # 第二种情况：非正常子域名 非正常ip 正常域名
             elif self.domain not in aa and not re.match(r'\d+.\d+.\d+:?\d?', aa):
                 info['subdomain'] = aa
-                info['ips'] = ''
+                info['ip'] = ''
                 info['port'] = None
                 info['target'] = 'webdomain'
                 self.clearTaskList.append(info)
@@ -242,17 +277,24 @@ class Spider(object):
                 if ':' in aa:
                     ip = i[0]
                     info['subdomain'] = ''
-                    info['ips'] = ip
+                    info['ip'] = ip
                     info['port'] = ip_port[ip]
                     info['target'] = 'ip'
                     self.clearTaskList.append(info)
                 else:
                     ip = i[0]
-                    info['ips'] = ip
+                    info['subdomain'] = ''
+                    info['ip'] = ip
                     info['port'] = list()
                     info['target'] = 'ip'
-                    info['subdomain'] = ''
                     self.clearTaskList.append(info)
+
+    # 存活探测，限制并发数
+    def aliveSpider(self):
+        limit_resolve_conn = 500
+        semaphore = asyncio.Semaphore(limit_resolve_conn)
+        async with semaphore:
+            pass
 
     # main start
     def run(self):
@@ -445,7 +487,7 @@ class Spider(object):
 
         # 1、checkCdn
         print("======checkCdn======")
-        # checkCdn(self.domain)
+        checkCdn(self.domain)
 
         # 2、大师兄ske用的ksubdomain 自己后面跟着一起
         # 这里进行单一的查询，要不然直接导致带宽不够直接造成其他模块的无法使用
@@ -464,9 +506,10 @@ class Spider(object):
         print("======EngineSpider======")
         # self.threadList.append(Thread(target=self.baiduSpider, ))
         # self.threadList.append(Thread(target=self.bingSpider,))
-        self.threadList.append(Thread(target=self.ctfrSpider,))
+        self.threadList.append(Thread(target=self.ctfrSpider, ))
         self.threadList.append(Thread(target=self.netSpider, ))
         # self.threadList.append(Thread(target=self.githubSpider,))
+        # self.threadList.append(Thread(target=self.structSpider,))
 
         for _ in self.threadList:
             _.start()
@@ -474,18 +517,21 @@ class Spider(object):
         for _ in self.threadList:
             _.join()
 
-        print("=============")
-        print(gAsnList)
-        print("=============")
-        print(gIpList)
-        print("=============")
-        print('[{}] {}'.format(len(self.domainList), self.domainList))
         # 5、清洗整理数据
-        # flushResult()
+        # self.flushResult()
 
         # 6、domain2ip
         # self.domain2ip()
-        # print(self.clear_task_list)
+
+
+        print("=============")
+        print('[{}] {}'.format(len(gIpPortList), gIpPortList))
+        print("=============")
+        print('[{}] {}'.format(len(gAsnList), gAsnList))
+        print("=============")
+        print('[{}] {}'.format(len(gIpList), gIpList))
+        print("=============")
+        print('[{}] {}'.format(len(self.domainList), self.domainList))
 
         # 7、ip2domain
         # self.ip2domain()

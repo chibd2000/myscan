@@ -10,66 +10,73 @@ TIMEOUT = 10
 cmp = re.compile(r'{"domain":"http:\\/\\/(.*?)","title":".*?"}')  # 正则匹配规则
 
 
-def ip2domain(allTargets_Queue, domain, _domain, ip2domain_dict, num, newDomains):
-    while not allTargets_Queue.empty():
-        ip = allTargets_Queue.get()
-        url = r'http://api.webscan.cc/?action=query&ip={}'.format(ip)
-        print(url)
-        try:
-            res = requests.get(url=url, headers=headers, timeout=TIMEOUT, verify=False)
-            text = res.text
-            if text != 'null':
-                results = eval(text)
-                domains = []
-                for each in results:
-                    domains.append(each['domain'])
-                # domains = cmp.findall(text)
-                if domains:
-                    ip2domain_dict[ip] = domains
-                    print('[{}] {}'.format(ip, domains))
-                    if domain:
-                        for each in domains:
-                            if _domain in each and domain not in each:
-                                newDomains.append(each)
-        except Exception as e:
-            print('[error] ip2domain: {}'.format(e.args))
+class Ip2domainSpider(Spider):
+    def __init__(self):
+        super().__init__()
+        self.source = 'ip2domain'
+        self.addr = 'http://api.webscan.cc/?action=query&ip={}'
 
+    def writeFile(self, web_lists, page):
+        workbook = openpyxl.load_workbook(abs_path + str(random) + ".xlsx")
+        worksheet = workbook.worksheets[page]
+        index = 0
+        while index < len(web_lists):
+            web = list()
+            web.append(web_lists[index]['spider'])
+            web.append(web_lists[index]['keyword'])
+            web.append(web_lists[index]['link'])
+            web.append(web_lists[index]['title'])
+            worksheet.append(web)
+            index += 1
+        workbook.save(abs_path + str(random) + ".xlsx")
+        workbook.close()
 
-def run_ip2domain(domain, allTargets_Queue):
-    ip2domain_dict = {}  # 字典，key为IP，value为归属地
-    newDomains = []
-    if domain:  #
-        _domain = domain.split('.')[0]  # baidu
-    else:
-        _domain = None
+    def ip2domain(self, allTargets_Queue, domain, _domain, ip2domain_dict, newDomains):
+        while not allTargets_Queue.empty():
+            ip = allTargets_Queue.get()
+            try:
+                res = requests.get(url=self.addr, headers=headers, timeout=TIMEOUT, verify=False)
+                text = res.text
+                if text != 'null':
+                    results = eval(text)
+                    domains = []
+                    for each in results:
+                        domains.append(each['domain'])
+                    # domains = cmp.findall(text)
+                    if domains:
+                        ip2domain_dict[ip] = domains
+                        print('[{}] {}'.format(ip, domains))
+                        if domain:
+                            for each in domains:
+                                if _domain in each and domain not in each:
+                                    newDomains.append(each)
+            except Exception as e:
+                print('[error] ip2domain: {}'.format(e.args))
 
-    threads = []
-    for num in range(50):
-        t = Thread(target=ip2domain, args=(allTargets_Queue, domain, _domain, ip2domain_dict, num, newDomains))
-        threads.append(t)
-        t.start()
-    for t in threads:
-        t.join()
+    def spider(self):
+        pass
 
-    return ip2domain_dict, list(set(newDomains))
+    def main(self):
+        pass
 
 
 if __name__ == '__main__':
-    domain = ''
-    allTargets_Queue = Queue(-1)
-    allTargets_Queue.put('')
-    allTargets_Queue.put('')
-    ip2domain_dict, _newDomains = run_ip2domain(domain, allTargets_Queue)
-    # for ip in ip2domain_dict:
-    #     print('[{}] -> {}'.format(ip, ip2domain_dict[ip]))
-
-    print(ip2domain_dict)
-    subdomains = []
-    for subdomain in ip2domain_dict.values():
-        subdomains.extend(subdomain)
-
-    setSubdomains = list(set(subdomains))
-    print('[{}] {}'.format(len(setSubdomains), setSubdomains))
-    print(_newDomains)
+    pass
+    # domain = ''
+    # allTargets_Queue = Queue(-1)
+    # allTargets_Queue.put('')
+    # allTargets_Queue.put('')
+    # ip2domain_dict, _newDomains = run_ip2domain(domain, allTargets_Queue)
+    # # for ip in ip2domain_dict:
+    # #     print('[{}] -> {}'.format(ip, ip2domain_dict[ip]))
+    #
+    # print(ip2domain_dict)
+    # subdomains = []
+    # for subdomain in ip2domain_dict.values():
+    #     subdomains.extend(subdomain)
+    #
+    # setSubdomains = list(set(subdomains))
+    # print('[{}] {}'.format(len(setSubdomains), setSubdomains))
+    # print(_newDomains)
 
 #

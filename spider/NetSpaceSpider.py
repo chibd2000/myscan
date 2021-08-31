@@ -26,7 +26,7 @@ class NetSpider(Spider):
         self.quakeApi = config.quakeApi
         self.asnList = []
         self.ipList = []
-        self.clearTaskList = {}
+        self.IpPortList = []
         self._init()
 
     def _init(self):
@@ -128,32 +128,63 @@ class NetSpider(Spider):
                                                                                                  keyword.encode()).decode()),
                                                    json=True)
 
-                    for i in res['results']:
-                        if 'http' in i[0]:
-                            subdomain = i[0].split('//')[1]  # https://www.baidu.com => www.baidu.com
+                    for banner in res['results']:
+                        if 'http' in banner[0]:
+                            subdomain = banner[0].split('//')[1]  # https://www.baidu.com => www.baidu.com
                         else:
-                            subdomain = i[0]
-                        if i[6] == '':
-                            portService = getPortService(i[4])
+                            subdomain = banner[0]
+                        if banner[6] == '':
+                            portService = getPortService(banner[4])
                         else:
-                            portService = i[6]
+                            portService = banner[6]
                         subdomainInfo = {
                             'spider': 'FOFA',
                             'subdomain': subdomain,
-                            'title': i[1],
-                            'ip': i[2],
-                            'domain': i[3],
-                            'port': i[4],
-                            'web_service': i[5],
+                            'title': banner[1],
+                            'ip': banner[2],
+                            'domain': banner[3],
+                            'port': banner[4],
+                            'web_service': banner[5],
                             'port_service': portService,
-                            'asn': i[7],
+                            'asn': banner[7],
                             'search_keyword': keyword
                         }
                         # print(subdomainInfo)
-                        self.ipList.append(i[2])
-                        self.asnList.append(i[7])
+                        self.ipList.append(banner[2])
+                        self.asnList.append(banner[7])
                         self.resList.append(subdomain)
                         domainList.append(subdomainInfo)
+                    # self.IpPortList
+                    # [
+                    #     {"ip": "1.1.1.1", "port": [7777, 8888]
+                    #     {"ip": "2.2.2.2", "port": []
+                    # ]
+                    for i in domainList:
+                        _ip = i['ip']
+                        _port = i['port']
+                        flag = True
+                        for j in self.IpPortList:
+                            if j['ip'] == i['ip']:
+                                flag = False
+                        if flag:
+                            self.IpPortList.append({'ip': _ip, 'port': []})
+
+                    for j in domainList:
+                        _ip = j['ip']
+                        _port = j['port']
+                        if int(_port) == 443 or int(_port) == 80:
+                            continue
+                        flag = True
+                        for k in self.IpPortList:
+                            if k['ip'] == _ip:
+                                for m in k['port']:
+                                    if m == _port:
+                                        flag = False
+                        if flag:
+                            for p in self.IpPortList:
+                                if p['ip'] == _ip:
+                                    p['port'].append(_port)
+
                     domainList = getUniqueList(domainList)
                     self.writeFile(domainList, 3)
         except Exception as e:
@@ -164,8 +195,9 @@ class NetSpider(Spider):
         async with aiohttp.ClientSession(headers=headers) as session:
             for keyword in self.quakeKeywordList:
                 domainList = []
-                params = {'query': keyword, 'size': 2000, 'ignore_cache': False}
-                res = await AsyncFetcher.postFetch2(session=session, url=self.quakeAddr, data=json.dumps(params), json=True)
+                params = {'query': keyword, 'size': 500, 'ignore_cache': False}
+                res = await AsyncFetcher.postFetch2(session=session, url=self.quakeAddr, data=json.dumps(params),
+                                                    json=True)
                 for banner in res['data']:
                     httpModule = banner['service'].get('name', '')  # http， http-simple-new
                     if 'http' in httpModule:
@@ -208,7 +240,31 @@ class NetSpider(Spider):
                         self.ipList.append(banner['ip'])
                         self.asnList.append(banner['asn'])
                         domainList.append(subdomainInfo)
+                    for i in domainList:
+                        _ip = i['ip']
+                        _port = i['port']
+                        flag = True
+                        for j in self.IpPortList:
+                            if j['ip'] == i['ip']:
+                                flag = False
+                        if flag:
+                            self.IpPortList.append({'ip': _ip, 'port': []})
 
+                    for j in domainList:
+                        _ip = j['ip']
+                        _port = j['port']
+                        if int(_port) == 443 or int(_port) == 80:
+                            continue
+                        flag = True
+                        for k in self.IpPortList:
+                            if k['ip'] == _ip:
+                                for m in k['port']:
+                                    if m == _port:
+                                        flag = False
+                        if flag:
+                            for p in self.IpPortList:
+                                if p['ip'] == _ip:
+                                    p['port'].append(_port)
                 domainList = getUniqueList(domainList)
                 self.writeFile(domainList, 4)
 
@@ -270,6 +326,31 @@ class NetSpider(Spider):
                         for _ in banner['hostnames']:
                             self.resList.append(_)
                     domainList.append(subdomainInfo)
+                for i in domainList:
+                    _ip = i['ip']
+                    _port = i['port']
+                    flag = True
+                    for j in self.IpPortList:
+                        if j['ip'] == i['ip']:
+                            flag = False
+                    if flag:
+                        self.IpPortList.append({'ip': _ip, 'port': []})
+
+                for j in domainList:
+                    _ip = j['ip']
+                    _port = j['port']
+                    if int(_port) == 443 or int(_port) == 80:
+                        continue
+                    flag = True
+                    for k in self.IpPortList:
+                        if k['ip'] == _ip:
+                            for m in k['port']:
+                                if m == _port:
+                                    flag = False
+                    if flag:
+                        for p in self.IpPortList:
+                            if p['ip'] == _ip:
+                                p['port'].append(_port)
             domainList = getUniqueList(domainList)
             self.writeFile(domainList, 5)
             # async with aiohttp.ClientSession(headers=headers) as session:
@@ -563,7 +644,7 @@ class NetSpider(Spider):
         logging.info("Net Spider Start")
         await self.spider()
         self.resList, self.asnList, self.ipList = list(set(self.resList)), list(set(self.asnList)), list(set(self.ipList))
-        return self.resList, self.asnList, self.ipList
+        return self.resList, self.asnList, self.ipList, self.IpPortList
 
 
 if __name__ == '__main__':
