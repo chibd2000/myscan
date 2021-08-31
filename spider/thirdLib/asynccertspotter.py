@@ -8,6 +8,7 @@ class Certspotter(ThirdBase):
         super().__init__()
         self.domain = domain
         self.addr = "https://api.certspotter.com/v1/issuances?domain={}&include_subdomains=true&expand=dns_names"
+        self.source = 'certspotter'
 
     async def spider(self):
         print('Load certspotter api ...')
@@ -26,7 +27,7 @@ class Certspotter(ThirdBase):
             print('[-] curl certspotter api error. {}'.format(e.args))
 
         self.resList = list(set(self.resList))
-        print('[{}] {}'.format(len(self.resList), self.resList))
+        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         return self.resList
 
 

@@ -93,7 +93,6 @@ class GithubSpider(Spider):
             self.process_pages(page_content, self.keyword)
 
     async def main(self):
-        logging.info("GithubSpider Start")
         await self.spider()
         return list(set(self.resList))
 

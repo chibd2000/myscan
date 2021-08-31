@@ -118,9 +118,9 @@ class NetSpider(Spider):
         workbook.close()
 
     async def fofaDomainSpider(self):
-        try:
-            async with aiohttp.ClientSession(headers=self.headers) as session:
-                for keyword in self.fofaKeywordList:
+        async with aiohttp.ClientSession(headers=self.headers) as session:
+            for keyword in self.fofaKeywordList:
+                try:
                     domainList = []
                     res = await AsyncFetcher.fetch(session=session, url=self.fofaAddr.format(FOFA_EMAIL=self.fofaEmail,
                                                                                              API_KEY=self.fofaApi,
@@ -187,58 +187,148 @@ class NetSpider(Spider):
 
                     domainList = getUniqueList(domainList)
                     self.writeFile(domainList, 3)
-        except Exception as e:
-            pass
+                except Exception as e:
+                    print('curl fofa.so api error, error is {}'.format(e.args))
 
     async def quakeDomainSpider(self):
         headers = {"X-QuakeToken": self.quakeApi, "Content-Type": "application/json"}
         async with aiohttp.ClientSession(headers=headers) as session:
             for keyword in self.quakeKeywordList:
-                domainList = []
-                params = {'query': keyword, 'size': 500, 'ignore_cache': False}
-                res = await AsyncFetcher.postFetch2(session=session, url=self.quakeAddr, data=json.dumps(params),
-                                                    json=True)
-                for banner in res['data']:
-                    httpModule = banner['service'].get('name', '')  # http， http-simple-new
-                    if 'http' in httpModule:
-                        http = banner['service'].get('http')
-                        if http:
+                try:
+                    domainList = []
+                    params = {'query': keyword, 'size': 500, 'ignore_cache': False}
+                    res = await AsyncFetcher.postFetch2(session=session, url=self.quakeAddr, data=json.dumps(params),
+                                                        json=True)
+                    for banner in res['data']:
+                        httpModule = banner['service'].get('name', '')  # http， http-simple-new
+                        if 'http' in httpModule:
+                            http = banner['service'].get('http')
+                            if http:
+                                subdomainInfo = {
+                                    'spider': 'QUAKE',
+                                    'subdomain': http['host'],
+                                    'title': http['title'],
+                                    'ip': banner['ip'],
+                                    'domain': '',
+                                    'port': banner['port'],
+                                    'web_service': http['server'],
+                                    'port_service': getPortService(banner['port']),
+                                    'asn': banner['asn'],
+                                    'search_keyword': keyword
+                                }
+                                # print(subdomainInfo)
+                                if banner['ip'] == http['host']:
+                                    self.ipList.append(banner['ip'])
+                                    self.asnList.append(banner['asn'])
+                                else:
+                                    self.ipList.append(banner['ip'])
+                                    self.asnList.append(banner['asn'])
+                                    self.resList.append(http['host'])
+                                domainList.append(subdomainInfo)
+                        else:
                             subdomainInfo = {
                                 'spider': 'QUAKE',
-                                'subdomain': http['host'],
-                                'title': http['title'],
+                                'subdomain': '',
+                                'title': '',
                                 'ip': banner['ip'],
                                 'domain': '',
                                 'port': banner['port'],
-                                'web_service': http['server'],
+                                'web_service': '',
                                 'port_service': getPortService(banner['port']),
                                 'asn': banner['asn'],
                                 'search_keyword': keyword
                             }
+                            self.ipList.append(banner['ip'])
+                            self.asnList.append(banner['asn'])
+                            domainList.append(subdomainInfo)
+                        for i in domainList:
+                            _ip = i['ip']
+                            _port = i['port']
+                            flag = True
+                            for j in self.IpPortList:
+                                if j['ip'] == i['ip']:
+                                    flag = False
+                            if flag:
+                                self.IpPortList.append({'ip': _ip, 'port': []})
+
+                        # [{'ip':'1.1.1.1',}]
+                        for j in domainList:
+                            _ip = j['ip']
+                            _port = j['port']
+                            if int(_port) == 443 or int(_port) == 80:
+                                continue
+                            flag = True
+                            for k in self.IpPortList:
+                                if k['ip'] == _ip:
+                                    for m in k['port']:
+                                        if m == _port:
+                                            flag = False
+                            if flag:
+                                for p in self.IpPortList:
+                                    if p['ip'] == _ip:
+                                        p['port'].append(_port)
+                    domainList = getUniqueList(domainList)
+                    self.writeFile(domainList, 4)
+                except Exception as e:
+                    print('curl quake.360.cn api error, error is {}'.format(e.args))
+
+    async def shodanDomainSpider(self):
+        # 这里用shodan模块的原因是正常请求会存在cloudflare，具体原因没研究，直接用shodan模块会方便
+        api = Shodan(self.shodanApi)
+        # ipinfo = api.host('8.8.8.8')
+        for keyword in self.shodanKeywordList:
+            try:
+                domainList = []
+                if keyword == 'ssl:"{}"'.format(self.domain):
+                    countInfo = api.count(keyword)
+                    if countInfo['total'] > 1000:
+                        print('[-] shodan skip ssl search...')
+                        continue
+                # ssl:"zjhu.edu.cn" == ssl:"zjhu.edu.cn"
+                # print(api.search_cursor(keyword))
+                for banner in api.search_cursor(keyword):
+                    # http exist
+                    httpModule = banner['_shodan'].get('module', '')  # http， http-simple-new
+                    if 'http' in httpModule:
+                        http = banner.get('http', '')
+                        if http:
+                            subdomainInfo = {
+                                'spider': 'SHODAN',
+                                'subdomain': str(banner['hostnames']),
+                                'title': http['title'],
+                                'ip': banner['ip_str'],  # 不用host的原因是其中有时候存在域名的情况，自己这里需要把域名和IP分开收集
+                                'domain': '',
+                                'port': banner['port'],
+                                'web_service': http['server'],
+                                'port_service': getPortService(banner['port']),
+                                'asn': banner['asn'][2:],
+                                'search_keyword': keyword
+                            }
                             # print(subdomainInfo)
-                            if banner['ip'] == http['host']:
-                                self.ipList.append(banner['ip'])
-                                self.asnList.append(banner['asn'])
-                            else:
-                                self.ipList.append(banner['ip'])
-                                self.asnList.append(banner['asn'])
-                                self.resList.append(http['host'])
+                            self.ipList.append(banner['ip_str'])
+                            self.asnList.append(banner['asn'][2:])
+                            for _ in banner['hostnames']:
+                                self.resList.append(_)
                             domainList.append(subdomainInfo)
                     else:
                         subdomainInfo = {
-                            'spider': 'QUAKE',
-                            'subdomain': '',
+                            'spider': 'SHODAN',
+                            'subdomain': str(banner['hostnames']),
                             'title': '',
-                            'ip': banner['ip'],
+                            'ip': banner['ip_str'],  # 不用host的原因是其中有时候存在域名的情况，自己这里需要把域名和IP分开收集
                             'domain': '',
                             'port': banner['port'],
                             'web_service': '',
                             'port_service': getPortService(banner['port']),
-                            'asn': banner['asn'],
+                            'asn': banner['asn'][2:],
                             'search_keyword': keyword
                         }
-                        self.ipList.append(banner['ip'])
-                        self.asnList.append(banner['asn'])
+                        # print(subdomainInfo)
+                        self.ipList.append(banner['ip_str'])
+                        self.asnList.append(banner['asn'][2:])
+                        if banner['hostnames']:
+                            for _ in banner['hostnames']:
+                                self.resList.append(_)
                         domainList.append(subdomainInfo)
                     for i in domainList:
                         _ip = i['ip']
@@ -266,93 +356,9 @@ class NetSpider(Spider):
                                 if p['ip'] == _ip:
                                     p['port'].append(_port)
                 domainList = getUniqueList(domainList)
-                self.writeFile(domainList, 4)
-
-    async def shodanDomainSpider(self):
-
-        # 这里用shodan模块的原因是正常请求会存在cloudflare，具体原因没研究，直接用shodan模块会方便
-        api = Shodan(self.shodanApi)
-        # ipinfo = api.host('8.8.8.8')
-        for keyword in self.shodanKeywordList:
-            domainList = []
-            if keyword == 'ssl:"{}"'.format(self.domain):
-                countInfo = api.count(keyword)
-                if countInfo['total'] > 1000:
-                    print('[-] shodan skip ssl search...')
-                    continue
-            # ssl:"zjhu.edu.cn" == ssl:"zjhu.edu.cn"
-            # print(api.search_cursor(keyword))
-            for banner in api.search_cursor(keyword):
-                # http exist
-                httpModule = banner['_shodan'].get('module', '')  # http， http-simple-new
-                if 'http' in httpModule:
-                    http = banner.get('http', '')
-                    if http:
-                        subdomainInfo = {
-                            'spider': 'SHODAN',
-                            'subdomain': str(banner['hostnames']),
-                            'title': http['title'],
-                            'ip': banner['ip_str'],  # 不用host的原因是其中有时候存在域名的情况，自己这里需要把域名和IP分开收集
-                            'domain': '',
-                            'port': banner['port'],
-                            'web_service': http['server'],
-                            'port_service': getPortService(banner['port']),
-                            'asn': banner['asn'][2:],
-                            'search_keyword': keyword
-                        }
-                        # print(subdomainInfo)
-                        self.ipList.append(banner['ip_str'])
-                        self.asnList.append(banner['asn'][2:])
-                        for _ in banner['hostnames']:
-                            self.resList.append(_)
-                        domainList.append(subdomainInfo)
-                else:
-                    subdomainInfo = {
-                        'spider': 'SHODAN',
-                        'subdomain': str(banner['hostnames']),
-                        'title': '',
-                        'ip': banner['ip_str'],  # 不用host的原因是其中有时候存在域名的情况，自己这里需要把域名和IP分开收集
-                        'domain': '',
-                        'port': banner['port'],
-                        'web_service': '',
-                        'port_service': getPortService(banner['port']),
-                        'asn': banner['asn'][2:],
-                        'search_keyword': keyword
-                    }
-                    # print(subdomainInfo)
-                    self.ipList.append(banner['ip_str'])
-                    self.asnList.append(banner['asn'][2:])
-                    if banner['hostnames']:
-                        for _ in banner['hostnames']:
-                            self.resList.append(_)
-                    domainList.append(subdomainInfo)
-                for i in domainList:
-                    _ip = i['ip']
-                    _port = i['port']
-                    flag = True
-                    for j in self.IpPortList:
-                        if j['ip'] == i['ip']:
-                            flag = False
-                    if flag:
-                        self.IpPortList.append({'ip': _ip, 'port': []})
-
-                for j in domainList:
-                    _ip = j['ip']
-                    _port = j['port']
-                    if int(_port) == 443 or int(_port) == 80:
-                        continue
-                    flag = True
-                    for k in self.IpPortList:
-                        if k['ip'] == _ip:
-                            for m in k['port']:
-                                if m == _port:
-                                    flag = False
-                    if flag:
-                        for p in self.IpPortList:
-                            if p['ip'] == _ip:
-                                p['port'].append(_port)
-            domainList = getUniqueList(domainList)
-            self.writeFile(domainList, 5)
+                self.writeFile(domainList, 5)
+            except Exception as e:
+                print('curl shodan api error, error is {}'.format(e.args))
             # async with aiohttp.ClientSession(headers=headers) as session:
             #     for keyword in self.shodanKeywordList:
             #         domainList = []
@@ -641,9 +647,9 @@ class NetSpider(Spider):
 
     # main start
     async def main(self):
-        logging.info("Net Spider Start")
         await self.spider()
-        self.resList, self.asnList, self.ipList = list(set(self.resList)), list(set(self.asnList)), list(set(self.ipList))
+        self.resList, self.asnList, self.ipList = list(set(self.resList)), list(set(self.asnList)), list(
+            set(self.ipList))
         return self.resList, self.asnList, self.ipList, self.IpPortList
 
 

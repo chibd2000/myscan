@@ -50,7 +50,6 @@ class CtfrSpider(Spider):
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
 
     async def main(self):
-        logging.info("Ctfr Spider Start")
         await self.spider()
         return self.resList
 

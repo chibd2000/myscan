@@ -1,14 +1,16 @@
 # coding=utf-8
+# @Author   : zpchcbd HG team
+# @Time     : 2021-08-31 23:04
 
 from spider.BaseSpider import *
 
 
-class CtfrSpider(Spider):
+class FriendChainsSpider(Spider):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
         self.addr = 'https://crt.sh/?q=%.{}&output=json'
-        self.source = 'ctfr'
+        self.source = 'friendChainsSpider'
 
     def writeFile(self, web_lists, page):
         workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
@@ -50,9 +52,10 @@ class CtfrSpider(Spider):
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
 
     async def main(self):
+        logging.info("Ctfr Spider Start")
         await self.spider()
         return self.resList
 
 
 if '__main__' == __name__:
-    CtfrSpider('nbcc.cn').main()
+    FriendChainsSpider('nbcc.cn').main()

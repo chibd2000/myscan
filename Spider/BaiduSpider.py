@@ -114,7 +114,6 @@ class BaiduSpider(Spider):
 
     # 主函数
     async def main(self):
-        logging.info("BaiduSpider Start")
         return await self.spider()
 
 

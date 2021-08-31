@@ -55,7 +55,7 @@ port_rules = {
     'RouterOS': ['8291'],
     'Elasticsearch': ['9200', '9300'],
     'Memcached': ['11211'],
-    'MongoDB': ['27017','28017'],
+    'MongoDB': ['27017', '28017'],
     'Hadoop': ['50070']
 }
 

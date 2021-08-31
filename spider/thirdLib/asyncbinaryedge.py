@@ -10,6 +10,7 @@ class Binaryedge(ThirdBase):
         super().__init__()
         self.domain = domain
         self.addr = "https://api.binaryedge.io/v2/query/domains/subdomain/{}?page={}"
+        self.source = 'binaryedge'
         self.api = config.binaryedgeApi
         self.headers.update({'X-Key': self.api})
 
@@ -39,7 +40,7 @@ class Binaryedge(ThirdBase):
             print('[-] curl binaryedge.io api error. {}'.format(e.args))
 
         self.resList = list(set(self.resList))
-        print('[{}] {}'.format(len(self.resList), self.resList))
+        print('[+] [{}] [{}] {}'.format(self.source,len(self.resList), self.resList))
         return self.resList
 
 

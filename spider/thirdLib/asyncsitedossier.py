@@ -7,6 +7,7 @@ class Sitedossier(ThirdBase):
         super().__init__()
         self.domain = domain
         self.addr = "http://www.sitedossier.com/parentdomain/{}"
+        self.source = 'sitedossier'
 
     async def spider(self):
         print('Load sitedossier api ...')
@@ -23,7 +24,7 @@ class Sitedossier(ThirdBase):
             print('[-] curl sitedossier api error. {}'.format(e.args))
 
         self.resList = list(set(self.resList))
-        print('[{}] {}'.format(len(self.resList), self.resList))
+        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         return self.resList
 
 

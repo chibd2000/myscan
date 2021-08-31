@@ -11,6 +11,7 @@ class Entrus(ThirdBase):
         super().__init__()
         self.domain = domain
         self.addr = "https://ctsearch.entrust.com/api/v1/certificates"
+        self.source = 'entrus'
 
     # async def spider(self):
     #     print('Load rapiddns api ...')
@@ -43,7 +44,7 @@ class Entrus(ThirdBase):
             print('[-] curl entrus.com api error. {}'.format(e.args))
 
         self.resList = list(set(self.resList))
-        print('[{}] {}'.format(len(self.resList), self.resList))
+        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         return self.resList
 
 

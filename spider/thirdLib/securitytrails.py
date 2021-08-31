@@ -10,6 +10,8 @@ class Securitytrails(ThirdBase):
         super().__init__()
         self.domain = domain
         self.addr = 'https://api.securitytrails.com/v1/domain/{}/subdomains'
+        self.source = 'securitytrails'
+        self.api = config.securitytrailsApi
 
     async def spider(self):
         print('Load securitytrails api ...')

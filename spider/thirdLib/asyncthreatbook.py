@@ -11,6 +11,7 @@ class Threatbook(ThirdBase):
         self.domain = domain
         self.addr = "https://api.threatbook.cn/v3/domain/sub_domains?apikey={API_KEY}&resource={DOMAIN}"
         self.api = config.threatbookApi
+        self.source = 'threatbook'
 
     async def spider(self):
         print('Load threatbook api ...')
@@ -22,7 +23,7 @@ class Threatbook(ThirdBase):
             print('[-] curl threatbook.cn api error. {}'.format(e.args))
 
         self.resList = list(set(self.resList))
-        print('[{}] {}'.format(len(self.resList), self.resList))
+        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         return self.resList
 
 
