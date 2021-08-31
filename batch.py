@@ -9,7 +9,8 @@ from spider.DnsDataSpider import *
 from spider.PortSpider import *
 from spider.GithubSpider import *
 from spider.JavaScriptSpider import *
-from spider.WebParamLinkSpider import *
+from spider.ParamLinkSpider import *
+from spider.FriendChainsSpider import *
 from spider.StructSpider import *
 
 from common import resolve
@@ -306,12 +307,19 @@ class Spider(object):
                     self.clearTaskList.append(info)
 
     # 友链爬取
-    def friendChainsSpider(self):
+    async def friendChainsSpider(self):
         logging.info("friendChainsSpider Start")
-        limit_resolve_conn = 100
-        semaphore = asyncio.Semaphore(limit_resolve_conn)
-        # async with semaphore:
-        #     pass
+        # queue = asyncio.Queue(-1)
+        # for domain in self.domainList:
+        #     queue.put(domain)
+        friend = FriendChainsSpider(self.domain, self.domainList)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        t = loop.create_task(friend.main())
+        resList = loop.run_until_complete(t)
+        self.lock.acquire()
+        self.domainList.extend(resList)
+        self.lock.release()
 
     # 存活探测，限制并发数
     def AliveSpider(self):
@@ -513,8 +521,7 @@ class Spider(object):
             #     print(e.args)
             # return None
 
-
-        global gAsnList, gIpList, gIpPortList
+        global gAsnList, gIpList
 
         # 1、checkCdn
         checkCdn(self.domain)
@@ -534,7 +541,7 @@ class Spider(object):
         # self.threadList.append(Thread(target=self.baiduSpider, ))
         # self.threadList.append(Thread(target=self.bingSpider,))
         # self.threadList.append(Thread(target=self.ctfrSpider, ))
-        self.threadList.append(Thread(target=self.netSpider,))
+        self.threadList.append(Thread(target=self.netSpider, ))
         # self.threadList.append(Thread(target=self.githubSpider,))
         # self.threadList.append(Thread(target=self.structSpider,))
 
@@ -550,8 +557,11 @@ class Spider(object):
         # 6、友链爬取
         self.friendChainsSpider()
 
-        # 6、domain2ip
+        # 7、domain2ip
         self.domain2ip()
+
+        # 8、ip2domain
+        self.ip2domain()
 
         # 去重子域名
         self.domainList = list(set(self.domainList))
@@ -560,13 +570,9 @@ class Spider(object):
         print("=============")
         print('[+] [gIpList] [{}] {}'.format(len(gIpList), gIpList))
         print("=============")
-        print('[+] [IpPortList] [{}] {}'.format(len(self.ipPortList), self.ipPortList))
+        print('[+] [ipPortList] [{}] {}'.format(len(self.ipPortList), self.ipPortList))
         print("=============")
         print('[+] [domainList] [{}] {}'.format(len(self.domainList), self.domainList))
-
-        # 7、ip2domain
-        # self.ip2domain()
-        # print(self.clear_task_list)
 
         # 8、端口扫描，这里的端口扫描自己写的只扫子域名下的ip 可以自行更改target的字段（当走到这里的时候 真正的数据以及格式都是完整的一段数据之后就开始漏洞利用了）
         # self.ipPortSpider()
@@ -600,20 +606,42 @@ class Exploit(object):
     def unauthLeakHttpScan(self):
         HttpUnauth(self.domain, self.clearTaskList).main()
 
-    def cmsLeakScan(self):
-        CmsScan(self.domain, self.clearTaskList).main()
-
-    def sqlLeakScan(self):
-        # SqlScan(gSubDomainParams).main()
-        pass
-
-    def portLeakScan(self):
-        # asyncio.open_connection()
-        pass
-
-    def jsLeakScan(self):
+    def jsExploit(self):
         # SqlScan(self.domain, self.clear_task_list).main()
         pass
+
+    # 基于网站参数的漏扫
+    def sqlExploit(self):
+        # [{"subdomain": "www.zjhu.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
+        queue = asyncio.Queue(-1)
+        for aTask in self.clearTaskList:
+            aIp = aTask.get('ip')
+            aPortList = aTask.get('port')
+            for port in aPortList:
+                queue.put("{}:{}".format(aIp, port))  # IP+端口, 接下里就是异步socket探测banner来进行相关利用即可.
+        IpUnauth(self.domain, queue).main()
+
+    # 基于网站框架的漏扫
+    def webExploit(self):
+        # [{"subdomain": "www.zjhu.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
+        queue = asyncio.Queue(-1)
+        for aTask in self.clearTaskList:
+            aIp = aTask.get('ip')
+            aPortList = aTask.get('port')
+            for port in aPortList:
+                queue.put("{}:{}".format(aIp, port))  # IP+端口, 接下里就是异步socket探测banner来进行相关利用即可.
+        IpUnauth(self.domain, queue).main()
+
+    # 基于端口服务的漏扫
+    def serviceExploit(self):
+        # [{"subdomain": "www.zjhu.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
+        queue = asyncio.Queue(-1)
+        for aTask in self.clearTaskList:
+            aIp = aTask.get('ip')
+            aPortList = aTask.get('port')
+            for port in aPortList:
+                queue.put("{}:{}".format(aIp, port))  # IP+端口, 接下里就是异步socket探测banner来进行相关利用即可.
+        IpUnauth(self.domain, queue).main()
 
     def run(self):
         def init():

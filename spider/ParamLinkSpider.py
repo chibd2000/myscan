@@ -6,21 +6,17 @@ from bs4 import BeautifulSoup
 from spider.BaseSpider import *
 
 
-class LinkSpider(Spider):
-    def __init__(self, domain):
-        super().__init__()
-        self.domain = domain
-
-    def get_links(self):
+class ParamsLinkSpider():
+    @classmethod
+    def getLinks(cls, url):
         # 1、https://www.yamibuy.com/cn/brand.php?id=566
         # 2、http://www.labothery-tea.cn/chanpin/2018-07-12/4.html
-
 
         # if 'gov.cn' in self.url:
         #     return 0
         #     pass
         # http://www.baidu.com/ -> www.baidu.com/ -> www.baidu.com -> baidu.com
-        domain = self.url.split('//')[1].strip('/').replace('www.', '')
+        domain = url.split('//')[1].strip('/').replace('www.', '')
         result = []
         id_links = []
         html_links = []
@@ -30,13 +26,7 @@ class LinkSpider(Spider):
         idid = []
         htht = []
         try:
-            headers = {
-                'User-Agent': 'random.choice(headerss)',
-                'Accept': 'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                'Cache-Control': 'max-age=0',
-                'Accept-Charset': 'GBK,utf-8;q=0.7,*;q=0.3',
-            }
-            rxww = requests.get(self.url, headers=headers, verify=False, timeout=10)
+            rxww = requests.get(url, headers=self.headers, verify=False, timeout=self.reqTimeout)
             soup = BeautifulSoup(rxww.content, 'html.parser', from_encoding='iso-8859-1')
 
             try:
@@ -104,22 +94,20 @@ class LinkSpider(Spider):
 
                 for x1 in html_links:  # 对于爬取到的后缀是html等等参数链接进行二次处理 是否能够访问
                     try:
-                        rx1 = requests.get(url=x1, headers=headers, timeout=15)
+                        rx1 = requests.get(url=x1, headers=self.headers, timeout=self.reqTimeout)
                         if rx1.status_code == 200:
                             htht.append(x1)
                     except Exception as e:
-                        writedata('[WARNING ERROR]' + str(e))
-                        pass
+                        print('error, {}'.format(e.args))
+
                 for x2 in id_links:  # 平常的id?=1 这种参数进行二次处理 是否能够访问
                     try:
-                        rx2 = requests.get(url=x2, headers=headers, timeout=15)
+                        rx2 = requests.get(url=x2, headers=self.headers, timeout=self.reqTimeout)
                         if rx2.status_code == 200:
                             if rx2.url.find('=') > 0:
                                 idid.append(rx2.url)
-
                     except Exception as e:
-                        writedata('[WARNING ERROR]' + str(e))
-                        pass
+                        print('error, {}'.format(e.args))
 
                 hthtx = []
                 ididx = []
@@ -192,7 +180,7 @@ class LinkSpider(Spider):
                 return result_links
 
         except Exception as e:
-            writedata('[WARNING ERROR]' + str(e))
+            print('error, {}'.format(e.args))
             pass
         return None
 

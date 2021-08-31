@@ -99,3 +99,5 @@ python batch.py -v zjhzu.edu.cn
 5、https://github.com/laramies/theHarvester
 
 6、https://github.com/knownsec/ksubdomain
+
+

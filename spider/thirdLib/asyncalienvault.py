@@ -37,8 +37,8 @@ class Alien(ThirdBase):
 
 async def do(domain):
     alien = Alien(domain)
-    res = await alien.spider()
-    return res
+    domainList = await alien.spider()
+    return domainList
 
 
 if __name__ == '__main__':

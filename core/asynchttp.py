@@ -118,7 +118,6 @@ class AsyncFetcher:
             async with aiohttp.ClientSession(headers=headers, timeout=aiohttp.ClientTimeout(total=15)) as session:
                 tuples = await asyncio.gather(*[AsyncFetcher.takeoverFetch(session, url) for url in urls])
                 return tuples
-
         if len(params) == 0:
             async with aiohttp.ClientSession(headers=headers, timeout=timeout) as session:
                 texts = await asyncio.gather(*[AsyncFetcher.fetch(session, url, json=json) for url in urls])

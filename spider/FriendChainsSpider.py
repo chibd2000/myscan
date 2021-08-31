@@ -6,56 +6,85 @@ from spider.BaseSpider import *
 
 
 class FriendChainsSpider(Spider):
-    def __init__(self, domain):
+    def __init__(self, domain, domainList: list):
         super().__init__()
         self.domain = domain
-        self.addr = 'https://crt.sh/?q=%.{}&output=json'
         self.source = 'friendChainsSpider'
+        self.domainList = domainList
 
     def writeFile(self, web_lists, page):
-        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
-        worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
-        index = 0
-        while index < len(web_lists):
-            web = list()
-            web.append(web_lists[index]['ssl'])
-            web.append(web_lists[index]['subdomain'])
-            worksheet.append(web)
-            index += 1
-        workbook.save(abs_path + str(self.domain) + ".xlsx")
-        workbook.close()
+        pass
 
     async def spider(self):
-        sslInfo = []
-        try:
-            async with aiohttp.ClientSession(headers=self.headers) as session:
-                result = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), json=True)
-                for (key, value) in enumerate(result):
-                    subdomainSSL = value['name_value'].split('\n')
-                    if len(subdomainSSL) == 2:
-                        domainInfo = {'ssl': subdomainSSL[0], 'subdomain': subdomainSSL[1]}
-                        self.resList.append(subdomainSSL[1])
-                    else:
-                        domainInfo = {'ssl': 'None', 'subdomain': subdomainSSL[0]}
-                        self.resList.append(subdomainSSL[0])
+        # sslInfo = []
+        # try:
+        # async with aiohttp.ClientSession(headers=self.headers) as session:
+        #     result = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), json=True)
+        #     for (key, value) in enumerate(result):
+        #         subdomainSSL = value['name_value'].split('\n')
+        #         if len(subdomainSSL) == 2:
+        #             domainInfo = {'ssl': subdomainSSL[0], 'subdomain': subdomainSSL[1]}
+        #             self.resList.append(subdomainSSL[1])
+        #         else:
+        #             domainInfo = {'ssl': 'None', 'subdomain': subdomainSSL[0]}
+        #             self.resList.append(subdomainSSL[0])
+        #
+        #         # 一起放到列表中进行存储
+        #         sslInfo.append(domainInfo)
+        # except Exception as e:
+        #     print('[-] curl crt.sh error. {}'.format(e.args))
 
-                    # 一起放到列表中进行存储
-                    sslInfo.append(domainInfo)
-        except Exception as e:
-            print('[-] curl crt.sh error. {}'.format(e.args))
+        tempDomainList = []
+        # limit_resolve_conn = 100
+        # semaphore = asyncio.Semaphore(limit_resolve_conn)
+        # async with semaphore:
+        result = await AsyncFetcher.fetchAll(urls=self.domainList, takeover=True)
+        for _ in result:
+            matchdomainList = self.matchSubdomain('zjhu.edu.cn', _[1])
+            _matchdomainList = list(set(matchdomainList))
+            for domain in _matchdomainList:
+                flag = True
+                for _domain in self.domainList:
+                    if str(domain) == str(_domain):
+                        flag = False
+                        break
+                if flag:
+                    tempDomainList.append(domain)  # 存放新的子域名的列表
+        print('[+] [{}] [{}] {}'.format(self.source, len(tempDomainList), tempDomainList))
+        self.resList.extend(tempDomainList)
 
-        # 列表中的字典去重
-        self.writeFile(getUniqueList(sslInfo), 1)
+        while tempDomainList:
+            result = await AsyncFetcher.fetchAll(urls=tempDomainList, takeover=True)
+            tempDomainList = []
+            for _ in result:
+                matchdomainList = self.matchSubdomain(self.domain, _[1])
+                _matchdomainList = list(set(matchdomainList))
+                for domain in _matchdomainList:
+                    flag = True
+                    for _domain in self.domainList:
+                        if str(domain) == str(_domain):
+                            flag = False
+                            break
+                    if flag:
+                        tempDomainList.append(domain)  # 存放新的子域名的列表
+            tempDomainList = list(set(tempDomainList))
+            print('[+] [{}] [{}] {}'.format(self.source, len(tempDomainList), tempDomainList))
+            self.resList.extend(tempDomainList)
 
         # 返回结果
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
 
     async def main(self):
-        logging.info("Ctfr Spider Start")
         await self.spider()
         return self.resList
 
 
 if '__main__' == __name__:
-    FriendChainsSpider('nbcc.cn').main()
+    # queue = asyncio.Queue(-1)
+    # FriendChainsSpider('nbcc.cn', queue).main()
+    baidu = FriendChainsSpider(
+        ['qzxylib.zjhu.edu.cn', '61.153.52.74', 'wgyxy.zjhu.edu.cn', 'ic.zjhu.edu.cn', 'rwxy.qzxy.zjhu.edu.cn',
+         'tzb.zjhu.edu.cn', 'dag.zjhu.edu.cn', 'yjsy.zjhu.edu.cn'])
+    loop = asyncio.get_event_loop()
+    res = loop.run_until_complete(baidu.main())

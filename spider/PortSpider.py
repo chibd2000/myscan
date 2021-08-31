@@ -157,10 +157,10 @@ class PortScan(object):
 if __name__ == '__main__':
     clear_task_list = [
         {'subdomain': '', 'ips': '60.190.19.102', 'port': [], 'target': 'ip'},
-        {'subdomain': 'webvpn.nbcc.cn', 'ips': '42.247.33.26', 'port': None, 'target': 'subdomain'},
-        {'subdomain': 'a004.cache.saaswaf.com', 'ips': '119.188.95.114', 'port': None, 'target': 'webdomain'},
-        {'subdomain': 'vpn.nbcc.cn', 'ips': '42.247.33.25', 'port': None, 'target': 'subdomain'},
-        {'subdomain': 'vpan.nbcc.cn', 'ips': '120.79.66.58', 'port': None, 'target': 'subdomain'},
+        {'subdomain': 'webvpn.zjhu.edu.cn', 'ips': '42.247.33.26', 'port': None, 'target': 'subdomain'},
+        {'subdomain': 'bd.bafang.com', 'ips': '119.188.95.114', 'port': None, 'target': 'webdomain'},
+        {'subdomain': 'admin.bafang.com', 'ips': '42.247.33.25', 'port': None, 'target': 'subdomain'},
+        {'subdomain': 'qax.bafang.com', 'ips': '120.79.66.58', 'port': None, 'target': 'subdomain'},
     ]
 
     multiprocessing.freeze_support()
@@ -177,7 +177,7 @@ if __name__ == '__main__':
                 if flag == 0:
                     temp_ips.append(aaa)
                     # print("已经扫描过的ip有如下：", temp_ips)
-                    bbb = PortScan(aaa)
+                    bbb = PortScan('test.com', aaa)
                     pool.apply_async(func=bbb.main)  # 异步运行,非阻塞
     pool.close()
     pool.join()
