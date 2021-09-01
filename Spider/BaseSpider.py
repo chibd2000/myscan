@@ -11,10 +11,11 @@ import random
 import base64
 import json
 import os
+import socket
 from core.asynchttp import *
 from threading import Lock
 from spider.common.config import *
-from common.tools import *
+# from common.tools import *
 
 abs_path = os.getcwd() + os.path.sep  # 路径
 
@@ -27,7 +28,6 @@ logging.basicConfig(level=logging.INFO, filemode='a', format="[%(levelname)s]%(a
 
 
 # filename='./Logs/worklog.txt'
-
 
 class Spider(metaclass=abc.ABCMeta):
     source = 'BaseSpider'

@@ -2,12 +2,11 @@
 from spider.thirdLib.third import *
 
 
-
 class Censys(ThirdBase):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
-        self.addr = ""
+        self.addr = 'https://censys.io/'
         self.id = config.censysId
         self.secret = config.censysSecret
 

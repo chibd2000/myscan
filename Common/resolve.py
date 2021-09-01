@@ -59,8 +59,8 @@ def resolve_callback(future, index, datas):
             if answers:
                 ips = answers[0].host  # 这里解析到的ip就拿一个
                 datas[index]['ip'] = str(ips)
-            else:
-                datas[index]['ip'] = 'No answers'
+            # else:
+            #     datas[index]['ip'] = 'No answers'
 
 
 async def bulk_query_a(datas):

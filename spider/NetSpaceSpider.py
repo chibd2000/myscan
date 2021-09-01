@@ -185,8 +185,7 @@ class NetSpider(Spider):
                                 if p['ip'] == _ip:
                                     p['port'].append(_port)
 
-                    domainList = getUniqueList(domainList)
-                    self.writeFile(domainList, 3)
+                    self.writeFile(getUniqueList(domainList), 3)
                 except Exception as e:
                     print('curl fofa.so api error, error is {}'.format(e.args))
 
@@ -355,8 +354,7 @@ class NetSpider(Spider):
                             for p in self.IpPortList:
                                 if p['ip'] == _ip:
                                     p['port'].append(_port)
-                domainList = getUniqueList(domainList)
-                self.writeFile(domainList, 5)
+                self.writeFile(getUniqueList(domainList), 5)
             except Exception as e:
                 print('curl shodan api error, error is {}'.format(e.args))
             # async with aiohttp.ClientSession(headers=headers) as session:

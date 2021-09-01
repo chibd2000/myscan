@@ -6,6 +6,7 @@ import asyncio
 from typing import Union, Tuple, Any
 
 import aiohttp
+import socket
 import random
 import ssl
 import certifi

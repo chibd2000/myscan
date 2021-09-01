@@ -13,6 +13,7 @@ from urllib.parse import quote
 
 abs_path = os.getcwd() + os.path.sep
 
+
 class JSSpider(Spider):
     def __init__(self, target):
         super().__init__()

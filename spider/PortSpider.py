@@ -25,8 +25,8 @@ class PortScan(object):
         self._ip = _ip
 
     # 写文件操作
-    def write_file(self, web_lists, target, page):
-        workbook = openpyxl.load_workbook(abs_path + str(target) + ".xlsx")
+    def writeFile(self, web_lists, page):
+        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
         worksheet = workbook.worksheets[page]
         index = 0
         while index < len(web_lists):
@@ -38,14 +38,13 @@ class PortScan(object):
             web.append(web_lists[index]['title'])  # title
             worksheet.append(web)
             index += 1
-        workbook.save(abs_path + str(target) + ".xlsx")
+        workbook.save(abs_path + str(self.domain) + ".xlsx")
         workbook.close()
 
     # 调用masscan识别端口
     def Portscan(self, scan_ip):
         temp_ports = []  # 设定一个临时端口列表
-        os.system(
-            abs_path + 'masscan.exe ' + str(scan_ip) + ' -p 1-65535 -oJ /result/' + str(scan_ip) + '.json --rate 1000')
+        os.system(abs_path + 'masscan.exe ' + str(scan_ip) + ' -p 1-65535 -oJ /result/' + str(scan_ip) + '.json --rate 1000')
 
         # 提取json文件中的端口
         with open(abs_path + '/result/masscan' + str(scan_ip) + '.json', 'r') as f:
@@ -151,7 +150,7 @@ class PortScan(object):
         print("当前正在扫描的IP为：" + self._ip)
         self.Portscan(self._ip)
         self.Scan(self._ip)
-        self.write_file(self.scanlists, self.domain, 1)
+        self.writeFile(self.scanlists, 1)
 
 
 if __name__ == '__main__':

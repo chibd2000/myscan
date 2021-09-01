@@ -9,6 +9,7 @@ from spider.DnsDataSpider import *
 from spider.PortSpider import *
 from spider.GithubSpider import *
 from spider.JavaScriptSpider import *
+from spider.ip2domainSpider import *
 from spider.ParamLinkSpider import *
 from spider.FriendChainsSpider import *
 from spider.StructSpider import *
@@ -59,7 +60,6 @@ class Spider(object):
         ksubdomainList = []
         ksubdomain_folder = './ksubdomain'
         ksubdomain_file = '{}/{}.txt'.format(ksubdomain_folder, self.domain)
-
         os.system('./ksubdomain/ksubdomain -d {} -o {}'.format(self.domain, ksubdomain_file))
         try:
             with open(ksubdomain_file, 'rt') as f:
@@ -134,6 +134,18 @@ class Spider(object):
         self.domainList.extend(resList)
         self.lock.release()
 
+    # github spider
+    def githubSpider(self):
+        logging.info("githubSpider Start")
+        cftr = GithubSpider(self.domain)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        t = loop.create_task(cftr.main())
+        resList = loop.run_until_complete(t)
+        self.lock.acquire()
+        self.domainList.extend(resList)
+        self.lock.release()
+
     # FOFA/Shodan/Quake360
     def netSpider(self):
         logging.info("netSpider Start")
@@ -147,10 +159,25 @@ class Spider(object):
         self.domainList.extend(resList)
         self.lock.release()
 
+    # 友链爬取
+    def friendChainsSpider(self):
+        logging.info("friendChainsSpider Start")
+        # queue = asyncio.Queue(-1)
+        # for domain in self.domainList:
+        #     queue.put(domain)
+        friend = FriendChainsSpider(self.domain, self.domainList)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        t = loop.create_task(friend.main())
+        resList = loop.run_until_complete(t)
+        self.lock.acquire()
+        self.domainList.extend(resList)
+        self.domainList = list(set(self.domainList))
+        self.lock.release()
+
     # asyncio domain2ip
     def domain2ip(self):
         logging.info("domain2ipSpider Start")
-        global gIpList
         ip2domainList = []
         for subdomain in self.domainList:
             ip2domainList.append({'subdomain': subdomain, 'ip': ''})
@@ -158,6 +185,7 @@ class Spider(object):
         asyncio.set_event_loop(loop)
         task = resolve.bulk_query_a(ip2domainList)  # 解析域名地址A记录
         resolvedomain2IpList = loop.run_until_complete(task)
+        global gIpList
         for _ in resolvedomain2IpList:
             gIpList.append(_['ip'])
         gIpList = list(set(gIpList))
@@ -180,53 +208,11 @@ class Spider(object):
     def ip2domain(self):
         logging.info("ip2domainSpider Start")
         global gIpList
-        ip2domain_dict = {}
-        for ip in gIpList:
-            try:
-                res = requests.get(url='http://api.webscan.cc/?action=query&ip={}'.format(ip), timeout=10, verify=False)
-                text = res.text
-                if text != 'null':
-                    results = eval(text)
-                    domains = []
-                    for aDomain in results:
-                        domains.append(aDomain['domain'])
-                    # domains = cmp.findall(text)
-                    if domains:
-                        ip2domain_dict[ip] = domains
-                        if self.domain:
-                            for each in domains:
-                                pass
-                                # if _domain in each and domain not in each:
-                                #     newDomains.append(each)
-            except Exception as e:
-                print('[error] ip2domain: {}'.format(e.args))
-
-        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
-        worksheet = workbook.worksheets[4]
-        index = 0
-        while index < len(ip2domain_dict):
-            web = list()
-            web.append(ip2domain_dict[index]['spider'])
-            web.append(ip2domain_dict[index]['keyword'])
-            web.append(ip2domain_dict[index]['link'])
-            web.append(ip2domain_dict[index]['title'])
-            worksheet.append(web)
-            index += 1
-        workbook.save(abs_path + str(self.domain) + ".xlsx")
-        workbook.close()
-
-    # github spider
-    def githubSpider(self):
-        logging.info("githubSpider Start")
-
-        cftr = GithubSpider(self.domain)
-        loop = asyncio.new_event_loop()
+        loop = asyncio.get_event_loop()
         asyncio.set_event_loop(loop)
-        t = loop.create_task(cftr.main())
-        resList = loop.run_until_complete(t)
-        self.lock.acquire()
+        ip2domain = Ip2domainSpider(self.domain, gIpList)
+        resList = loop.run_until_complete(ip2domain.main())
         self.domainList.extend(resList)
-        self.lock.release()
 
     # port spider
     def ipPortSpider(self):
@@ -250,278 +236,84 @@ class Spider(object):
         pool.close()
         pool.join()
 
-    def flushResult(self):
-        # 第一次 清理 去域名协议
-        for i in self.task_list:
-            if 'http' in i:
-                self.task_list[self.task_list.index(i)] = i.split('//')[1]
-
-        # 第二次 清理去重 去重复值
-        self.task_list = list(set(self.task_list))
-
-        # 第三次 可视化格式数据拼接
-        # 拼接的格式如：[{"subdomain": "www.zjhu.edu.cn","ips": "1.1.1.1","port":[7777,8888],"target","yes"}]
-        ip_port = {}
-        for aa in self.task_list:
-            i = aa.split(':')
-            if ':' in aa:
-                if str(i[0]) in ip_port.keys():
-                    ip_port[str(i[0])].append(str(i[1]))
-                else:
-                    ip_port[str(i[0])] = [str(i[1])]
-
-        for aa in self.task_list:
-            info = dict()
-            # 第一种情况：子域名 非正常ip 非正常域名
-            if self.domain in aa:
-                info['subdomain'] = aa
-                info['ip'] = ''
-                info['port'] = None
-                info['target'] = 'subdomain'  # 作为子域名的一个标识符
-                self.clearTaskList.append(info)
-
-            # 第二种情况：非正常子域名 非正常ip 正常域名
-            elif self.domain not in aa and not re.match(r'\d+.\d+.\d+:?\d?', aa):
-                info['subdomain'] = aa
-                info['ip'] = ''
-                info['port'] = None
-                info['target'] = 'webdomain'
-                self.clearTaskList.append(info)
-
-            # 第三种情况：非正常子域名 非正常域名 正常ip
-            else:
-                i = aa.split(':')
-                if ':' in aa:
-                    ip = i[0]
-                    info['subdomain'] = ''
-                    info['ip'] = ip
-                    info['port'] = ip_port[ip]
-                    info['target'] = 'ip'
-                    self.clearTaskList.append(info)
-                else:
-                    ip = i[0]
-                    info['subdomain'] = ''
-                    info['ip'] = ip
-                    info['port'] = list()
-                    info['target'] = 'ip'
-                    self.clearTaskList.append(info)
-
-    # 友链爬取
-    async def friendChainsSpider(self):
-        logging.info("friendChainsSpider Start")
-        # queue = asyncio.Queue(-1)
-        # for domain in self.domainList:
-        #     queue.put(domain)
-        friend = FriendChainsSpider(self.domain, self.domainList)
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        t = loop.create_task(friend.main())
-        resList = loop.run_until_complete(t)
-        self.lock.acquire()
-        self.domainList.extend(resList)
-        self.lock.release()
-
     # 存活探测，限制并发数
     def AliveSpider(self):
         logging.info("aliveSpider Start")
-        limit_resolve_conn = 100
-        semaphore = asyncio.Semaphore(limit_resolve_conn)
-        # async with semaphore:
-        #     pass
 
     # main start
     def run(self):
-
+        # 检查cdn
         def checkCdn(domain):
             logging.info("checkCdn start")
 
             randomStr = "abcdefghijklmn"
 
-        def getLinks(domain):
+        # 整理数据，相关格式之类的整理
+        def flushResult():
+            # 第一次 清理 去域名协议
+            for i in self.task_list:
+                if 'http' in i:
+                    self.task_list[self.task_list.index(i)] = i.split('//')[1]
+
+            # 第二次 清理去重 去重复值
+            self.task_list = list(set(self.task_list))
+
+            # 第三次 可视化格式数据拼接
+            # 拼接的格式如：[{"subdomain": "www.zjhu.edu.cn","ips": "1.1.1.1","port":[7777,8888],"target","yes"}]
+            ip_port = {}
+            for aa in self.task_list:
+                i = aa.split(':')
+                if ':' in aa:
+                    if str(i[0]) in ip_port.keys():
+                        ip_port[str(i[0])].append(str(i[1]))
+                    else:
+                        ip_port[str(i[0])] = [str(i[1])]
+
+            for aa in self.task_list:
+                info = dict()
+                # 第一种情况：子域名 非正常ip 非正常域名
+                if self.domain in aa:
+                    info['subdomain'] = aa
+                    info['ip'] = ''
+                    info['port'] = None
+                    info['target'] = 'subdomain'  # 作为子域名的一个标识符
+                    self.clearTaskList.append(info)
+
+                # 第二种情况：非正常子域名 非正常ip 正常域名
+                elif self.domain not in aa and not re.match(r'\d+.\d+.\d+:?\d?', aa):
+                    info['subdomain'] = aa
+                    info['ip'] = ''
+                    info['port'] = None
+                    info['target'] = 'webdomain'
+                    self.clearTaskList.append(info)
+
+                # 第三种情况：非正常子域名 非正常域名 正常ip
+                else:
+                    i = aa.split(':')
+                    if ':' in aa:
+                        ip = i[0]
+                        info['subdomain'] = ''
+                        info['ip'] = ip
+                        info['port'] = ip_port[ip]
+                        info['target'] = 'ip'
+                        self.clearTaskList.append(info)
+                    else:
+                        ip = i[0]
+                        info['subdomain'] = ''
+                        info['ip'] = ip
+                        info['port'] = list()
+                        info['target'] = 'ip'
+                        self.clearTaskList.append(info)
+
+        # 整理数据，去除cdn段的asn @ske大师兄
+        def flushAsn():
             pass
-            # 1、https://www.yamibuy.com/cn/brand.php?id=566
-            # 2、http://www.labothery-tea.cn/chanpin/2018-07-12/4.html
-            # if 'gov.cn' in self.url:
-            #     return 0
-            #     pass
 
-            # http://www.baidu.com/ -> www.baidu.com/ -> www.baidu.com -> baidu.com
+        # 整理数据，去除cdn段的节点段 @ske大师兄
+        def flushIpSegment():
+            pass
 
-            # domain = domain.split('//')[1].strip('/').replace('www.', '')
-            # result = []
-            # id_links = []
-            # html_links = []
-            # result_links = {}
-            # html_links_s = []
-            # result_links['title'] = '网址标题获取失败'
-            # idid = []
-            # htht = []
-            # try:
-            #     headers = {
-            #         'Accept': 'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            #         'Cache-Control': 'max-age=0',
-            #         'Accept-Charset': 'GBK,utf-8;q=0.7,*;q=0.3',
-            #     }
-            #     rxww = requests.get(domain, headers=headers, verify=False, timeout=10)
-            #     soup = BeautifulSoup(rxww.content, 'html.parser', from_encoding='iso-8859-1')
-            #
-            #     try:
-            #         encoding = requests.utils.get_encodings_from_content(rxww.text)[0]
-            #         res = rxww.content.decode(encoding, 'replace')
-            #         title_pattern = '<title>(.*?)</title>'
-            #         title = re.search(title_pattern, res, re.S | re.I)
-            #         result_links['title'] = str(title.group(1))
-            #     except:
-            #         pass
-            #
-            #     if result_links['title'] == '' or result_links['title'] == None:
-            #         result_links['title'] = '网址标题获取失败'
-            #
-            #     links = soup.findAll('a')
-            #     for link in links:  # 判断是不是一个新的网站
-            #         _url = link.get('href')
-            #         res = re.search('(javascript|:;|#|%)', str(_url))
-            #         res1 = re.search(
-            #             '.(jpg|png|bmp|mp3|wma|wmv|gz|zip|rar|iso|pdf|txt)', str(_url))
-            #         if res == None and res1 == None:
-            #             result.append(str(_url))  # 是的话 那么添加到result列表中
-            #         else:
-            #             pass
-            #     # print(result)
-            #     # time.sleep(50)
-            #     if result != []:
-            #         rst = list(set(result))
-            #         for rurl in rst:  # 再进行二次判断是不是子域名 这次的判断有三种情况
-            #             if '//' in rurl and 'http' in rurl and domain in rurl:
-            #                 # http // domain 都在
-            #                 # https://www.yamibuy.com/cn/search.php?tags=163
-            #                 # http://news.hnu.edu.cn/zhyw/2017-11-11/19605.html
-            #                 if '?' in rurl and '=' in rurl:
-            #                     # result_links.append(rurl)
-            #                     id_links.append(rurl.strip())
-            #                 if '.html' in rurl or '.shtml' in rurl or '.htm' in rurl or '.shtm' in rurl:
-            #                     if '?' not in rurl:
-            #                         # result_links.append(rurl)
-            #                         html_links.append(rurl.strip())
-            #             # //wmw.dbw.cn/system/2018/09/25/001298805.shtml
-            #             if 'http' not in rurl and domain in rurl:
-            #                 # http 不在    domain 在
-            #                 if '?' in rurl and '=' in rurl:
-            #                     id_links.append('http://' + rurl.lstrip('/').strip())
-            #                 if '.html' in rurl or '.shtml' in rurl or '.htm' in rurl or '.shtm' in rurl:
-            #                     if '?' not in rurl:
-            #                         html_links.append(
-            #                             'http://' + rurl.lstrip('/').strip())
-            #
-            #             # /chanpin/2018-07-12/3.html"
-            #             if 'http' not in rurl and domain not in rurl:
-            #                 # http 不在  domain 不在
-            #                 if '?' in rurl and '=' in rurl:
-            #                     id_links.append(
-            #                         'http://' + domain.strip() + '/' + rurl.strip().lstrip('/'))
-            #                 if '.html' in rurl or '.shtml' in rurl or '.htm' in rurl or '.shtm' in rurl:
-            #                     if '?' not in rurl:
-            #                         html_links.append(
-            #                             'http://' + domain.strip() + '/' + rurl.strip().lstrip('/'))
-            #
-            #         # print(html_links)
-            #         # print(id_links)
-            #         # time.sleep(50)
-            #
-            #         for x1 in html_links:  # 对于爬取到的后缀是html等等参数链接进行二次处理 是否能够访问
-            #             try:
-            #                 rx1 = requests.get(url=x1, headers=headers, timeout=15)
-            #                 if rx1.status_code == 200:
-            #                     htht.append(x1)
-            #             except Exception as e:
-            #                 print(e.args)
-            #                 pass
-            #         for x2 in id_links:  # 平常的id?=1 这种参数进行二次处理 是否能够访问
-            #             try:
-            #                 rx2 = requests.get(url=x2, headers=headers, timeout=15)
-            #                 if rx2.status_code == 200:
-            #                     if rx2.url.find('=') > 0:
-            #                         idid.append(rx2.url)
-            #
-            #             except Exception as e:
-            #                 print(e.args)
-            #                 pass
-            #
-            #         hthtx = []
-            #         ididx = []
-            #         dic_1 = []
-            #         dic_2 = []
-            #         dic_3 = []
-            #         dic_4 = []
-            #         for i in htht:
-            #             path = urlparse(i).path
-            #             if path.count('/') == 1:
-            #                 dic_1.append(i)
-            #             if path.count('/') == 2:
-            #                 dic_2.append(i)
-            #             if path.count('/') == 3:
-            #                 dic_3.append(i)
-            #             if path.count('/') > 3:
-            #                 dic_4.append(i)
-            #         if dic_1:
-            #             hthtx.append(random.choice(dic_1))
-            #         if dic_2:
-            #             hthtx.append(random.choice(dic_2))
-            #         if dic_3:
-            #             hthtx.append(random.choice(dic_3))
-            #         if dic_4:
-            #             hthtx.append(random.choice(dic_4))
-            #         dic_11 = []
-            #         dic_21 = []
-            #         dic_31 = []
-            #         dic_41 = []
-            #         for i in idid:
-            #             path = urlparse(i).path
-            #             if path.count('/') == 1:
-            #                 dic_11.append(i)
-            #             if path.count('/') == 2:
-            #                 dic_21.append(i)
-            #             if path.count('/') == 3:
-            #                 dic_31.append(i)
-            #             if path.count('/') > 3:
-            #                 dic_41.append(i)
-            #         if dic_11:
-            #             ididx.append(random.choice(dic_11))
-            #         if dic_21:
-            #             ididx.append(random.choice(dic_21))
-            #         if dic_31:
-            #             ididx.append(random.choice(dic_31))
-            #         if dic_41:
-            #             ididx.append(random.choice(dic_41))
-            #
-            #         if hthtx == []:
-            #             pass
-            #         else:
-            #             result_links['html_links'] = hthtx
-            #
-            #         if ididx == []:
-            #             pass
-            #         else:
-            #             result_links['id_links'] = ididx
-            #
-            #     with open('InjEction_links.txt', 'a+', encoding='utf-8')as a:
-            #         if ididx:
-            #             for i in ididx:
-            #                 a.write(i + '\n')
-            #         if hthtx:
-            #             for u in hthtx:
-            #                 a.write(u.replace('.htm', '*.htm').replace('.shtm', '*.shtm') + '\n')
-            #
-            #     if result_links == {}:
-            #         return None
-            #     else:
-            #         return result_links
-            #
-            # except Exception as e:
-            #     print(e.args)
-            # return None
-
-        global gAsnList, gIpList
+        global gAsnList, gIpList, gIpSegmentDict
 
         # 1、checkCdn
         checkCdn(self.domain)
@@ -532,7 +324,7 @@ class Spider(object):
         # self.lock.acquire()
         # self.task_list.extend(dnsbrute_list)
         # self.lock.release()
-        self.ksubdomainSpider()
+        # self.ksubdomainSpider()
 
         # 3、第三方接口查询
         self.thirdSpider()
@@ -540,7 +332,7 @@ class Spider(object):
         # 4、SSL/engine/netSpace/github查询
         # self.threadList.append(Thread(target=self.baiduSpider, ))
         # self.threadList.append(Thread(target=self.bingSpider,))
-        # self.threadList.append(Thread(target=self.ctfrSpider, ))
+        self.threadList.append(Thread(target=self.ctfrSpider, ))
         self.threadList.append(Thread(target=self.netSpider, ))
         # self.threadList.append(Thread(target=self.githubSpider,))
         # self.threadList.append(Thread(target=self.structSpider,))

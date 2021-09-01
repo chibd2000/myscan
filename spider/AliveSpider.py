@@ -1,14 +1,37 @@
 # coding=utf-8
-# @Author   : HengGe's team
-# @Time     : 2021-08-25 13:28
+# @Author   : zpchcbd HG team
+# @Time     : 2021-09-01 11:08
 from urllib.parse import urlparse
+
 from bs4 import BeautifulSoup
+
 from spider.BaseSpider import *
 
 
-class ParamsLinkSpider():
-    @staticmethod
-    def getLinks(url):
+class AliveSpider(Spider):
+    def __init__(self, domain, gIpList):
+        super().__init__()
+        self.source = 'ip2domain'
+        self.domain = domain
+        self.ipList = gIpList
+        self.addr = 'http://api.webscan.cc/?action=query&ip={}'
+
+    def writeFile(self, web_lists, page):
+        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
+        worksheet = workbook.worksheets[page]
+        index = 0
+        while index < len(web_lists):
+            web = list()
+            web.append(web_lists[index]['url'])
+            web.append(web_lists[index]['status'])
+            web.append(web_lists[index]['title'])
+            web.append(web_lists[index]['frame'])
+            worksheet.append(web)
+            index += 1
+        workbook.save(abs_path + str(self.domain) + ".xlsx")
+        workbook.close()
+
+    def getLinks(self, url):
         # 1、https://www.yamibuy.com/cn/brand.php?id=566
         # 2、http://www.labothery-tea.cn/chanpin/2018-07-12/4.html
 
@@ -47,13 +70,13 @@ class ParamsLinkSpider():
                 res = re.search('(javascript|:;|#|%)', str(_url))
                 res1 = re.search(
                     '.(jpg|png|bmp|mp3|wma|wmv|gz|zip|rar|iso|pdf|txt)', str(_url))
-                if res == None and res1 == None:
+                if res is None and res1 is None:
                     result.append(str(_url))  # 是的话 那么添加到result列表中
                 else:
                     pass
             # print(result)
             # time.sleep(50)
-            if result != []:
+            if result:
                 rst = list(set(result))
                 for rurl in rst:  # 再进行二次判断是不是子域名 这次的判断有三种情况
                     if '//' in rurl and 'http' in rurl and domain in rurl:
@@ -166,13 +189,13 @@ class ParamsLinkSpider():
                 else:
                     result_links['id_links'] = ididx
 
-            with open('InjEction_links.txt', 'a+', encoding='utf-8')as a:
-                if ididx:
-                    for i in ididx:
-                        a.write(i + '\n')
-                if hthtx:
-                    for u in hthtx:
-                        a.write(u.replace('.htm', '*.htm').replace('.shtm', '*.shtm') + '\n')
+            # with open('InjEction_links.txt', 'a+', encoding='utf-8')as a:
+            #     if ididx:
+            #         for i in ididx:
+            #             a.write(i + '\n')
+            #     if hthtx:
+            #         for u in hthtx:
+            #             a.write(u.replace('.htm', '*.htm').replace('.shtm', '*.shtm') + '\n')
 
             if result_links == {}:
                 return None
@@ -184,6 +207,30 @@ class ParamsLinkSpider():
             pass
         return None
 
+    def spider(self):
+        pass
+
+    def main(self):
+        pass
+
 
 if __name__ == '__main__':
     pass
+    # domain = ''
+    # allTargets_Queue = Queue(-1)
+    # allTargets_Queue.put('')
+    # allTargets_Queue.put('')
+    # ip2domain_dict, _newDomains = run_ip2domain(domain, allTargets_Queue)
+    # # for ip in ip2domain_dict:
+    # #     print('[{}] -> {}'.format(ip, ip2domain_dict[ip]))
+    #
+    # print(ip2domain_dict)
+    # subdomains = []
+    # for subdomain in ip2domain_dict.values():
+    #     subdomains.extend(subdomain)
+    #
+    # setSubdomains = list(set(subdomains))
+    # print('[{}] {}'.format(len(setSubdomains), setSubdomains))
+    # print(_newDomains)
+
+#

@@ -1,9 +1,10 @@
 # coding=utf-8
 
 from spider.BaseSpider import *
-from github import Github
+from github import Github, UnknownObjectException
 from github import GithubException
 from spider.common import config
+import logging
 
 
 class GithubSpider(Spider):
