@@ -11,9 +11,9 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/myscan_master$ThirdSublist3r.coverage" NAME="ThirdSublist3r Coverage Results" MODIFIED="1629947262902" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
     <SUITE FILE_PATH="coverage/myscan$AsyncThirdHacktarget.coverage" NAME="AsyncThirdHacktarget Coverage Results" MODIFIED="1629992483595" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
-    <SUITE FILE_PATH="coverage/myscan$getssl.coverage" NAME="getssl Coverage Results" MODIFIED="1630250779098" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/myscan$getssl.coverage" NAME="getssl Coverage Results" MODIFIED="1630491810527" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan_master$test_write_mul.coverage" NAME="test_write_mul Coverage Results" MODIFIED="1594870652532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/myscan$batch.coverage" NAME="batch Coverage Results" MODIFIED="1630293948492" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/myscan$batch.coverage" NAME="batch Coverage Results" MODIFIED="1630501204514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$__init__.coverage" NAME="__init__ Coverage Results" MODIFIED="1629981025901" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="D:/python38/Lib/site-packages/cloudscraper" />
     <SUITE FILE_PATH="coverage/myscan$favico.coverage" NAME="favico Coverage Results" MODIFIED="1630056486725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan_master$BaiduSpider.coverage" NAME="BaiduSpider Coverage Results" MODIFIED="1629816109673" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider" />
@@ -24,6 +24,7 @@
     <SUITE FILE_PATH="coverage/myscan$yapi.coverage" NAME="yapi Coverage Results" MODIFIED="1630310193126" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit/web" />
     <SUITE FILE_PATH="coverage/myscan_master$ThirdChaziyu.coverage" NAME="ThirdChaziyu Coverage Results" MODIFIED="1629947809293" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
     <SUITE FILE_PATH="coverage/myscan_master$ThirdSitedossier.coverage" NAME="ThirdSitedossier Coverage Results" MODIFIED="1629870978977" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
+    <SUITE FILE_PATH="coverage/myscan$testSegment.coverage" NAME="testSegment Coverage Results" MODIFIED="1630505544155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan_master$BingSpider.coverage" NAME="BingSpider Coverage Results" MODIFIED="1629816184147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider" />
     <SUITE FILE_PATH="coverage/myscan$sitedossier.coverage" NAME="sitedossier Coverage Results" MODIFIED="1630243891713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
     <SUITE FILE_PATH="coverage/myscan$BeianSpider.coverage" NAME="BeianSpider Coverage Results" MODIFIED="1630325793148" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider" />
@@ -43,7 +44,7 @@
     <SUITE FILE_PATH="coverage/myscan$HILLSTONE.coverage" NAME="HILLSTONE Coverage Results" MODIFIED="1629991621699" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Exploit/Web" />
     <SUITE FILE_PATH="coverage/myscan$certspotter.coverage" NAME="certspotter Coverage Results" MODIFIED="1630242455148" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
     <SUITE FILE_PATH="coverage/myscan$AsyncThirdAlienvault__1_.coverage" NAME="AsyncThirdAlienvault (1) Coverage Results" MODIFIED="1630075455802" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
-    <SUITE FILE_PATH="coverage/myscan$ximcx.coverage" NAME="ximcx Coverage Results" MODIFIED="1630245123987" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
+    <SUITE FILE_PATH="coverage/myscan$ximcx.coverage" NAME="ximcx Coverage Results" MODIFIED="1630506535442" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
     <SUITE FILE_PATH="coverage/myscan$bbb.coverage" NAME="bbb Coverage Results" MODIFIED="1630124379418" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$asyncentrust.coverage" NAME="asyncentrust Coverage Results" MODIFIED="1630301610971" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
     <SUITE FILE_PATH="coverage/myscan$BaseSpider.coverage" NAME="BaseSpider Coverage Results" MODIFIED="1630077695295" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider" />
@@ -66,6 +67,7 @@
     <SUITE FILE_PATH="coverage/myscan$resolve3.coverage" NAME="resolve3 Coverage Results" MODIFIED="1630419454428" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/common" />
     <SUITE FILE_PATH="coverage/myscan$AsyncThirdBinaryedge.coverage" NAME="AsyncThirdBinaryedge Coverage Results" MODIFIED="1630242229383" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
     <SUITE FILE_PATH="coverage/myscan$jldc.coverage" NAME="jldc Coverage Results" MODIFIED="1630242764368" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
+    <SUITE FILE_PATH="coverage/myscan$AliveSpider.coverage" NAME="AliveSpider Coverage Results" MODIFIED="1630498635898" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider" />
     <SUITE FILE_PATH="coverage/myscan_master$ThirdRapiddns.coverage" NAME="ThirdRapiddns Coverage Results" MODIFIED="1629872163048" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
     <SUITE FILE_PATH="coverage/myscan$ttttttt_boss.coverage" NAME="ttttttt-boss Coverage Results" MODIFIED="1630402948970" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan_master$ThirdSpyse.coverage" NAME="ThirdSpyse Coverage Results" MODIFIED="1629900794956" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
@@ -76,6 +78,7 @@
     <SUITE FILE_PATH="coverage/myscan_master$ThirdXimcx.coverage" NAME="ThirdXimcx Coverage Results" MODIFIED="1629907003362" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
     <SUITE FILE_PATH="coverage/myscan$NetSpider.coverage" NAME="NetSpider Coverage Results" MODIFIED="1630131994902" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider" />
     <SUITE FILE_PATH="coverage/myscan$FriendChainsSpider.coverage" NAME="FriendChainsSpider Coverage Results" MODIFIED="1630474985707" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider" />
+    <SUITE FILE_PATH="coverage/myscan$ttttssl.coverage" NAME="ttttssl Coverage Results" MODIFIED="1630512964436" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$entrust.coverage" NAME="entrust Coverage Results" MODIFIED="1630244933617" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
     <SUITE FILE_PATH="coverage/myscan_master$ThirdCertspotter.coverage" NAME="ThirdCertspotter Coverage Results" MODIFIED="1629870896387" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
     <SUITE FILE_PATH="coverage/myscan$qiye_jiagou.coverage" NAME="qiye_jiagou Coverage Results" MODIFIED="1629999991255" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tusi" />
@@ -104,20 +107,91 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/spider/ip2domainSpider.py">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/batch.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
-              <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
+            <state relative-caret-position="379">
+              <caret line="205" lean-forward="true" selection-start-line="205" selection-end-line="205" />
+              <folding>
+                <element signature="e#16#48#0" expanded="true" />
+                <element signature="e#9169#11301#0" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/tools.py">
+        <entry file="file://$PROJECT_DIR$/spider/ip2domainSpider.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="85" selection-start-line="85" selection-end-line="96" selection-end-column="17" />
+            <state relative-caret-position="247">
+              <caret line="48" column="15" lean-forward="true" selection-start-line="48" selection-start-column="15" selection-end-line="48" selection-end-column="15" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spider/NetSpaceSpider.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="416">
+              <caret line="327" column="47" lean-forward="true" selection-start-line="327" selection-start-column="47" selection-end-line="327" selection-end-column="47" />
+              <folding>
+                <element signature="e#15#37#0" expanded="true" />
+                <element signature="e#23540#26129#0" />
+                <element signature="e#26135#26156#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bbb.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/banner">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="462">
+              <caret line="21" column="50" lean-forward="true" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/spider/FriendChainsSpider.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="292">
+              <caret line="50" column="28" lean-forward="true" selection-start-line="50" selection-start-column="28" selection-end-line="50" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ttttssl.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="352">
+              <caret line="16" column="11" lean-forward="true" selection-start-line="16" selection-start-column="11" selection-end-line="16" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spider/PortSpider.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="528">
+              <caret line="152" column="41" selection-start-line="152" selection-start-column="41" selection-end-line="152" selection-end-column="41" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spider/AliveSpider.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="455">
+              <caret line="60" column="49" selection-start-line="60" selection-start-column="49" selection-end-line="60" selection-end-column="49" />
+              <folding>
+                <element signature="e#76#109#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -125,8 +199,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/asynchttp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="587">
-              <caret line="119" column="25" lean-forward="true" selection-start-line="119" selection-start-column="25" selection-end-line="119" selection-end-column="106" />
+            <state relative-caret-position="355">
+              <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
               <folding>
                 <element signature="e#77#91#0" expanded="true" />
               </folding>
@@ -145,36 +219,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ips</find>
-      <find>Securitytrails</find>
-      <find>getunique</find>
-      <find>domainList</find>
-      <find>if not data.get('</find>
-      <find>match</find>
-      <find>matchSubdomain</find>
-      <find>clearTaskList</find>
-      <find>gAsnList</find>
-      <find>ip</find>
-      <find>ipportlis</find>
-      <find>IpPortList</find>
-      <find>portlist</find>
-      <find>PortSpider</find>
-      <find>sync with semaphore</find>
-      <find>zcjy.zjhu.edu</find>
-      <find>jglxy.zjhu.ed</find>
-      <find>libvpn.zjhu.e</find>
-      <find>rz.zjhu.edu</find>
-      <find>reslist</find>
-      <find>domainli</find>
-      <find>limit</find>
-      <find>61.153.52.11</find>
+      <find>find</find>
+      <find>id_links</find>
+      <find>html_links</find>
+      <find>fetch2</find>
+      <find>session.get</find>
+      <find>gettitle</find>
+      <find>shhzc.zjhu.edu.cn/main*.</find>
+      <find>tifulSoup(text, 'html.pa</find>
+      <find>frame</find>
+      <find>friendChainsSpide</find>
+      <find>ensure_future</find>
+      <find>getLinks</find>
+      <find>self.asnList.appe</find>
+      <find>CN</find>
+      <find>cname</find>
+      <find>subject</find>
+      <find>*.geely.com</find>
+      <find>ca_certs</find>
+      <find>writeFile</find>
+      <find>resList</find>
+      <find>ip反查</find>
+      <find>{ipSegment: 1, 'ip': []}</find>
+      <find>gIpSegmentList</find>
       <find>friendChainsSpider</find>
-      <find>self.friendChainsSpider()</find>
-      <find>ip2domain</find>
-      <find>[error] ip2domain</find>
-      <find>ip2domain_dict</find>
-      <find>no answer</find>
-      <find>getUniqueList</find>
+      <find>tFaviconAndMD5</find>
+      <find>t iconHa</find>
+      <find>gAsnList</find>
+      <find>asn</find>
+      <find>asnList</find>
+      <find>new friendChains</find>
     </findStrings>
     <dirStrings>
       <dir>D:\ALL\myscan</dir>
@@ -190,15 +264,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/exploit/service/rsync.py" />
-        <option value="$PROJECT_DIR$/exploit/service/webdav.py" />
-        <option value="$PROJECT_DIR$/exploit/service/zookeeper.py" />
-        <option value="$PROJECT_DIR$/exploit/service/mongodb.py" />
-        <option value="$PROJECT_DIR$/exploit/service/rmi.py" />
-        <option value="$PROJECT_DIR$/banner" />
-        <option value="$PROJECT_DIR$/test2.py" />
         <option value="$PROJECT_DIR$/spider/StructSpider.py" />
-        <option value="$PROJECT_DIR$/getssl.py" />
         <option value="$PROJECT_DIR$/test_dns.py" />
         <option value="$PROJECT_DIR$/ttttttt-boss.py" />
         <option value="$PROJECT_DIR$/tqdm_Test.py" />
@@ -211,13 +277,10 @@
         <option value="$PROJECT_DIR$/spider/thirdLib/asyncrapiddns.py" />
         <option value="$PROJECT_DIR$/spider/thirdLib/asyncentrust.py" />
         <option value="$PROJECT_DIR$/spider/thirdLib/asynccertspotter.py" />
-        <option value="$PROJECT_DIR$/common/tools.py" />
         <option value="$PROJECT_DIR$/common/resolve2.py" />
         <option value="$PROJECT_DIR$/spider/thirdLib/securitytrails.py" />
         <option value="$PROJECT_DIR$/common/resolve3.py" />
         <option value="$PROJECT_DIR$/exploit/AliveScan.py" />
-        <option value="$PROJECT_DIR$/spider/BaiduSpider.py" />
-        <option value="$PROJECT_DIR$/spider/CtfrSpider.py" />
         <option value="$PROJECT_DIR$/spider/WebParamLinkSpider.py" />
         <option value="$PROJECT_DIR$/exploit/web/CVE-2017-12615.py" />
         <option value="$PROJECT_DIR$/exploit/web/Editor.py" />
@@ -228,19 +291,30 @@
         <option value="$PROJECT_DIR$/spider/thirdLib/asyncalienvault.py" />
         <option value="$PROJECT_DIR$/spider/thirdLib/asyncbinaryedge.py" />
         <option value="$PROJECT_DIR$/spider/thirdLib/censys.py" />
-        <option value="$PROJECT_DIR$/spider/PortSpider.py" />
         <option value="$PROJECT_DIR$/exploit/web/confluence.py" />
         <option value="$PROJECT_DIR$/spider/JavaScriptSpider.py" />
         <option value="$PROJECT_DIR$/spider/ParamLinkSpider.py" />
-        <option value="$PROJECT_DIR$/spider/AliveSpider.py" />
         <option value="$PROJECT_DIR$/spider/GithubSpider.py" />
         <option value="$PROJECT_DIR$/common/resolve.py" />
         <option value="$PROJECT_DIR$/core/asynchttp.py" />
-        <option value="$PROJECT_DIR$/spider/NetSpaceSpider.py" />
+        <option value="$PROJECT_DIR$/getssl.py" />
+        <option value="$PROJECT_DIR$/spider/BaseSpider.py" />
+        <option value="$PROJECT_DIR$/testSegment.py" />
+        <option value="$PROJECT_DIR$/spider/SSLSpider.py" />
+        <option value="$PROJECT_DIR$/spider/thirdLib/ximcx.py" />
+        <option value="$PROJECT_DIR$/spider/thirdLib/chinaz.py" />
+        <option value="$PROJECT_DIR$/spider/BaiduSpider.py" />
+        <option value="$PROJECT_DIR$/spider/BingSpider.py" />
+        <option value="$PROJECT_DIR$/spider/CtfrSpider.py" />
+        <option value="$PROJECT_DIR$/spider/ip2domainSpider.py" />
+        <option value="$PROJECT_DIR$/spider/PortSpider.py" />
         <option value="$PROJECT_DIR$/batch.py" />
         <option value="$PROJECT_DIR$/spider/FriendChainsSpider.py" />
-        <option value="$PROJECT_DIR$/spider/BaseSpider.py" />
-        <option value="$PROJECT_DIR$/spider/ip2domainSpider.py" />
+        <option value="$PROJECT_DIR$/core/hackrequest.py" />
+        <option value="$PROJECT_DIR$/common/tools.py" />
+        <option value="$PROJECT_DIR$/spider/AliveSpider.py" />
+        <option value="$PROJECT_DIR$/ttttssl.py" />
+        <option value="$PROJECT_DIR$/spider/NetSpaceSpider.py" />
       </list>
     </option>
   </component>
@@ -266,12 +340,18 @@
             <path>
               <item name="myscan" type="b2602c69:ProjectViewProjectNode" />
               <item name="myscan" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="myscan" type="b2602c69:ProjectViewProjectNode" />
               <item name="myscan" type="462c0819:PsiDirectoryNode" />
               <item name="spider" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="myscan" type="b2602c69:ProjectViewProjectNode" />
+              <item name="myscan" type="462c0819:PsiDirectoryNode" />
+              <item name="spider" type="462c0819:PsiDirectoryNode" />
+              <item name="thirdLib" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -289,11 +369,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\ALL\myscan\spider\common" />
       <recent name="D:\ALL\myscan\spider" />
       <recent name="D:\ALL\myscan\img" />
       <recent name="D:\ALL\myscan\common" />
       <recent name="D:\ALL\myscan\ksubdomain" />
-      <recent name="D:\ALL\myscan" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\ALL\myscan\spider\common" />
@@ -313,8 +393,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.ip2domainSpider">
-    <configuration name="FriendChainsSpider" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.ttttssl">
+    <configuration name="AliveSpider" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="myscan-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -327,7 +407,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spider/FriendChainsSpider.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spider/AliveSpider.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -336,7 +416,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="PortSpider" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="batch" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="myscan-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -344,12 +424,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/spider" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spider/PortSpider.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/batch.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -358,7 +438,51 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="asyncalienvault" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="testSegment" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="myscan-master" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testSegment.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ttttssl" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="myscan-master" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ttttssl.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ximcx" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="myscan-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -371,51 +495,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spider/thirdLib/asyncalienvault.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="ip2domainSpider" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="myscan-master" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/spider" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spider/ip2domainSpider.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="resolve (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="myscan-master" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/common" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/common/resolve.py" />
+      <option name="SCRIPT_NAME" value="D:\ALL\myscan\spider\thirdLib\asyncximcx.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -425,19 +505,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.resolve (1)" />
-      <item itemvalue="Python.FriendChainsSpider" />
-      <item itemvalue="Python.asyncalienvault" />
-      <item itemvalue="Python.PortSpider" />
-      <item itemvalue="Python.ip2domainSpider" />
+      <item itemvalue="Python.AliveSpider" />
+      <item itemvalue="Python.testSegment" />
+      <item itemvalue="Python.batch" />
+      <item itemvalue="Python.ximcx" />
+      <item itemvalue="Python.ttttssl" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.ip2domainSpider" />
-        <item itemvalue="Python.FriendChainsSpider" />
-        <item itemvalue="Python.PortSpider" />
-        <item itemvalue="Python.asyncalienvault" />
-        <item itemvalue="Python.resolve (1)" />
+        <item itemvalue="Python.ttttssl" />
+        <item itemvalue="Python.ximcx" />
+        <item itemvalue="Python.testSegment" />
+        <item itemvalue="Python.batch" />
+        <item itemvalue="Python.AliveSpider" />
       </list>
     </recent_temporary>
   </component>
@@ -470,23 +550,23 @@
       <workItem from="1630292527562" duration="20986000" />
       <workItem from="1630317525726" duration="21127000" />
       <workItem from="1630386773386" duration="37066000" />
-      <workItem from="1630463218050" duration="12404000" />
+      <workItem from="1630463218050" duration="42421000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="313812000" />
+    <option name="totallyTimeSpent" value="343829000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16044776" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16044776" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" weight="0.30877572" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.30877572" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39761648" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -504,12 +584,12 @@
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
     </layout>
     <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15884861" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16044776" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" weight="0.31960997" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" weight="0.30877572" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39761648" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -548,6 +628,11 @@
           <line>13</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/testSegment.py</url>
+          <line>43</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -561,6 +646,11 @@
   <component name="debuggerHistoryManager">
     <expressions id="setValue">
       <expression>
+        <expression-string>0</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
         <expression-string>'query=ssl%3A%22geely.com%22&amp;minify=True&amp;page=1&amp;key=E00hXnOQ4ep8aM309o5QsCH1JyArnAr8'</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
@@ -568,227 +658,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/spider/common/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="16" column="53" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/securitytrails.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="556">
-          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/BaseExploit.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="880">
-          <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/service/dubbo.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/service/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-          <folding>
-            <element signature="e#93#106#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/web/CVE-2017-12615.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="66" lean-forward="true" selection-start-line="66" selection-end-line="66" />
-          <folding>
-            <element signature="e#52#80#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/web/easyConnect.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="92" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/web/Editor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="90" lean-forward="true" selection-start-line="90" selection-end-line="90" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/service/couchdb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/DirExploit.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-          <folding>
-            <element signature="e#16#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/asynccebaidu.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="16" selection-start-line="16" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/python38/Lib/site-packages/aiohttp/client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="186" column="17" selection-start-line="186" selection-start-column="17" selection-end-line="186" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/asyncfht.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="719">
-          <caret line="39" selection-start-line="39" selection-end-line="40" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/img/assetsFromip.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="1210">
-            <caret line="55" lean-forward="true" selection-start-line="55" selection-end-line="55" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/BaiduSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="120" selection-start-line="120" selection-end-line="122" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/BeianSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="829">
-          <caret line="114" selection-start-line="114" selection-end-line="114" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/asyncjldc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="455">
-          <caret line="29" selection-start-line="29" selection-end-line="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/asyncvirustotal.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-249" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/asyncbinaryedge.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1005">
-          <caret line="46" column="19" selection-start-line="46" selection-start-column="19" selection-end-line="46" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/third.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="34" column="20" selection-start-line="34" selection-start-column="20" selection-end-line="34" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/python38/Lib/logging/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="343">
-          <caret line="2063" column="67" selection-start-line="2063" selection-start-column="67" selection-end-line="2063" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/censys.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/PortSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="511">
-          <caret line="62" column="16" lean-forward="true" selection-start-line="62" selection-start-column="16" selection-end-line="62" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/StructSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-484">
-          <caret line="83" lean-forward="true" selection-start-line="83" selection-end-line="83" />
-          <folding>
-            <element signature="e#73#104#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/asyncthreatbook.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" selection-start-line="1" selection-end-line="1" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/web/confluence.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/rules.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1804">
-          <caret line="82" column="55" lean-forward="true" selection-start-line="82" selection-start-column="55" selection-end-line="82" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/asyncbufferrun.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="26" column="32" lean-forward="true" selection-start-line="26" selection-start-column="32" selection-end-line="26" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/asyncchaziyu.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/asyncentrust.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="39" column="29" lean-forward="true" selection-start-line="39" selection-start-column="29" selection-end-line="39" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/common/resolve4.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="191">
@@ -799,30 +668,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spider/AliveSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
-          <folding>
-            <element signature="e#76#109#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/common/resolve2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1100">
           <caret line="7" selection-start-line="7" selection-end-line="8" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/ParamLinkSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
-          <folding>
-            <element signature="e#74#107#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -850,20 +699,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spider/BingSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="77" column="10" lean-forward="true" selection-start-line="77" selection-start-column="10" selection-end-line="77" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/CtfrSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="45" column="23" selection-start-line="45" selection-start-column="23" selection-end-line="45" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/common/resolve.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="453">
@@ -881,16 +716,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/AliveScan.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="144" column="24" selection-start-line="144" selection-start-column="24" selection-end-line="144" selection-end-column="24" />
-          <folding>
-            <element signature="e#16#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/spider/JavaScriptSpider.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-132">
@@ -898,65 +723,306 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spider/NetSpaceSpider.py">
+    <entry file="file://$PROJECT_DIR$/exploit/BaseExploit.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="644" lean-forward="true" selection-start-line="644" selection-end-line="644" />
+        <state relative-caret-position="44">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
           <folding>
-            <element signature="e#15#37#0" expanded="true" />
+            <element signature="e#16#42#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spider/FriendChainsSpider.py">
+    <entry file="file://D:/python38/Lib/asyncio/streams.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="56" lean-forward="true" selection-start-line="56" selection-end-line="56" />
+        <state relative-caret-position="-427">
+          <caret line="642" column="14" selection-start-line="642" selection-start-column="14" selection-end-line="642" selection-end-column="14" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/batch.py">
+    <entry file="file://D:/python38/Lib/asyncio/tasks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3381">
-          <caret line="376" lean-forward="true" selection-start-line="376" selection-end-line="376" />
+        <state relative-caret-position="204">
+          <caret line="716" column="4" selection-start-line="716" selection-start-column="4" selection-end-line="716" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/SQLInjectExploit.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="33" column="37" selection-start-line="33" selection-start-column="29" selection-end-line="33" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/python38/Lib/site-packages/aiohttp/client_reqrep.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="711" column="8" selection-start-line="711" selection-start-column="8" selection-end-line="711" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/python38/Lib/site-packages/requests/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/ParamLinkSpider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="33" column="18" lean-forward="true" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
           <folding>
-            <element signature="e#16#48#0" expanded="true" />
-            <element signature="e#8773#10915#0" />
+            <element signature="e#74#107#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/asynchttp.py">
+    <entry file="file://$PROJECT_DIR$/exploit/AliveScan.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="587">
-          <caret line="119" column="25" lean-forward="true" selection-start-line="119" selection-start-column="25" selection-end-line="119" selection-end-column="106" />
+        <state relative-caret-position="189">
+          <caret line="37" column="71" lean-forward="true" selection-start-line="36" selection-start-column="112" selection-end-line="37" selection-end-column="71" />
           <folding>
-            <element signature="e#77#91#0" expanded="true" />
+            <element signature="e#16#49#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cloud.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shodantest.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="572">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cacert.pem">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/typeshed/stdlib/2and3/ssl.pyi">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="35" column="46" lean-forward="true" selection-start-line="35" selection-start-column="46" selection-end-line="35" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/python38/Lib/ssl.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3384">
+          <caret line="1120" column="8" selection-start-line="1120" selection-start-column="8" selection-end-line="1120" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/getssl.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+          <folding>
+            <element signature="e#77#90#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="290">
+            <caret line="24" column="4" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spider/BaseSpider.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
+        <state relative-caret-position="374">
+          <caret line="17" column="26" lean-forward="true" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="26" />
           <folding>
             <element signature="e#16#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/tools.py">
+    <entry file="file://$PROJECT_DIR$/spider/SSLSpider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tqdm_Test.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdnSegment">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3260">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testSegment.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="412">
+          <caret line="31" selection-start-line="31" selection-end-line="34" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/common/config.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/thirdLib/chinaz.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="286">
-          <caret line="85" selection-start-line="85" selection-end-line="96" selection-end-column="17" />
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/thirdLib/asyncximcx.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/common/cacert.pem">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/BeianSpider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-66" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/BaiduSpider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="389">
+          <caret line="107" column="53" selection-start-line="107" selection-start-column="53" selection-end-line="107" selection-end-column="53" />
+          <folding>
+            <element signature="e#16#47#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/BingSpider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="80" column="53" selection-start-line="80" selection-start-column="53" selection-end-line="80" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/CtfrSpider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="479">
+          <caret line="45" column="48" selection-start-line="45" selection-start-column="48" selection-end-line="45" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/python38/Lib/site-packages/aiohttp/client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="409">
+          <caret line="850" column="41" selection-start-line="850" selection-start-column="26" selection-end-line="850" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/hackrequest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="651">
+          <caret line="47" column="25" selection-start-line="47" selection-start-column="25" selection-end-line="47" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/tools.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="224" column="36" lean-forward="true" selection-start-line="224" selection-start-column="36" selection-end-line="224" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/PortSpider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="528">
+          <caret line="152" column="41" selection-start-line="152" selection-start-column="41" selection-end-line="152" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/asynchttp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="355">
+          <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
+          <folding>
+            <element signature="e#77#91#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spider/ip2domainSpider.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
+        <state relative-caret-position="247">
+          <caret line="48" column="15" lean-forward="true" selection-start-line="48" selection-start-column="15" selection-end-line="48" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/AliveSpider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="455">
+          <caret line="60" column="49" selection-start-line="60" selection-start-column="49" selection-end-line="60" selection-end-column="49" />
+          <folding>
+            <element signature="e#76#109#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ttttssl.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="16" column="11" lean-forward="true" selection-start-line="16" selection-start-column="11" selection-end-line="16" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/batch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="205" lean-forward="true" selection-start-line="205" selection-end-line="205" />
+          <folding>
+            <element signature="e#16#48#0" expanded="true" />
+            <element signature="e#9169#11301#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/NetSpaceSpider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="327" column="47" lean-forward="true" selection-start-line="327" selection-start-column="47" selection-end-line="327" selection-end-column="47" />
+          <folding>
+            <element signature="e#15#37#0" expanded="true" />
+            <element signature="e#23540#26129#0" />
+            <element signature="e#26135#26156#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bbb.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/banner">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="21" column="50" lean-forward="true" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/FriendChainsSpider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="50" column="28" lean-forward="true" selection-start-line="50" selection-start-column="28" selection-end-line="50" selection-end-column="28" />
         </state>
       </provider>
     </entry>

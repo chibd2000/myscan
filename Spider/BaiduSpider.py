@@ -105,7 +105,7 @@ class BaiduSpider(Spider):
         await asyncio.gather(*[asyncio.create_task(self.fetch(word)) for word in self.words])
 
         # 列表中的字典去重/写入文件
-        self.writeFile(getUniqueList(self.webList), 0)
+        self.writeFile(getUniqueList(self.webList), 1)
 
         # 返回结果
         self.resList = list(set(self.resList))

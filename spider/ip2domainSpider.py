@@ -2,18 +2,7 @@
 # @Author   : ske
 from spider.BaseSpider import *
 
-def getUniqueList(L):
-    (output, temp) = ([], [])
-    for l in L:
-        for k, v in l.items():
-            flag = False
-            if (k, v) not in temp:
-                flag = True
-                break
-        if flag:
-            output.append(l)
-        temp.extend(l.items())
-    return output
+
 class Ip2domainSpider(Spider):
     def __init__(self, domain, gIpList):
         super().__init__()
@@ -63,7 +52,7 @@ class Ip2domainSpider(Spider):
         taskList = [asyncio.create_task(self.getSubdomain(semaphore, ip, ip2domainList)) for ip in self.ipList]
         await asyncio.gather(*taskList)
         # 写文件
-        self.writeFile(getUniqueList(ip2domainList), 7)
+        self.writeFile(getUniqueList(ip2domainList), 6)
         # 返回结果
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

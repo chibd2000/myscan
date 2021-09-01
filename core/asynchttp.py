@@ -52,11 +52,11 @@ class AsyncFetcher:
                 async with session.get(url, ssl=sslcontext, params=params) as response:
                     await asyncio.sleep(2)
                     return response
-
             else:
                 sslcontext = ssl.create_default_context(cafile=certifi.where())
                 async with session.get(url, ssl=sslcontext) as response:
                     await asyncio.sleep(2)
+                    print(await response.text())
                     return response
         except Exception as e:
             print(f'An exception has occurred: {e.args}')

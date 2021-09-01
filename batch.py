@@ -13,6 +13,7 @@ from spider.ip2domainSpider import *
 from spider.ParamLinkSpider import *
 from spider.FriendChainsSpider import *
 from spider.StructSpider import *
+from spider.AliveSpider import *
 
 from common import resolve
 
@@ -28,6 +29,7 @@ import argparse
 import time
 import sys
 import asyncio
+from IPy import IP
 
 if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -35,10 +37,10 @@ if sys.platform == 'win32':
 abs_path = os.getcwd() + os.path.sep  # 路径
 thirdLib = abs_path + 'spider/thirdLib/'
 
-gWebParamsList = []  # 存储可注入探测参数列表 ["http://www.baidu.com/?id=1111*"]
+gParamsList = []  # 存储可注入探测参数列表 ["http://www.baidu.com/?id=1111*"]
 gJavaScriptParamList = []  # 存储js文件中的js敏感接口
 
-gIpSegmentDict = {}  # 存储资产IP区段分布以及资产IP在指定的区段出现的次数  {"111.111.111.0/24":1,"111.111.222.0/24":1}
+gIpSegmentList = []  # 存储资产IP区段分布以及资产IP在指定的区段出现的次数  [{"111.111.111.0/24":1},{"111.111.222.0/24":1}]
 gAsnList = []  # ASN记录
 gIpList = []  # 用来统计gIpSegmentDict
 gTopDomainList = []  # top域名记录
@@ -79,8 +81,7 @@ class Spider(object):
         baidu = BaiduSpider(self.domain)
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        t = loop.create_task(baidu.main())
-        resList = loop.run_until_complete(t)
+        resList = loop.run_until_complete(baidu.main())
         self.lock.acquire()
         self.domainList.extend(resList)
         self.lock.release()
@@ -91,8 +92,7 @@ class Spider(object):
         bing = BingSpider(self.domain)
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        t = loop.create_task(bing.main())
-        resList = loop.run_until_complete(t)
+        resList = loop.run_until_complete(bing.main())
         self.lock.acquire()
         self.domainList.extend(resList)
         self.lock.release()
@@ -190,7 +190,7 @@ class Spider(object):
             gIpList.append(_['ip'])
         gIpList = list(set(gIpList))
         workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
-        worksheet = workbook.worksheets[2]
+        worksheet = workbook.worksheets[3]
         index = 0
         while index < len(resolvedomain2IpList):
             # if self.clear_task_list[index]['subdomain'] != '':
@@ -208,11 +208,15 @@ class Spider(object):
     def ip2domain(self):
         logging.info("ip2domainSpider Start")
         global gIpList
+        gIpList = [i for i in gIpList if i != '']  # 清洗一遍，这里面可能存在一个''，空字符串
         loop = asyncio.get_event_loop()
         asyncio.set_event_loop(loop)
-        ip2domain = Ip2domainSpider(self.domain, gIpList)
-        resList = loop.run_until_complete(ip2domain.main())
+        ip2domainSpider = Ip2domainSpider(self.domain, gIpList)
+        resList = loop.run_until_complete(ip2domainSpider.main())
+        self.lock.acquire()
         self.domainList.extend(resList)
+        self.domainList = list(set(self.domainList))
+        self.lock.release()
 
     # port spider
     def ipPortSpider(self):
@@ -237,19 +241,24 @@ class Spider(object):
         pool.join()
 
     # 存活探测，限制并发数
-    def AliveSpider(self):
+    def aliveSpider(self):
+        global gParamsList
         logging.info("aliveSpider Start")
+        aliveSpider = AliveSpider(self.domain, self.domainList)
+        loop = asyncio.get_event_loop()
+        resList = loop.run_until_complete(aliveSpider.main())
+        gParamsList.extend(resList)
 
     # main start
     def run(self):
-        # 检查cdn
+        # 检查cdn @author ske大师兄
         def checkCdn(domain):
             logging.info("checkCdn start")
 
             randomStr = "abcdefghijklmn"
 
         # 整理数据，相关格式之类的整理
-        def flushResult():
+        def flushResult(domain):
             # 第一次 清理 去域名协议
             for i in self.task_list:
                 if 'http' in i:
@@ -272,7 +281,7 @@ class Spider(object):
             for aa in self.task_list:
                 info = dict()
                 # 第一种情况：子域名 非正常ip 非正常域名
-                if self.domain in aa:
+                if domain in aa:
                     info['subdomain'] = aa
                     info['ip'] = ''
                     info['port'] = None
@@ -280,7 +289,7 @@ class Spider(object):
                     self.clearTaskList.append(info)
 
                 # 第二种情况：非正常子域名 非正常ip 正常域名
-                elif self.domain not in aa and not re.match(r'\d+.\d+.\d+:?\d?', aa):
+                elif domain not in aa and not re.match(r'\d+.\d+.\d+:?\d?', aa):
                     info['subdomain'] = aa
                     info['ip'] = ''
                     info['port'] = None
@@ -305,15 +314,49 @@ class Spider(object):
                         info['target'] = 'ip'
                         self.clearTaskList.append(info)
 
-        # 整理数据，去除cdn段的asn @ske大师兄
-        def flushAsn():
-            pass
+        # 整理数据，去除cdn段的asn 去除cdn段的节点段 @ske大师兄
+        def flushIpSegment(domain):
+            global gIpList, gIpSegmentList
+            tempIpSegmentList = getIpSegment(gIpList)
+            for ipSegment in tempIpSegmentList:
+                gIpSegmentList.append({'ipSegment': ipSegment, 'ip': [], 'num': 0})
+            for ip in gIpList:
+                for ipSegment in tempIpSegmentList:
+                    ipList = IP(ipSegment)
+                    for i in ipList:
+                        if str(ip) == str(i):
+                            for j in gIpSegmentList:
+                                if j.get('ipSegment') == ipSegment:
+                                    j['num'] += 1
+                                    j['ip'].append(ip)
+            workbook = openpyxl.load_workbook(abs_path + str(domain) + ".xlsx")
+            worksheet = workbook.worksheets[4]
+            index = 0
+            while index < len(gIpSegmentList):
+                web = list()
+                web.append(gIpSegmentList[index]['ipSegment'])
+                web.append(str(gIpSegmentList[index]['ip']))
+                web.append(gIpSegmentList[index]['num'])
+                worksheet.append(web)
+                index += 1
+            workbook.save(abs_path + str(domain) + ".xlsx")
+            workbook.close()
 
-        # 整理数据，去除cdn段的节点段 @ske大师兄
-        def flushIpSegment():
-            pass
-
-        global gAsnList, gIpList, gIpSegmentDict
+        def flushAsn(domain):
+            global gAsnList
+            workbook = openpyxl.load_workbook(abs_path + str(domain) + ".xlsx")
+            worksheet = workbook.worksheets[5]
+            index = 0
+            while index < len(gIpSegmentList):
+                web = list()
+                web.append(gIpSegmentList[index]['ipSegment'])
+                web.append(str(gIpSegmentList[index]['ip']))
+                web.append(gIpSegmentList[index]['num'])
+                worksheet.append(web)
+                index += 1
+            workbook.save(abs_path + str(domain) + ".xlsx")
+            workbook.close()
+        global gAsnList, gIpList, gIpSegmentList
 
         # 1、checkCdn
         checkCdn(self.domain)
@@ -355,6 +398,13 @@ class Spider(object):
         # 8、ip2domain
         self.ip2domain()
 
+        # 9、alive
+        self.aliveSpider()
+
+        # 10、asn和ip段整理
+        flushIpSegment(self.domain)
+        flushAsn(self.domain)
+
         # 去重子域名
         self.domainList = list(set(self.domainList))
         print("=============")
@@ -362,14 +412,16 @@ class Spider(object):
         print("=============")
         print('[+] [gIpList] [{}] {}'.format(len(gIpList), gIpList))
         print("=============")
+        print('[+] [gIpSegmentList] [{}] {}'.format(len(gIpSegmentList), gIpSegmentList))
+        print("=============")
+        print('[+] [gParamsList] [{}] {}'.format(len(gParamsList), gParamsList))
+        print("=============")
         print('[+] [ipPortList] [{}] {}'.format(len(self.ipPortList), self.ipPortList))
         print("=============")
         print('[+] [domainList] [{}] {}'.format(len(self.domainList), self.domainList))
 
         # 8、端口扫描，这里的端口扫描自己写的只扫子域名下的ip 可以自行更改target的字段（当走到这里的时候 真正的数据以及格式都是完整的一段数据之后就开始漏洞利用了）
         # self.ipPortSpider()
-
-        # print(self.clearTaskList)
 
         # 最后返回处理好的数据 交给Exploit类
         return self.domainList, self.ipPortList
@@ -471,8 +523,10 @@ if __name__ == '__main__':
     if args.domain:
         if not os.path.exists(abs_path + args.domain + ".xlsx"):
             createXlsx(args.domain)
-        spider = Spider(args.domain)
-        clear_task_list = spider.run()
+            spider = Spider(args.domain)
+            clear_task_list = spider.run()
+        else:
+            print('文件{}.xlsx已存在，如果要运行的话需要将该文件{}.xlsx改名或者删除.'.format(args.domain, args.domain))
         # exploit = Exploit(args.domain, clear_task_list)
         # exploit.run()
     print("总共耗时时间为：" + str(time.time() - starttime))

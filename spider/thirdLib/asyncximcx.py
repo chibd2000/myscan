@@ -14,7 +14,7 @@ class Ximcx(ThirdBase):
         self.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         try:
             async with aiohttp.ClientSession(headers=self.headers) as session:
-                results = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain),json=True)
+                results = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), json=True)
                 code = results['code']
                 if code == 0:
                     for _ in results['data']:

@@ -10,6 +10,7 @@ class Chinaz(ThirdBase):
         super().__init__()
         self.domain = domain
         self.addr = "https://api.sublist3r.com/search.php?domain={}"
+        self.source = 'chinaz'
 
     async def spider(self):
         print('Load chinaz api ...')

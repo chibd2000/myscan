@@ -43,7 +43,7 @@ class CtfrSpider(Spider):
             print('[-] curl crt.sh error. {}'.format(e.args))
 
         # 列表中的字典去重
-        self.writeFile(getUniqueList(sslInfo), 1)
+        self.writeFile(getUniqueList(sslInfo), 2)
 
         # 返回结果
         self.resList = list(set(self.resList))

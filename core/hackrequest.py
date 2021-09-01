@@ -29,11 +29,11 @@ class HackRequest(object):
             favicon = codecs.encode(resp.content, 'base64')
             self.iconHash = mmh3.hash(favicon)
             self.iconMD5 = theMD5
-            print('get iconHash: ', self.iconHash)
-            print('get iconMD5: ', self.iconMD5)
+            print('[+] get iconHash: ', self.iconHash)
+            print('[+] get iconMD5: ', self.iconMD5)
         except Exception as e:
-            print('_getFaviconAndMD5 first failed, error is {}'.format(e.args))
-            print('_getFaviconAndMD5 second ...')
+            print('[-] _getFaviconAndMD5 first failed, error is {}'.format(e.args))
+            print('[+] _getFaviconAndMD5 second ...')
             try:
                 resp_ = requests.get(self.getUrl('www.' + self.domain) + '/favicon.ico')
                 m1_ = hashlib.md5()
@@ -42,10 +42,10 @@ class HackRequest(object):
                 favicon = codecs.encode(resp_.content, 'base64')
                 self.iconHash = mmh3.hash(favicon)
                 self.iconMD5 = theMD5
-                print('get iconHash: ', self.iconHash)
-                print('get iconMD5: ', self.iconMD5)
+                print('[+] get iconHash: ', self.iconHash)
+                print('[+] get iconMD5: ', self.iconMD5)
             except Exception as e:
-                print('_getFaviconAndMD5 second failed, error is {}'.format(e.args))
+                print('[-] _getFaviconAndMD5 second failed, error is {}'.format(e.args))
 
     async def getRequest(self, url):
         try:

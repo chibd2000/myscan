@@ -10,8 +10,10 @@ s = socket.socket()
 s.settimeout(1)
 c = ssl.wrap_socket(s, cert_reqs=ssl.CERT_REQUIRED, ca_certs='./cacert.pem')
 c.settimeout(10)
-c.connect(('150.158.186.39', 3443))
+c.connect(('www.geely.com', 443))
 cert = c.getpeercert()
-print(cert)
+dns_domains = [each[1] for each in cert['subjectAltName']]
+print(dns_domains)
+
 # SSLCertVerificationError 存在
 #

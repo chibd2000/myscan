@@ -50,13 +50,13 @@ class NetSpider(Spider):
                 favicon = codecs.encode(resp.content, 'base64')
                 self.iconHash = mmh3.hash(favicon)
                 self.iconMD5 = theMD5
-                print('get iconHash: ', self.iconHash)
-                print('get iconMD5: ', self.iconMD5)
+                print('[+] get iconHash: ', self.iconHash)
+                print('[+] get iconMD5: ', self.iconMD5)
             else:
                 raise Exception
         except Exception as e:
-            print('_getFaviconAndMD5 first failed, error is {}'.format(e.args))
-            print('_getFaviconAndMD5 second ...')
+            print('[-] _getFaviconAndMD5 first failed, error is {}'.format(e.args))
+            print('[-] _getFaviconAndMD5 second ...')
             try:
                 resp_ = requests.get(getUrl('www.' + self.domain) + '/favicon.ico')
                 if resp_.status_code == 200:
@@ -66,14 +66,14 @@ class NetSpider(Spider):
                     favicon = codecs.encode(resp_.content, 'base64')
                     self.iconHash = mmh3.hash(favicon)
                     self.iconMD5 = theMD5
-                    print('get iconHash: ', self.iconHash)
-                    print('get iconMD5: ', self.iconMD5)
+                    print('[+] get iconHash: ', self.iconHash)
+                    print('[+] get iconMD5: ', self.iconMD5)
                 else:
                     raise Exception
             except Exception as e:
                 self.iconHash = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
                 self.iconMD5 = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-                print('_getFaviconAndMD5 second failed, error is {}'.format(e.args))
+                print('[-] _getFaviconAndMD5 second failed, error is {}'.format(e.args))
 
     def _getBeianCompany(self):
         try:
@@ -86,10 +86,10 @@ class NetSpider(Spider):
             self.beian = compangyName[0]
         except IndexError as e:
             self.beian = 'xxxxxxxxxxxxxxxxxxxxx'
-            print('curl beian no company, {}'.format(e.args))
+            print('[-] curl beian no company, {}'.format(e.args))
         except Exception as e:
             self.beian = 'xxxxxxxxxxxxxxxxxxxxx'
-            print('curl chinaz.com error, {}'.format(e.args))
+            print('[-] curl chinaz.com error, {}'.format(e.args))
 
     # 保存文件
     def writeFile(self, web_lists: list, page: int):
@@ -151,7 +151,7 @@ class NetSpider(Spider):
                         }
                         # print(subdomainInfo)
                         self.ipList.append(banner[2])
-                        self.asnList.append(banner[7])
+                        self.asnList.append(int(banner[7]))
                         self.resList.append(subdomain)
                         domainList.append(subdomainInfo)
                     # self.IpPortList
@@ -185,7 +185,7 @@ class NetSpider(Spider):
                                 if p['ip'] == _ip:
                                     p['port'].append(_port)
 
-                    self.writeFile(getUniqueList(domainList), 3)
+                    self.writeFile(getUniqueList(domainList), 7)
                 except Exception as e:
                     print('curl fofa.so api error, error is {}'.format(e.args))
 
@@ -218,10 +218,10 @@ class NetSpider(Spider):
                                 # print(subdomainInfo)
                                 if banner['ip'] == http['host']:
                                     self.ipList.append(banner['ip'])
-                                    self.asnList.append(banner['asn'])
+                                    self.asnList.append(int(banner['asn']))
                                 else:
                                     self.ipList.append(banner['ip'])
-                                    self.asnList.append(banner['asn'])
+                                    self.asnList.append(int(banner['asn']))
                                     self.resList.append(http['host'])
                                 domainList.append(subdomainInfo)
                         else:
@@ -238,7 +238,7 @@ class NetSpider(Spider):
                                 'search_keyword': keyword
                             }
                             self.ipList.append(banner['ip'])
-                            self.asnList.append(banner['asn'])
+                            self.asnList.append(int(banner['asn']))
                             domainList.append(subdomainInfo)
                         for i in domainList:
                             _ip = i['ip']
@@ -267,7 +267,7 @@ class NetSpider(Spider):
                                     if p['ip'] == _ip:
                                         p['port'].append(_port)
                     domainList = getUniqueList(domainList)
-                    self.writeFile(domainList, 4)
+                    self.writeFile(domainList, 8)
                 except Exception as e:
                     print('curl quake.360.cn api error, error is {}'.format(e.args))
 
@@ -305,7 +305,7 @@ class NetSpider(Spider):
                             }
                             # print(subdomainInfo)
                             self.ipList.append(banner['ip_str'])
-                            self.asnList.append(banner['asn'][2:])
+                            self.asnList.append(int(banner['asn'][2:]))
                             for _ in banner['hostnames']:
                                 self.resList.append(_)
                             domainList.append(subdomainInfo)
@@ -324,7 +324,7 @@ class NetSpider(Spider):
                         }
                         # print(subdomainInfo)
                         self.ipList.append(banner['ip_str'])
-                        self.asnList.append(banner['asn'][2:])
+                        self.asnList.append(int(banner['asn'][2:]))
                         if banner['hostnames']:
                             for _ in banner['hostnames']:
                                 self.resList.append(_)
@@ -354,7 +354,7 @@ class NetSpider(Spider):
                             for p in self.IpPortList:
                                 if p['ip'] == _ip:
                                     p['port'].append(_port)
-                self.writeFile(getUniqueList(domainList), 5)
+                self.writeFile(getUniqueList(domainList), 9)
             except Exception as e:
                 print('curl shodan api error, error is {}'.format(e.args))
             # async with aiohttp.ClientSession(headers=headers) as session:

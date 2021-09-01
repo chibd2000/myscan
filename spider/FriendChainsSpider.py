@@ -53,7 +53,6 @@ class FriendChainsSpider(Spider):
             print('[+] [new friendChains] [{}] {}'.format(len(tempDomainList), tempDomainList))
             self.resList.extend(tempDomainList)
             self.resList = list(set(self.resList))
-            print('\t[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
 
             while tempDomainList:
                 result = await AsyncFetcher.fetchAll(urls=tempDomainList, takeover=True)
@@ -70,7 +69,7 @@ class FriendChainsSpider(Spider):
                         if flag:
                             tempDomainList.append(domain)  # 存放新的子域名的列表
                 tempDomainList = list(set(tempDomainList))
-                print('\t\t[+] [new friendChains] [{}] {}'.format(len(tempDomainList), tempDomainList))
+                print('[+] [new friendChains] [{}] {}'.format(len(tempDomainList), tempDomainList))
                 self.resList.extend(tempDomainList)
         except Exception as e:
             print('curl error is {}'.format(e.args))

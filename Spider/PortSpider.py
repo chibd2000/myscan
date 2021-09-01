@@ -150,7 +150,7 @@ class PortScan(object):
         print("当前正在扫描的IP为：" + self._ip)
         self.Portscan(self._ip)
         self.Scan(self._ip)
-        self.writeFile(self.scanlists, 1)
+        self.writeFile(self.scanlists, 10)
 
 
 if __name__ == '__main__':
