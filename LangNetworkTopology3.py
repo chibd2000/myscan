@@ -322,7 +322,8 @@ class IpInfoScan:
             b'rabbitmq': [b'^amqp\x00\x00\t\x01'],
             b'zookeeper': [b'^zookeeper version: '],
             b'jdwp': [b'xxxxxxxxxxxxxxx'],
-            b'log4j': [b'xxxxxxxxxxx']
+            b'log4j': [b'xxxxxxxxxxx'],
+            b'ajp': [b'\x12\x34\x00\x01\x0a']
         }
         # from https://github.com/al0ne/Vxscan/blob/master/plugins/Scanning/port_scan.py
         self.PortLib = {

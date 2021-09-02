@@ -58,27 +58,27 @@ gIpList = []
 
 漏洞扫描（多进程、多线程、异步IO）：
 
-2、WEB CMS探测 -> 定向EXP利用
+1、CMS框架漏洞
 
-3、敏感路径扫描（只探测脆弱的资产，例如solr phpMyadmin weblogic jboss特征路径）
+2、端口服务漏洞
 
-4、HTTP/IP未授权探测
-
-5、sqlmap调用SQL检测
-
-6、敏感端口反序列化探测
+3、SQL注入漏洞
 
 #用法：
 
 python batch.py -d zjhzu.edu.cn
 
-python batch.py -f zjhzu.edu.cn
+python batch.py -file topDomainList.txt
 
-python batch.py -d zjhzu.edu.cn
+python batch.py -u zjhzu.edu.cn -p jira
 
-python batch.py -d zjhzu.edu.cn
+python batch.py -fofa "cert=\"zjhzu.edu.cn\"" -p jira
 
-python batch.py -v zjhzu.edu.cn
+python batch.py -quake "cert:\"zjhzu.edu.cn\"" -p jira
+
+python batch.py -shodan "ssl:\"zjhzu.edu.cn\"" -p jira
+
+python batch.py -v
 
 #总结：
 
@@ -99,5 +99,11 @@ python batch.py -v zjhzu.edu.cn
 5、https://github.com/laramies/theHarvester
 
 6、https://github.com/knownsec/ksubdomain
+
+#需要优化
+
+1、相关进度条展示
+
+2、fofa/quake 指定关键词->利用探测，有时候新写的EXP需要待验证
 
 

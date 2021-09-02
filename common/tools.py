@@ -217,12 +217,11 @@ def createXlsx(target):
     worksheet8.write_row('A1', headings8)
 
     worksheet9 = workbook.add_worksheet('子域名端口扫描')
-    headings9 = ['ip', '端口', '协议', '服务', '标题']
+    headings9 = ['ip', '端口', '协议', '服务']
     worksheet9.set_column('A:A', 19)
     worksheet9.set_column('B:B', 28)
     worksheet9.set_column('C:C', 21)
     worksheet9.set_column('D:D', 25)
-    worksheet9.set_column('E:E', 20)
     worksheet9.write_row('A1', headings9)
 
     worksheet10 = workbook.add_worksheet('存活网站标题')

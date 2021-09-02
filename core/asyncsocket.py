@@ -5,7 +5,7 @@
 import asyncio
 import asyncore
 
-from _socket import AF_INET
+import socket
 
 
 class Client(asyncore.dispatcher):

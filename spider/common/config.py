@@ -18,7 +18,6 @@ securitytrailsApi = 'Zxq5GccNGfC4rWL6UxE8JIUO5czXmXZe '  # https://securitytrail
 binaryedgeApi = 'd4622310-d99e-4bff-93f4-7bac11c2c03b'  # https://app.binaryedge.io/account/api
 threatbookApi = 'c9c4de91c4cc460e9b0745872d0310e9623ef3c208784bebb714eea6f5b3bc0c'  # https://x.threatbook.cn/v5/myApi
 
-
 ip_scan_mode = 'small'
 url_scan_mode = 'default'
 

@@ -219,26 +219,30 @@ class Spider(object):
         self.lock.release()
 
     # port spider
+    # def ipPortSpider(self):
+    #     logging.info("PortSpider Start")
+    #     multiprocessing.freeze_support()
+    #     temp_ips = []  # 用来记录扫描过的ip 防止多次扫描 节省时间
+    #     pool = multiprocessing.Pool(5)
+    #     for aaa in self.clearTaskList:
+    #         flag = 0
+    #         if aaa['target'] == 'subdomain':
+    #             if aaa['ips'] != '':
+    #                 # 先进行遍历 验证是否重复扫描
+    #                 for i in temp_ips:
+    #                     if aaa['ips'] == i:
+    #                         flag += 1
+    #                 if flag == 0:
+    #                     temp_ips.append(aaa['ips'])
+    #                     # print("已经扫描过的ip有如下：", temp_ips)
+    #                     bbb = PortScan(self.domain, aaa['ips'])
+    #                     pool.apply_async(func=bbb.main)  # 异步阻塞运行
+    #     pool.close()
+    #     pool.join()
+
     def ipPortSpider(self):
-        logging.info("PortScan Start")
-        multiprocessing.freeze_support()
-        temp_ips = []  # 用来记录扫描过的ip 防止多次扫描 节省时间
-        pool = multiprocessing.Pool(5)
-        for aaa in self.clearTaskList:
-            flag = 0
-            if aaa['target'] == 'subdomain':
-                if aaa['ips'] != '':
-                    # 先进行遍历 验证是否重复扫描
-                    for i in temp_ips:
-                        if aaa['ips'] == i:
-                            flag += 1
-                    if flag == 0:
-                        temp_ips.append(aaa['ips'])
-                        # print("已经扫描过的ip有如下：", temp_ips)
-                        bbb = PortScan(self.domain, aaa['ips'])
-                        pool.apply_async(func=bbb.main)  # 异步阻塞运行
-        pool.close()
-        pool.join()
+        logging.info("portSpider Start")
+        pass
 
     # 存活探测，限制并发数
     def aliveSpider(self):
@@ -347,15 +351,14 @@ class Spider(object):
             workbook = openpyxl.load_workbook(abs_path + str(domain) + ".xlsx")
             worksheet = workbook.worksheets[5]
             index = 0
-            while index < len(gIpSegmentList):
+            while index < len(gAsnList):
                 web = list()
-                web.append(gIpSegmentList[index]['ipSegment'])
-                web.append(str(gIpSegmentList[index]['ip']))
-                web.append(gIpSegmentList[index]['num'])
+                web.append(gAsnList[index])
                 worksheet.append(web)
                 index += 1
             workbook.save(abs_path + str(domain) + ".xlsx")
             workbook.close()
+
         global gAsnList, gIpList, gIpSegmentList
 
         # 1、checkCdn
@@ -401,7 +404,10 @@ class Spider(object):
         # 9、alive
         self.aliveSpider()
 
-        # 10、asn和ip段整理
+        # 10、port scan in self.ipPortList
+        # self.ipPortSpider()
+
+        # 11、asn和ip段整理
         flushIpSegment(self.domain)
         flushAsn(self.domain)
 
@@ -420,27 +426,27 @@ class Spider(object):
         print("=============")
         print('[+] [domainList] [{}] {}'.format(len(self.domainList), self.domainList))
 
-        # 8、端口扫描，这里的端口扫描自己写的只扫子域名下的ip 可以自行更改target的字段（当走到这里的时候 真正的数据以及格式都是完整的一段数据之后就开始漏洞利用了）
-        # self.ipPortSpider()
-
         # 最后返回处理好的数据 交给Exploit类
         return self.domainList, self.ipPortList
 
 
 # Exploit
 class Exploit(object):
-    def __init__(self, domain, clearTaskList):
+    def __init__(self, domain, domainList, IpPortList):
         self.thread_list = list()
         self.domain = domain
-        self.clearTaskList = clearTaskList
+        self.domainList = domainList
+        self.IpPortList = IpPortList
 
     def AliveScan(self):
-        AliveScan(self.domain, self.clearTaskList).main()
+        pass
+        # AliveScan(self.domain, self.domainList).main()
 
     def UnauthPortScan(self):
+        pass
         # [{"subdomain": "www.zjhu.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
         queue = asyncio.Queue(-1)
-        for aTask in self.clearTaskList:
+        for aTask in self.domainList:
             aIp = aTask.get('ip')
             aPortList = aTask.get('port')
             for port in aPortList:
@@ -448,7 +454,7 @@ class Exploit(object):
         IpUnauth(self.domain, queue).main()
 
     def unauthLeakHttpScan(self):
-        HttpUnauth(self.domain, self.clearTaskList).main()
+        HttpUnauth(self.domain, self.domainList).main()
 
     def jsExploit(self):
         # SqlScan(self.domain, self.clear_task_list).main()
@@ -457,19 +463,18 @@ class Exploit(object):
     # 基于网站参数的漏扫
     def sqlExploit(self):
         # [{"subdomain": "www.zjhu.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
+        global gParamsList
         queue = asyncio.Queue(-1)
-        for aTask in self.clearTaskList:
-            aIp = aTask.get('ip')
-            aPortList = aTask.get('port')
-            for port in aPortList:
-                queue.put("{}:{}".format(aIp, port))  # IP+端口, 接下里就是异步socket探测banner来进行相关利用即可.
-        IpUnauth(self.domain, queue).main()
+        for aTask in gParamsList:
+            pass
+        #     queue.put("{}:{}".format(aIp, port))  # IP+端口, 接下里就是异步socket探测banner来进行相关利用即可.
+        # IpUnauth(self.domain, queue).main()
 
     # 基于网站框架的漏扫
     def webExploit(self):
         # [{"subdomain": "www.zjhu.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
         queue = asyncio.Queue(-1)
-        for aTask in self.clearTaskList:
+        for aTask in self.domainList:
             aIp = aTask.get('ip')
             aPortList = aTask.get('port')
             for port in aPortList:
@@ -480,7 +485,7 @@ class Exploit(object):
     def serviceExploit(self):
         # [{"subdomain": "www.zjhu.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
         queue = asyncio.Queue(-1)
-        for aTask in self.clearTaskList:
+        for aTask in self.IpPortList:
             aIp = aTask.get('ip')
             aPortList = aTask.get('port')
             for port in aPortList:
@@ -524,9 +529,10 @@ if __name__ == '__main__':
         if not os.path.exists(abs_path + args.domain + ".xlsx"):
             createXlsx(args.domain)
             spider = Spider(args.domain)
-            clear_task_list = spider.run()
+            domainList, ipPortList = spider.run()
+            # exploit = Exploit(args.domain, domainList, ipPortList)
+            # exploit.run()
+
         else:
             print('文件{}.xlsx已存在，如果要运行的话需要将该文件{}.xlsx改名或者删除.'.format(args.domain, args.domain))
-        # exploit = Exploit(args.domain, clear_task_list)
-        # exploit.run()
     print("总共耗时时间为：" + str(time.time() - starttime))
