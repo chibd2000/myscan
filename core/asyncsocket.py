@@ -14,10 +14,10 @@ class Client(asyncore.dispatcher):
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect((host, port))
 
-    def handle_write(self):
+    def handleWrite(self):
         self.send('hello'.encode())
 
-    def handle_read(self):
+    def handleRead(self):
         print(self.recv(1024).decode('utf-8'))
 
 
@@ -26,16 +26,33 @@ class AsyncSocketer:
         pass
 
 
+async def tcp_echo_client(message):
+    reader, writer = await asyncio.open_connection(
+        '127.0.0.1', 6377)
+
+    print(f'Send: {message!r}')
+    writer.write(message.encode())
+    await writer.drain()
+
+    data = await reader.read(100)
+    print(f'Received: {data.decode()!r}')
+
+    print('Close the connection')
+    writer.close()
+    await writer.wait_closed()
+
+
+asyncio.run(tcp_echo_client('Hello World!'))
+
+
 # 193.144.76.212:8000
 # 150.158.186.39:3443
 async def main():
-    loop = asyncio.get_event_loop()
-    a, b = await loop.create_connection(asyncio.BaseProtocol, host='150.158.186.39', port=3443)
-    print(a, b)
+    pass
+    # t = Client('127.0.0.1', 6377)
+    # t.handle_write()
+    # t.handle_read()
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
-
-    # server = Server('localhost', 9090)
-    # client = Client('localhost', 9090)
+    asyncio.run(tcp_echo_client('aaaaaa'))

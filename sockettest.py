@@ -1,11 +1,11 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
-# @Time     : 2021-08-27 18:24
+# @Time     : 2021-09-03 16:52
 
 import socket
-import re
+import asyncio
 
-Banner = {
+banner = {
     b'http': [b'^HTTP/.*\nServer: Apach', b'^HTTP/.*\nServer: nginx', b'HTTP.*?text/html', b'http.*?</html>'],
     b'ssh': [b'^SSH-.*openssh', b'^ssh-', b'connection refused by remote host.'],
     b'netbios': [b'\xc2\x83\x00\x00\x01\xc2\x8f', b'^y\x08.*browse', b'^y\x08.\x00\x00\x00\x00',
@@ -84,7 +84,7 @@ Banner = {
              b'^\x03\x00\x00\x0e\t\xd0\x00\x00\x00[\x02\xa1]\x00\xc0\x01\n$',
              b'^\x03\x00\x00\x0b\x06\xd0\x00\x004\x12\x00'],
     b'rdp-proxy': [b'^nmproxy: procotol byte is not 8\n$'], b'rmi': [b'\x00\x00\x00vinva', b'^n\x00\t'],
-    b'postgresql': [b'invalid packet length', b'^efatal'],
+    b'postgresql': [b'^EInvalid packet length\0$', b'^efatal'],
     b'imap': [b'^\\* ok.*?imap'],
     b'pop': [b'^\\+ok.*?'],
     b'smtp': [b'^220.*?smtp', b'^554 smtp'],
@@ -105,36 +105,27 @@ Banner = {
     b'elasticsearch': [b'cluster_name.*elasticsearch'],
     b'rabbitmq': [b'^amqp\x00\x00\t\x01'],
     b'zookeeper': [b'^zookeeper version: '],
-    b'jdwp': [b'^JDWP-Handshake'],
-    b'log4j': [b'xxxxxxxxxxx']
+    b'jdwp': [b'xxxxxxxxxxxxxxx'],
+    b'log4j': [b'xxxxxxxxxxx'],
+    b'ajp': [b'^AB\0\x13\x04\x01\x90']
 }
 
 
-# 193.144.76.212:8000
-# 150.158.186.39:3443
-def test(ip, port):
-    s = socket.socket()
-    try:
-        s.settimeout(0.7)
-        s.connect((ip, int(port)))
-        s.send(b'zpchcbd\r\n')
-        socketRecv = (s.recv(1024))
-        print("====================")
-        print(socketRecv)
-        s.close()
-        for k, v in Banner.items():
-            for b in v:
-                banner = re.search(b, socketRecv, re.I | re.S)
-                if banner:
-                    return k.decode()
-        return '获取失败'
-    except Exception as e:
-        print(e.args)
-        return
-    finally:
-        s.close()
+async def test():
+    reader, writer = await asyncio.open_connection('127.0.0.1', 6377)
+    writer.write(b'*1\r\n$4\r\ninfo\r\n\n')
+    await writer.drain()
 
+    data = await reader.read(100)
+    print(data)
+    writer.close()
+
+    # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # s.settimeout(0.7)
+    # s.connect(('127.0.0.1', 6377))
+    # s.send(b'INFO\r\n')
+    # data = s.recv(1024)
+    # print(data)
 
 if __name__ == '__main__':
-    print(test('39.104.69.101', 900))
-    # test('150.158.186.39', 3443)
+    asyncio.run(test())

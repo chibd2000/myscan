@@ -183,7 +183,7 @@ class NetSpider(Spider):
                         if flag:
                             for p in self.IpPortList:
                                 if p['ip'] == _ip:
-                                    p['port'].append(_port)
+                                    p['port'].append(int(_port))
 
                     self.writeFile(getUniqueList(domainList), 7)
                 except Exception as e:

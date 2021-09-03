@@ -21,7 +21,7 @@ from spider.BaseSpider import *
 class AliveSpider(Spider):
     def __init__(self, domain, domainList):
         super().__init__()
-        self.source = 'ip2domain'
+        self.source = 'AliveSpider'
         self.domain = domain
         self.domainList = domainList
         self.linkList = []

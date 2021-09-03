@@ -10,18 +10,19 @@ from spider.PortSpider import *
 from spider.GithubSpider import *
 from spider.JavaScriptSpider import *
 from spider.ip2domainSpider import *
-from spider.ParamLinkSpider import *
+# from spider.ParamLinkSpider import *
 from spider.FriendChainsSpider import *
 from spider.StructSpider import *
 from spider.AliveSpider import *
 
 from common import resolve
 
-from exploit.AliveScan import *
-from exploit.IpUnauthExploit import *
-from exploit.HttpUnauthExploit import *
+# from exploit.AliveScan import *
+# from exploit.IpUnauthExploit import *
+# from exploit.HttpUnauthExploit import *
 from exploit.CmsExploit import *
-from exploit.SQLInjectExploit import *
+from exploit.SQLExploit import *
+from exploit.ServiceExploit import *
 from threading import Thread
 
 import os
@@ -38,7 +39,7 @@ abs_path = os.getcwd() + os.path.sep  # 路径
 thirdLib = abs_path + 'spider/thirdLib/'
 
 gParamsList = []  # 存储可注入探测参数列表 ["http://www.baidu.com/?id=1111*"]
-gJavaScriptParamList = []  # 存储js文件中的js敏感接口
+gJavaScriptParamList = []  # 存储js文件中的js敏感接口 @小洲
 
 gIpSegmentList = []  # 存储资产IP区段分布以及资产IP在指定的区段出现的次数  [{"111.111.111.0/24":1},{"111.111.222.0/24":1}]
 gAsnList = []  # ASN记录
@@ -401,15 +402,20 @@ class Spider(object):
         # 8、ip2domain
         self.ip2domain()
 
-        # 9、alive
-        self.aliveSpider()
+        # 9、sslSpider @keefe @行牛 2021.09.01 SSL
+        # self.sslSpider()
 
-        # 10、port scan in self.ipPortList
-        # self.ipPortSpider()
+        # 10、alive
+        self.aliveSpider()
 
         # 11、asn和ip段整理
         flushIpSegment(self.domain)
         flushAsn(self.domain)
+
+        # 12、过滤属于CDN网段的IP
+
+        # 13、port scan in self.ipPortList
+        # self.ipPortSpider()
 
         # 去重子域名
         self.domainList = list(set(self.domainList))
@@ -451,10 +457,11 @@ class Exploit(object):
             aPortList = aTask.get('port')
             for port in aPortList:
                 queue.put("{}:{}".format(aIp, port))  # IP+端口, 接下里就是异步socket探测banner来进行相关利用即可.
-        IpUnauth(self.domain, queue).main()
+        # IpUnauth(self.domain, queue).main()
 
     def unauthLeakHttpScan(self):
-        HttpUnauth(self.domain, self.domainList).main()
+        pass
+        # HttpUnauth(self.domain, self.domainList).main()
 
     def jsExploit(self):
         # SqlScan(self.domain, self.clear_task_list).main()

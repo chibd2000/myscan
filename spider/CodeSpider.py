@@ -1,6 +1,6 @@
 # coding=utf-8
-# author：ske
-# python3
+# @author: ske
+# @python3
 import requests
 import re
 import chardet

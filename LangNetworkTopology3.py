@@ -300,7 +300,7 @@ class IpInfoScan:
                      b'^\x03\x00\x00\x0e\t\xd0\x00\x00\x00[\x02\xa1]\x00\xc0\x01\n$',
                      b'^\x03\x00\x00\x0b\x06\xd0\x00\x004\x12\x00'],
             b'rdp-proxy': [b'^nmproxy: procotol byte is not 8\n$'], b'rmi': [b'\x00\x00\x00vinva', b'^n\x00\t'],
-            b'postgresql': [b'invalid packet length', b'^efatal'],
+            b'postgresql': [b'^EInvalid packet length\0$', b'^efatal'],
             b'imap': [b'^\\* ok.*?imap'],
             b'pop': [b'^\\+ok.*?'],
             b'smtp': [b'^220.*?smtp', b'^554 smtp'],
@@ -323,7 +323,7 @@ class IpInfoScan:
             b'zookeeper': [b'^zookeeper version: '],
             b'jdwp': [b'xxxxxxxxxxxxxxx'],
             b'log4j': [b'xxxxxxxxxxx'],
-            b'ajp': [b'\x12\x34\x00\x01\x0a']
+            b'ajp': [b'^AB\0\x13\x04\x01\x90']
         }
         # from https://github.com/al0ne/Vxscan/blob/master/plugins/Scanning/port_scan.py
         self.PortLib = {
