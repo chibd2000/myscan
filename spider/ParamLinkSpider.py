@@ -166,7 +166,7 @@ class ParamsLinkSpider():
                 else:
                     result_links['id_links'] = ididx
 
-            with open('InjEction_links.txt', 'a+', encoding='utf-8')as a:
+            with open('test.txt', 'a+', encoding='utf-8')as a:
                 if ididx:
                     for i in ididx:
                         a.write(i + '\n')

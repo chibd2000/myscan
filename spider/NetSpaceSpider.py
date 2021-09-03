@@ -167,7 +167,7 @@ class NetSpider(Spider):
                             if j['ip'] == i['ip']:
                                 flag = False
                         if flag:
-                            self.IpPortList.append({'ip': _ip, 'port': []})
+                            self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
 
                     for j in domainList:
                         _ip = j['ip']
@@ -178,7 +178,7 @@ class NetSpider(Spider):
                         for k in self.IpPortList:
                             if k['ip'] == _ip:
                                 for m in k['port']:
-                                    if m == _port:
+                                    if int(m) == int(_port):
                                         flag = False
                         if flag:
                             for p in self.IpPortList:
@@ -248,7 +248,7 @@ class NetSpider(Spider):
                                 if j['ip'] == i['ip']:
                                     flag = False
                             if flag:
-                                self.IpPortList.append({'ip': _ip, 'port': []})
+                                self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
 
                         # [{'ip':'1.1.1.1',}]
                         for j in domainList:
@@ -260,12 +260,12 @@ class NetSpider(Spider):
                             for k in self.IpPortList:
                                 if k['ip'] == _ip:
                                     for m in k['port']:
-                                        if m == _port:
+                                        if int(m) == int(_port):
                                             flag = False
                             if flag:
                                 for p in self.IpPortList:
                                     if p['ip'] == _ip:
-                                        p['port'].append(_port)
+                                        p['port'].append(int(_port))
                     domainList = getUniqueList(domainList)
                     self.writeFile(domainList, 8)
                 except Exception as e:
@@ -337,7 +337,7 @@ class NetSpider(Spider):
                             if j['ip'] == i['ip']:
                                 flag = False
                         if flag:
-                            self.IpPortList.append({'ip': _ip, 'port': []})
+                            self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
 
                     for j in domainList:
                         _ip = j['ip']
@@ -348,12 +348,12 @@ class NetSpider(Spider):
                         for k in self.IpPortList:
                             if k['ip'] == _ip:
                                 for m in k['port']:
-                                    if m == _port:
+                                    if int(m) == int(_port):
                                         flag = False
                         if flag:
                             for p in self.IpPortList:
                                 if p['ip'] == _ip:
-                                    p['port'].append(_port)
+                                    p['port'].append(int(_port))
                 self.writeFile(getUniqueList(domainList), 9)
             except Exception as e:
                 print('curl shodan api error, error is {}'.format(e.args))

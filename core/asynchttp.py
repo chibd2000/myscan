@@ -66,7 +66,7 @@ class AsyncFetcher:
     async def postFetch(cls, url, headers='', data='', params='', json=False):
         if len(headers) == 0:
             headers = {'User-Agent': AsyncFetcher.getUserAgent()}
-        timeout = aiohttp.ClientTimeout(total=720)
+        timeout = aiohttp.ClientTimeout()
         try:
             if params == '':
                 async with aiohttp.ClientSession(headers=headers, timeout=timeout) as session:
@@ -112,11 +112,11 @@ class AsyncFetcher:
 
     @classmethod
     async def fetchAll(cls, urls, headers='', params='', json=False, takeover=False) -> list:
-        timeout = aiohttp.ClientTimeout(total=60)
+        timeout = aiohttp.ClientTimeout()
         if len(headers) == 0:
             headers = {'User-Agent': AsyncFetcher.getUserAgent()}
         if takeover:
-            async with aiohttp.ClientSession(headers=headers, timeout=aiohttp.ClientTimeout(total=15)) as session:
+            async with aiohttp.ClientSession(headers=headers, timeout=timeout) as session:
                 tuples = await asyncio.gather(*[AsyncFetcher.takeoverFetch(session, url) for url in urls])
                 return tuples
         if len(params) == 0:

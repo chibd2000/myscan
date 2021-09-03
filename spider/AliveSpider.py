@@ -112,7 +112,7 @@ class AliveSpider(Spider):
                                                 'http://' + domain.strip() + '/' + rurl.strip().lstrip('/'))
                             for x1 in html_links:  # 对于爬取到的后缀是html等等参数链接进行二次处理 是否能够访问
                                 try:
-                                    async with session.get(x1) as resp1:
+                                    async with session.get(url=x1, timeout=self.reqTimeout) as resp1:
                                         if resp1.status == 200:
                                             htht.append(x1)
                                 except Exception as e:
@@ -120,7 +120,7 @@ class AliveSpider(Spider):
 
                             for x2 in id_links:  # 平常的id?=1 这种参数进行二次处理 是否能够访问
                                 try:
-                                    async with session.get(x2) as resp2:
+                                    async with session.get(x2, timeout=self.reqTimeout) as resp2:
                                         if resp2.status == 200:
                                             if str(resp2.url).find('=') > 0:
                                                 idid.append(x2)

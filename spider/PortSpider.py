@@ -58,10 +58,14 @@ class ServiceScan(object):
             else:
                 nmap_service, nmap_fingerprint = self.match_probe_pattern(response, probe)
                 if bool(nmap_fingerprint):
+                    title = ''
+                    if 'http' in nmap_service:
+                        title = self.get_http_title(response)
                     record = {
                         'ip': host,
                         'port': port,
                         'service': nmap_service,
+                        'title': title,
                         'versioninfo': nmap_fingerprint,
                     }
                     # ssl特殊处理
@@ -82,11 +86,15 @@ class ServiceScan(object):
             else:
                 nmap_service, nmap_fingerprint = self.match_probe_pattern(response, probe)
                 if bool(nmap_fingerprint):
+                    title = ''
+                    if b'HTTP' in response and 'http' in nmap_service:
+                        title = self.get_http_title(response)
                     record = {
-                        "ip": host,
-                        "port": port,
-                        "service": nmap_service,
-                        "banner": nmap_fingerprint,
+                        'ip': host,
+                        'port': port,
+                        'service': nmap_service,
+                        'title': title,
+                        'versioninfo': nmap_fingerprint,
                     }
                     # ssl特殊处理
                     if nmap_service == "ssl" and self.all_guess_services.get(str(port)) is not None:
@@ -329,6 +337,28 @@ class ServiceScan(object):
 
         return bret
 
+    def get_http_title(self, response):
+        title = '获取失败'
+        try:
+            title_pattern = b'<title>(.*?)</title>'
+            title = re.search(title_pattern, response, re.S | re.I).group(1)
+            try:
+                title = title.decode().replace('\n', '').strip()
+                return title
+            except:
+                try:
+                    title = title.decode('gbk').replace('\n', '').strip()
+                    return title
+                except:
+                    return title
+        except:
+            return title
+        finally:
+            if title == '':
+                return title + ' 标题为空'
+            else:
+                return title
+
 
 class PortScan(Spider):
     def __init__(self, domain, ipPortList):
@@ -337,7 +367,7 @@ class PortScan(Spider):
         self.ipPortList = ipPortList
         self.loop = asyncio.get_event_loop()
         self.serviceScan = ServiceScan()
-        self.vulList = []
+        self.ipPortServiceList = []
 
     def writeFile(self, web_lists, page):
         workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
@@ -348,7 +378,8 @@ class PortScan(Spider):
             web.append(str(web_lists[index]['ip']))  # scan_ip
             web.append(str(web_lists[index]['port']))  # port
             web.append(str(web_lists[index]['service']))  # service
-            # web.append(str(web_lists[index]['banner']))  # banner
+            web.append(str(web_lists[index]['title']))  # service
+            web.append(str(web_lists[index]['versioninfo']))  # versioninfo
             worksheet.append(web)
             index += 1
         workbook.save(abs_path + str(self.domain) + ".xlsx")
@@ -366,20 +397,19 @@ class PortScan(Spider):
                 data = await self.serviceScan.scan(ip, port, 'tcp')
                 if data.get('error') is None:
                     # self.format_log(self.ip, port, data)
-                    self.resList.append({'ip': ip, 'port': port, 'service': data.get('service')})
+                    self.resList.append({'ip': ip, 'port': port, 'service': data.get('service'), 'title': data.get('title'), 'versioninfo': data.get('versioninfo')})
                     print(data)
                     # for i in self.vulList:
                     #     if i['service'] ==
-
                     flag = True
-                    for _ in self.vulList:
+                    for _ in self.ipPortServiceList:
                         if _:
                             service = _.get('service')
                             if service == data.get('service'):
                                 flag = False
                                 _['ip'].append('{}:{}'.format(ip, port))
                     if flag:
-                        self.vulList.append({'service': str(data.get('service')), 'ip': ['{}:{}'.format(ip, port)]})
+                        self.ipPortServiceList.append({'service': str(data.get('service')), 'ip': ['{}:{}'.format(ip, port)]})
                     # self.vulList = [{'service': 'redis', 'ip': ['1.1.1.1:6379','2.2.2.2:9874']},
                     # {'service': 'rsync', 'ip': ['3.3.3.3:873','4.4.4.4:783'], }]
             except Exception as e:
@@ -398,7 +428,7 @@ class PortScan(Spider):
 
     async def main(self):
         await self.spider()
-        return self.vulList  # 返回需要探测的端口服务,剩下的交给Exploit模块
+        return self.ipPortServiceList  # 返回需要探测的端口服务,剩下的交给Exploit模块
     # self.vulList = [
     # {'service': 'redis', 'ip': ['1.1.1.1:6379','2.2.2.2:9874']},
     # {'service': 'rsync', 'ip': ['3.3.3.3:873','4.4.4.4:783'], }
@@ -406,106 +436,9 @@ class PortScan(Spider):
 
 
 if __name__ == '__main__':
-    portscan = PortScan('zjhu.edu.cn', [{'ip': '127.0.0.1', 'port': [6377]}, {'ip': '125.19.57.134', 'port': []},
-                                        {'ip': '58.60.230.103', 'port': [8000, 2000]},
-                                        {'ip': '202.103.147.169', 'port': [25]}, {'ip': '125.19.57.136', 'port': []},
-                                        {'ip': '58.60.230.102', 'port': [179]}, {'ip': '209.9.37.38', 'port': [25]},
-                                        {'ip': '63.217.80.70', 'port': [25]}, {'ip': '202.103.147.161', 'port': [25]},
-                                        {'ip': '103.27.119.242', 'port': [541]},
-                                        {'ip': '202.103.147.172', 'port': [25]}, {'ip': '125.19.57.132', 'port': []},
-                                        {'ip': '218.2.178.14', 'port': []}, {'ip': '119.23.244.247', 'port': []},
-                                        {'ip': '61.132.54.28', 'port': []}, {'ip': '210.21.223.9', 'port': [8080]},
-                                        {'ip': '149.129.151.100', 'port': [8443, 8080]},
-                                        {'ip': '47.110.217.169', 'port': [8443, 8080]},
-                                        {'ip': '47.106.97.155', 'port': []},
-                                        {'ip': '47.254.137.137', 'port': [8443, 8080]},
-                                        {'ip': '41.169.101.13', 'port': [8080]}, {'ip': '4.14.239.109', 'port': []},
-                                        {'ip': '58.251.27.73', 'port': [8080, '9000']},
-                                        {'ip': '58.60.230.115', 'port': [8080]}, {'ip': '210.21.236.181', 'port': []},
-                                        {'ip': '63.221.140.244', 'port': [8080]}, {'ip': '112.74.28.147', 'port': []},
-                                        {'ip': '61.132.54.33', 'port': []}, {'ip': '63.221.140.237', 'port': [8080]},
-                                        {'ip': '58.251.27.72', 'port': []}, {'ip': '113.98.59.166', 'port': [8080]},
-                                        {'ip': '61.54.1.23', 'port': [8080]}, {'ip': '210.74.157.110', 'port': []},
-                                        {'ip': '209.9.37.59', 'port': [8080]}, {'ip': '58.60.230.71', 'port': []},
-                                        {'ip': '58.60.230.23', 'port': []}, {'ip': '210.51.195.20', 'port': []},
-                                        {'ip': '4.14.134.163', 'port': [8080]},
-                                        {'ip': '200.196.255.15', 'port': [8080]}, {'ip': '205.252.217.110', 'port': []},
-                                        {'ip': '113.98.59.188', 'port': []}, {'ip': '113.140.11.236', 'port': []},
-                                        {'ip': '116.228.53.166', 'port': []}, {'ip': '113.140.11.173', 'port': []},
-                                        {'ip': '119.188.176.41', 'port': []}, {'ip': '112.65.203.41', 'port': []},
-                                        {'ip': '41.169.101.12', 'port': [8080]}, {'ip': '209.9.37.60', 'port': [8080]},
-                                        {'ip': '200.196.255.14', 'port': []}, {'ip': '210.21.223.8', 'port': []},
-                                        {'ip': '63.221.140.249', 'port': []}, {'ip': '210.21.236.140', 'port': []},
-                                        {'ip': '202.103.147.168', 'port': []}, {'ip': '47.113.23.213', 'port': [8080]},
-                                        {'ip': '222.134.66.177', 'port': [8080]}, {'ip': '59.83.221.136', 'port': []},
-                                        {'ip': '113.195.63.4', 'port': []}, {'ip': '123.125.132.41', 'port': []},
-                                        {'ip': '61.54.7.71', 'port': [8080]}, {'ip': '153.3.231.195', 'port': []},
-                                        {'ip': '139.199.64.205', 'port': [8080]}, {'ip': '163.181.37.207', 'port': []},
-                                        {'ip': '59.83.221.131', 'port': []}, {'ip': '222.134.66.167', 'port': []},
-                                        {'ip': '222.134.66.173', 'port': [8080]},
-                                        {'ip': '222.134.66.172', 'port': [8000, 8888]},
-                                        {'ip': '59.83.221.137', 'port': [8888]}, {'ip': '61.54.7.72', 'port': []},
-                                        {'ip': '59.83.221.134', 'port': [8080]},
-                                        {'ip': '222.134.66.180', 'port': [8000]},
-                                        {'ip': '222.134.66.166', 'port': [8888]}, {'ip': '61.54.7.74', 'port': [8000]},
-                                        {'ip': '47.52.122.123', 'port': [8443]}, {'ip': '34.225.11.109', 'port': []},
-                                        {'ip': '8.209.73.231', 'port': []}, {'ip': '8.209.75.179', 'port': []},
-                                        {'ip': '8.136.203.6', 'port': []}, {'ip': '8.136.192.28', 'port': []},
-                                        {'ip': '3.127.130.125', 'port': []}, {'ip': '47.96.196.50', 'port': [8443]},
-                                        {'ip': '52.66.15.8', 'port': []}, {'ip': '42.228.133.155', 'port': []},
-                                        {'ip': '47.254.137.126', 'port': [8443]}, {'ip': '162.62.21.177', 'port': []},
-                                        {'ip': '162.62.175.82', 'port': []}, {'ip': '162.62.175.36', 'port': []},
-                                        {'ip': '162.62.177.226', 'port': []}, {'ip': '47.254.4.109', 'port': [8443]},
-                                        {'ip': '47.114.57.137', 'port': []}, {'ip': '52.3.86.87', 'port': []},
-                                        {'ip': '113.140.11.179', 'port': []}, {'ip': '47.98.215.180', 'port': []},
-                                        {'ip': '163.181.33.225', 'port': []}, {'ip': '120.77.205.232', 'port': []},
-                                        {'ip': '47.114.44.220', 'port': []}, {'ip': '47.98.16.135', 'port': []},
-                                        {'ip': '115.29.211.225', 'port': []}, {'ip': '120.77.238.227', 'port': []},
-                                        {'ip': '120.78.230.242', 'port': []}, {'ip': '54.166.86.130', 'port': []},
-                                        {'ip': '52.66.18.225', 'port': []}, {'ip': '52.59.150.47', 'port': []},
-                                        {'ip': '52.20.89.141', 'port': []}, {'ip': '47.108.157.149', 'port': []},
-                                        {'ip': '47.114.162.115', 'port': []}, {'ip': '39.98.182.209', 'port': []},
-                                        {'ip': '162.62.34.107', 'port': []}, {'ip': '47.113.54.67', 'port': []},
-                                        {'ip': '119.23.51.233', 'port': []}, {'ip': '39.98.197.84', 'port': []},
-                                        {'ip': '13.234.203.51', 'port': []}, {'ip': '218.2.178.21', 'port': []},
-                                        {'ip': '120.24.93.16', 'port': []}, {'ip': '47.107.72.66', 'port': []},
-                                        {'ip': '35.157.243.178', 'port': []}, {'ip': '47.102.129.5', 'port': []},
-                                        {'ip': '52.57.138.198', 'port': []}, {'ip': '52.57.159.2', 'port': []},
-                                        {'ip': '120.26.62.125', 'port': []}, {'ip': '121.40.53.175', 'port': []},
-                                        {'ip': '18.159.114.210', 'port': []}, {'ip': '47.244.25.148', 'port': []},
-                                        {'ip': '52.201.38.101', 'port': []}, {'ip': '34.225.0.168', 'port': []},
-                                        {'ip': '54.197.161.80', 'port': []}, {'ip': '120.25.175.158', 'port': []},
-                                        {'ip': '121.40.138.88', 'port': []}, {'ip': '121.40.161.9', 'port': []},
-                                        {'ip': '121.199.5.96', 'port': []}, {'ip': '121.199.6.126', 'port': []},
-                                        {'ip': '120.78.194.86', 'port': []}, {'ip': '121.43.34.117', 'port': []},
-                                        {'ip': '120.27.16.1', 'port': []}, {'ip': '120.55.37.69', 'port': []},
-                                        {'ip': '120.27.150.207', 'port': []}, {'ip': '115.29.204.124', 'port': []},
-                                        {'ip': '114.55.109.116', 'port': []}, {'ip': '114.55.57.81', 'port': []},
-                                        {'ip': '114.55.41.10', 'port': []}, {'ip': '106.14.127.244', 'port': []},
-                                        {'ip': '101.37.160.198', 'port': []}, {'ip': '101.37.22.242', 'port': []},
-                                        {'ip': '47.114.104.80', 'port': []}, {'ip': '47.97.206.253', 'port': []},
-                                        {'ip': '47.74.244.141', 'port': []}, {'ip': '39.98.242.191', 'port': []},
-                                        {'ip': '47.91.90.92', 'port': []}, {'ip': '39.98.88.177', 'port': []},
-                                        {'ip': '39.98.180.11', 'port': []}, {'ip': '47.100.166.67', 'port': []},
-                                        {'ip': '47.92.49.128', 'port': []}, {'ip': '47.74.188.175', 'port': []},
-                                        {'ip': '8.210.67.100', 'port': [8443, '8443']},
-                                        {'ip': '47.253.3.132', 'port': []}, {'ip': '47.111.170.47', 'port': []},
-                                        {'ip': '47.110.225.118', 'port': []}, {'ip': '34.230.237.154', 'port': []},
-                                        {'ip': '121.196.123.97', 'port': []}, {'ip': '163.181.37.188', 'port': []},
-                                        {'ip': '118.212.225.122', 'port': []}, {'ip': '47.106.170.128', 'port': []},
-                                        {'ip': '113.106.97.139', 'port': []}, {'ip': '113.98.59.181', 'port': []},
-                                        {'ip': '113.140.11.199', 'port': []}, {'ip': '114.215.253.188', 'port': []},
-                                        {'ip': '3.231.192.77', 'port': []}, {'ip': '8.135.110.32', 'port': []},
-                                        {'ip': '47.252.13.196', 'port': []}, {'ip': '18.184.132.222', 'port': []},
-                                        {'ip': '15.207.151.187', 'port': []}, {'ip': '52.55.115.112', 'port': []},
-                                        {'ip': '210.51.195.51', 'port': []}, {'ip': '8.129.71.44', 'port': []},
-                                        {'ip': '39.96.250.241', 'port': []}, {'ip': '47.113.22.231', 'port': []},
-                                        {'ip': '120.25.234.122', 'port': []}, {'ip': '116.62.43.88', 'port': []},
-                                        {'ip': '47.97.9.205', 'port': []}, {'ip': '47.98.31.14', 'port': []},
-                                        {'ip': '18.233.49.167', 'port': []}, {'ip': '101.37.134.103', 'port': []},
-                                        {'ip': '47.107.165.27', 'port': []}, {'ip': '210.51.195.49', 'port': []},
-                                        {'ip': '112.74.174.146', 'port': []}, {'ip': '47.100.61.202', 'port': []},
-                                        {'ip': '120.24.26.72', 'port': []}])
+    portscan = PortScan('zjhu.edu.cn', [{'ip': '61.153.52.21', 'port': [5001, 5008]},
+                                        {'ip': '61.153.52.74', 'port': []},
+                                        {'ip': '61.153.52.24', 'port': []}, {'ip': '61.153.52.23', 'port': []}, {'ip': '61.153.52.57', 'port': [4430]}, {'ip': '61.153.52.52', 'port': [4430, 4430]}, {'ip': '61.153.52.68', 'port': []}, {'ip': '61.153.52.20', 'port': [4433, 4433, 4433, 4433, 4433]}, {'ip': '211.80.146.57', 'port': [4430]}, {'ip': '211.80.146.74', 'port': []}, {'ip': '61.153.52.103', 'port': []}, {'ip': '61.153.52.11', 'port': []}, {'ip': '61.153.52.15', 'port': []}, {'ip': '61.153.52.48', 'port': []}, {'ip': '114.255.40.175', 'port': []}, {'ip': '61.153.52.10', 'port': []}, {'ip': '123.58.177.239', 'port': []}, {'ip': '61.153.52.78', 'port': []}, {'ip': '61.153.52.46', 'port': [8080]}, {'ip': '221.12.135.204', 'port': []}, {'ip': '61.153.52.62', 'port': []}, {'ip': '221.12.135.208', 'port': []}, {'ip': '61.153.52.31', 'port': []}, {'ip': '61.153.52.42', 'port': []}, {'ip': '120.199.142.57', 'port': [4430]}, {'ip': '120.199.142.74', 'port': []}, {'ip': '61.153.52.83', 'port': []}, {'ip': '120.199.142.40', 'port': []}, {'ip': '61.153.52.40', 'port': []}, {'ip': '61.153.52.64', 'port': []}, {'ip': '211.80.146.40', 'port': []}, {'ip': '61.153.52.32', 'port': []}, {'ip': '61.153.52.18', 'port': []}, {'ip': '221.12.135.197', 'port': [4430]}, {'ip': '221.12.135.210', 'port': []}, {'ip': '120.199.142.46', 'port': [8080]}, {'ip': '61.153.52.9', 'port': [8888]}, {'ip': '211.80.146.1', 'port': [8888]}, {'ip': '61.153.52.63', 'port': []}, {'ip': '61.153.52.12', 'port': []}, {'ip': '221.12.135.200', 'port': []}, {'ip': '61.153.52.37', 'port': []}, {'ip': '120.199.142.78', 'port': []}, {'ip': '221.12.135.212', 'port': []}, {'ip': '221.12.135.217', 'port': []}, {'ip': '211.80.146.62', 'port': []}, {'ip': '120.199.142.11', 'port': []}, {'ip': '61.153.52.84', 'port': []}])
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(portscan.main())
     print(res)

@@ -10,7 +10,7 @@ ALL_GUESS_SERVICE = "eNqUvduO87rapXcrjf84WrD2Us6CRhI0kKQP/j7/QEu0zc/alSjbVbORew9
 
 if __name__ == '__main__':
     res = json.loads(zlib.decompress(base64.b64decode(ALLPROBES)))
-    with open('a.json', 'a+',encoding='utf-8') as f:
+    with open('nmap_banner.json', 'a+',encoding='utf-8') as f:
         f.write(str(res))
 
 

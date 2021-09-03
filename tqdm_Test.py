@@ -5,7 +5,7 @@
 from time import sleep
 import random
 from tqdm import tqdm
-from multiprocessing import Pool, freeze_support, RLock
+import asyncio
 
 L = list(range(24))  # works until 23, breaks starting at 24
 
@@ -20,8 +20,32 @@ def progresser(n):
             pbar.update(1)
 
 
+def test01(n):
+    text = f'#{n}'
+
+    sampling_counts = 10
+    with tqdm(total=sampling_counts, desc=text, position=n + 1) as pbar:
+        for i in range(sampling_counts):
+            sleep(random.uniform(0, 1))
+            pbar.update(1)
+
+
+async def test02(n):
+    text = f'#{n}'
+
+    sampling_counts = 10
+    with tqdm(total=sampling_counts, desc=text, position=n + 1) as pbar:
+        for i in range(sampling_counts):
+            sleep(random.uniform(0, 1))
+            pbar.update(1)
+
+async def main():
+    pass
+
 if __name__ == '__main__':
-    freeze_support()
-    p = Pool(processes=None, initargs=(RLock(),), initializer=tqdm.set_lock)
-    p.map(progresser, L)
-    print('\n' * (len(L) + 1))
+    # freeze_support()
+    # p = Pool(processes=None, initargs=(RLock(),), initializer=tqdm.set_lock)
+    # p.map(progresser, L)
+    # print('\n' * (len(L) + 1))
+
+    asyncio.run(main())
