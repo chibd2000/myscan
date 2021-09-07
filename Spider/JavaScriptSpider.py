@@ -1,6 +1,7 @@
 # coding=utf-8
 
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 
 from urllib.parse import quote
 
@@ -14,7 +15,7 @@ from urllib.parse import quote
 abs_path = os.getcwd() + os.path.sep
 
 
-class JSSpider(Spider):
+class JSSpider(BaseSpider):
     def __init__(self, target):
         super().__init__()
         self.source = 'JavaScriptSpider'  #

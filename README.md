@@ -24,7 +24,7 @@
 
 - 8-IP反查域名
 
-- 9-nmap指纹库socket探测开放端口服务
+- 9-nmap指纹库socket异步探测开放端口服务
 
 - 10-子域名内容正则匹配域名
 
@@ -34,7 +34,6 @@
 
 - 12、探测存活，整理数据，如下格式所示  
 ```
-
 # 资产IP+端口格式
 
 [+] [ipPortList] [280] [{'ip': '202.103.147.144', 'port': [8080, 8090]}, {'ip': '125.19.57.134', 'port': []}, {'ip': '58.60.230.103', 'port': [8000, 2000]}, {'ip': '202.103.147.169', 'port': [25]}]
@@ -113,6 +112,8 @@ python batch.py -v
 5、https://github.com/laramies/theHarvester
 
 6、https://github.com/knownsec/ksubdomain
+
+7、https://mp.weixin.qq.com/s?__biz=MzI0NzEwOTM0MA==&mid=2652476301&idx=1&sn=498748d68c27cdd5ef05ce7d990fd64c&chksm=f258303ec52fb928989a2dc56d68791b89576d8cff8b4832e8d103c7525d95948d803aae8e27&scene=178&cur_album_id=1368680445315235841#rd
 
 #需要优化
 

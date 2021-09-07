@@ -16,7 +16,7 @@ requests.packages.urllib3.disable_warnings()
 abs_path = os.getcwd() + os.path.sep
 
 
-# 端口扫描的实现
+# 端口扫描的实现 old version 2020.05.30
 class PortScan(object):
     def __init__(self, domain, _ip):
         self.domain = domain

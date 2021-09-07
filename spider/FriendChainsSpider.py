@@ -2,10 +2,11 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-31 23:04
 
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 
 
-class FriendChainsSpider(Spider):
+class FriendChainsSpider(BaseSpider):
     def __init__(self, domain, domainList: list):
         super().__init__()
         self.domain = domain
@@ -72,7 +73,7 @@ class FriendChainsSpider(Spider):
                 print('[+] [new friendChains] [{}] {}'.format(len(tempDomainList), tempDomainList))
                 self.resList.extend(tempDomainList)
         except Exception as e:
-            print('curl error is {}'.format(e.args))
+            print('curl error is {}'.format(e.__str__()))
 
         # 返回结果
         self.resList = list(set(self.resList))

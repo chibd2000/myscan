@@ -5,7 +5,8 @@ import codecs
 import contextlib
 
 from async_timeout import timeout
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 from spider.common.banner import *
 import zlib
 
@@ -35,6 +36,7 @@ def compile_pattern(allprobes):
     return allprobes
 
 
+# @chacha nmap portFinger provider
 class ServiceScan(object):
 
     def __init__(self):
@@ -360,7 +362,7 @@ class ServiceScan(object):
                 return title
 
 
-class PortScan(Spider):
+class PortScan(BaseSpider):
     def __init__(self, domain, ipPortList):
         super().__init__()
         self.domain = domain
@@ -368,6 +370,7 @@ class PortScan(Spider):
         self.loop = asyncio.get_event_loop()
         self.serviceScan = ServiceScan()
         self.ipPortServiceList = []
+        self.httpProtocolList = []
 
     def writeFile(self, web_lists, page):
         workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
@@ -397,7 +400,9 @@ class PortScan(Spider):
                 data = await self.serviceScan.scan(ip, port, 'tcp')
                 if data.get('error') is None:
                     # self.format_log(self.ip, port, data)
-                    self.resList.append({'ip': ip, 'port': port, 'service': data.get('service'), 'title': data.get('title'), 'versioninfo': data.get('versioninfo')})
+                    self.resList.append(
+                        {'ip': ip, 'port': port, 'service': data.get('service'), 'title': data.get('title'),
+                         'versioninfo': data.get('versioninfo')})
                     print(data)
                     # for i in self.vulList:
                     #     if i['service'] ==
@@ -409,7 +414,8 @@ class PortScan(Spider):
                                 flag = False
                                 _['ip'].append('{}:{}'.format(ip, port))
                     if flag:
-                        self.ipPortServiceList.append({'service': str(data.get('service')), 'ip': ['{}:{}'.format(ip, port)]})
+                        self.ipPortServiceList.append(
+                            {'service': str(data.get('service')), 'ip': ['{}:{}'.format(ip, port)]})
                     # self.vulList = [{'service': 'redis', 'ip': ['1.1.1.1:6379','2.2.2.2:9874']},
                     # {'service': 'rsync', 'ip': ['3.3.3.3:873','4.4.4.4:783'], }]
             except Exception as e:
@@ -418,17 +424,22 @@ class PortScan(Spider):
     async def spider(self):
         semaphore = asyncio.Semaphore(500)
         taskList = []
-        for aDict in self.ipPortList:
-            for port in aDict['port']:
-                ip = aDict['ip']
+        for target in self.ipPortList:
+            for port in target['port']:
+                ip = target['ip']
                 task = asyncio.create_task(self.scan(semaphore, ip, port))
                 taskList.append(task)
         await asyncio.gather(*taskList)
-        self.writeFile(self.resList, 10)
+        for target in self.ipPortServiceList:
+            service = target.get('service')
+            if service == 'http':
+                self.httpProtocolList = target['ip']
+
+        # self.writeFile(self.resList, 10)
 
     async def main(self):
         await self.spider()
-        return self.ipPortServiceList  # 返回需要探测的端口服务,剩下的交给Exploit模块
+        return self.ipPortServiceList, self.httpProtocolList  # 返回需要探测的端口服务,剩下的交给Exploit模块
     # self.vulList = [
     # {'service': 'redis', 'ip': ['1.1.1.1:6379','2.2.2.2:9874']},
     # {'service': 'rsync', 'ip': ['3.3.3.3:873','4.4.4.4:783'], }
@@ -436,9 +447,7 @@ class PortScan(Spider):
 
 
 if __name__ == '__main__':
-    portscan = PortScan('zjhu.edu.cn', [{'ip': '61.153.52.21', 'port': [5001, 5008]},
-                                        {'ip': '61.153.52.74', 'port': []},
-                                        {'ip': '61.153.52.24', 'port': []}, {'ip': '61.153.52.23', 'port': []}, {'ip': '61.153.52.57', 'port': [4430]}, {'ip': '61.153.52.52', 'port': [4430, 4430]}, {'ip': '61.153.52.68', 'port': []}, {'ip': '61.153.52.20', 'port': [4433, 4433, 4433, 4433, 4433]}, {'ip': '211.80.146.57', 'port': [4430]}, {'ip': '211.80.146.74', 'port': []}, {'ip': '61.153.52.103', 'port': []}, {'ip': '61.153.52.11', 'port': []}, {'ip': '61.153.52.15', 'port': []}, {'ip': '61.153.52.48', 'port': []}, {'ip': '114.255.40.175', 'port': []}, {'ip': '61.153.52.10', 'port': []}, {'ip': '123.58.177.239', 'port': []}, {'ip': '61.153.52.78', 'port': []}, {'ip': '61.153.52.46', 'port': [8080]}, {'ip': '221.12.135.204', 'port': []}, {'ip': '61.153.52.62', 'port': []}, {'ip': '221.12.135.208', 'port': []}, {'ip': '61.153.52.31', 'port': []}, {'ip': '61.153.52.42', 'port': []}, {'ip': '120.199.142.57', 'port': [4430]}, {'ip': '120.199.142.74', 'port': []}, {'ip': '61.153.52.83', 'port': []}, {'ip': '120.199.142.40', 'port': []}, {'ip': '61.153.52.40', 'port': []}, {'ip': '61.153.52.64', 'port': []}, {'ip': '211.80.146.40', 'port': []}, {'ip': '61.153.52.32', 'port': []}, {'ip': '61.153.52.18', 'port': []}, {'ip': '221.12.135.197', 'port': [4430]}, {'ip': '221.12.135.210', 'port': []}, {'ip': '120.199.142.46', 'port': [8080]}, {'ip': '61.153.52.9', 'port': [8888]}, {'ip': '211.80.146.1', 'port': [8888]}, {'ip': '61.153.52.63', 'port': []}, {'ip': '61.153.52.12', 'port': []}, {'ip': '221.12.135.200', 'port': []}, {'ip': '61.153.52.37', 'port': []}, {'ip': '120.199.142.78', 'port': []}, {'ip': '221.12.135.212', 'port': []}, {'ip': '221.12.135.217', 'port': []}, {'ip': '211.80.146.62', 'port': []}, {'ip': '120.199.142.11', 'port': []}, {'ip': '61.153.52.84', 'port': []}])
+    portscan = PortScan('zjhu.edu.cn', [{'ip': '150.158.186.39', 'port': [80]}])
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(portscan.main())
     print(res)

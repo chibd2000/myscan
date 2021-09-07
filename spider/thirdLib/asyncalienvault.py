@@ -2,10 +2,11 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-26 0:13
 
-from spider.thirdLib.third import *
+from spider.thirdLib.public import *
+from spider.thirdLib import BaseThird
 
 
-class Alien(ThirdBase):
+class Alien(BaseThird):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain

@@ -1,13 +1,14 @@
 # coding=utf-8
 
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 from github import Github, UnknownObjectException
 from github import GithubException
 from spider.common import config
 import logging
 
 
-class GithubSpider(Spider):
+class GithubSpider(BaseSpider):
     def __init__(self, domain):
         super().__init__()
         self.source = 'GithubSpider'  #

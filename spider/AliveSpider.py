@@ -1,9 +1,11 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
 # @Time     : 2021-09-01 11:08
+from spider.public import *
+from spider import BaseSpider
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-from spider.BaseSpider import *
+
 
 
 # def getUniqueList(L):
@@ -18,7 +20,8 @@ from spider.BaseSpider import *
 #             output.append(l)
 #         temp.extend(l.items())
 #     return output
-class AliveSpider(Spider):
+class AliveSpider(BaseSpider):
+
     def __init__(self, domain, domainList):
         super().__init__()
         self.source = 'AliveSpider'
@@ -60,7 +63,8 @@ class AliveSpider(Spider):
                         # 标题
                         title_pattern = '<title>(.*?)</title>'
                         try:
-                            title = re.search(title_pattern, text, re.S | re.I)[1].strip(' ').strip('\r\n').strip('\n').strip('\r')
+                            title = re.search(title_pattern, text, re.S | re.I)[1].strip(' ').strip('\r\n').strip(
+                                '\n').strip('\r')
                         except:
                             title = ''
                         # status

@@ -1,8 +1,10 @@
 # coding=utf-8
-from lxml import etree
 
-from spider.BaseSpider import *
-from core.hackrequest import *
+
+from spider.public import *
+from spider import BaseSpider
+from lxml import etree
+from core.MyRequest import *
 from urllib.parse import quote, urlparse
 from common.tools import *
 from spider.common import config
@@ -10,7 +12,7 @@ import base64
 from shodan import Shodan
 
 
-class NetSpider(Spider):
+class NetSpider(BaseSpider):
     def __init__(self, domain: str):
         super().__init__()
         self.source = 'Fofa & Shodan & Quake'

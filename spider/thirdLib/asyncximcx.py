@@ -1,9 +1,10 @@
 # coding=utf-8
 
-from spider.thirdLib.third import *
+from spider.thirdLib.public import *
+from spider.thirdLib import BaseThird
 
 
-class Ximcx(ThirdBase):
+class Ximcx(BaseThird):
     def __init__(self, domain):
         super().__init__()
         self.addr = 'http://sbd.ximcx.cn/DomainServlet'

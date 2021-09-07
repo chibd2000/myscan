@@ -23,6 +23,7 @@ from common import resolve
 from exploit.CmsExploit import *
 from exploit.SQLExploit import *
 from exploit.ServiceExploit import *
+
 from threading import Thread
 
 import os
@@ -30,6 +31,7 @@ import argparse
 import time
 import sys
 import asyncio
+import importlib
 from IPy import IP
 
 if sys.platform == 'win32':
@@ -43,6 +45,7 @@ gAsnList = []  # ASN记录
 gIpList = []  # 用来统计gIpSegmentDict
 gIpPortList = []  # 存储端口+服务
 gTopDomainList = []  # 存储顶级域名记录 @ske
+gPortRegister = []  # 存储用于portSpider模块中要扫描的端口
 
 
 # Spider
@@ -53,8 +56,8 @@ class Spider(object):
         self.domainList = []  # 用来存储所有匹配到的子域名和一些隐形资产
         self.ipPortServiceList = []
         self.webParamsList = []  # 存储可注入探测参数列表 ["http://www.baidu.com/?id=1111*"]
-        self.javaScriptParamList = []  # 存储js文件中的js敏感接口 @小洲
-        self.clearTaskList = []  # 存储整理过后的域名 [{"subdomain": "www.ncist.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
+        self.javaScriptParamList = []  # 存储js文件中的js敏感接口 @小洲师傅
+        self.clearTaskList = []  # 存储整理过后的域名 [{"subdomain": "www.zjhu.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
         self.lock = threading.Lock()
 
     # github spider
@@ -102,7 +105,7 @@ class Spider(object):
     def thirdSpider(self):
         logging.info("thirdSpider Start")
         sys.path.append(thirdLib)
-        thirdList = filter(lambda x: (True, False)[x[-3:] == 'pyc' or x[-5:] == '__.py' or x[:2] == '__'],
+        thirdModuleList = filter(lambda x: (True, False)[x[-3:] == 'pyc' or x[-5:] == '__.py' or x[:2] == '__'],
                            os.listdir(thirdLib))
 
         async def do(future, domain):
@@ -113,8 +116,8 @@ class Spider(object):
         loop = asyncio.get_event_loop()
         asyncio.set_event_loop(loop)
         taskList = []
-        for _ in thirdList:
-            module = __import__(_[:-3])
+        for _ in thirdModuleList:
+            module = importlib.import_module(_[:-3])
             if hasattr(module, 'do'):
                 doMethod = getattr(module, 'do')
                 # do(doMethod, self.domain)
@@ -244,9 +247,12 @@ class Spider(object):
     def ipPortSpider(self):
         logging.info("portSpider Start")
         global gIpPortList
-        portscan = PortScan(self.domain, gIpPortList)
+        portscan = PortScan(self.domain, gIpPortList, gPortRegister)
         loop = asyncio.get_event_loop()
-        self.ipPortServiceList = loop.run_until_complete(portscan.main())
+        self.ipPortServiceList, httpList = loop.run_until_complete(portscan.main())
+        self.lock.acquire()
+        self.domainList.extend(httpList)
+        self.lock.release()
 
     # 存活探测，限制并发数
     def aliveSpider(self):
@@ -254,11 +260,13 @@ class Spider(object):
         aliveSpider = AliveSpider(self.domain, self.domainList)
         loop = asyncio.get_event_loop()
         resList = loop.run_until_complete(aliveSpider.main())
-        self.paramsList.extend(resList)
+        self.lock.acquire()
+        self.webParamsList.extend(resList)
+        self.lock.release()
 
     # main start
     def run(self):
-        # 检查cdn @author ske大师兄
+        # 检查cdn @author ske(大师兄)
         def checkCdn(domain):
             logging.info("checkCdn start")
 
@@ -404,7 +412,7 @@ class Spider(object):
         # 8、ip2domain
         self.ip2domain()
 
-        # 9、sslSpider @keefe @行牛 2021.09.01 SSL
+        # 9、sslSpider @keefe @行牛 @ske 2021.09.01 SSL
         # self.sslSpider()
 
         # 10、alive
@@ -443,11 +451,11 @@ class Spider(object):
 
 # Exploit
 class Exploit(object):
-    def __init__(self, domain, domainList, IpPortList, webParamsList):
+    def __init__(self, domain, domainList, ipPortServiceList, webParamsList):
         self.threadList = list()
         self.domain = domain
         self.domainList = domainList
-        self.IpPortList = IpPortList
+        self.ipPortServiceList = ipPortServiceList
         self.webParamsList = webParamsList
 
     def AliveScan(self):
@@ -486,25 +494,25 @@ class Exploit(object):
     # 基于网站框架的漏扫
     def webExploit(self):
         logging.info("CmsScan Start")
-        queue = asyncio.Queue(-1)
-        for aTask in self.domainList:
-            aIp = aTask.get('ip')
-            aPortList = aTask.get('port')
-            for port in aPortList:
-                queue.put("{}:{}".format(aIp, port))  # IP+端口, 接下里就是异步socket探测banner来进行相关利用即可.
+
+        # queue = asyncio.Queue(-1)
+        # for aTask in self.domainList:
+        #     aIp = aTask.get('ip')
+        #     aPortList = aTask.get('port')
+        #     for port in aPortList:
+        #         queue.put("{}:{}".format(aIp, port))  # IP+端口, 接下里就是异步socket探测banner来进行相关利用即可.
         # IpUnauth(self.domain, queue).main()
 
     # 基于端口服务的漏扫
     def serviceExploit(self):
         logging.info("ServiceScan Start")
-        # [{"subdomain": "www.zjhu.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
-        queue = asyncio.Queue(-1)
-        for aTask in self.IpPortList:
-            aIp = aTask.get('ip')
-            aPortList = aTask.get('port')
-            for port in aPortList:
-                queue.put("{}:{}".format(aIp, port))  # IP+端口, 接下里就是异步socket探测banner来进行相关利用即可.
-        # IpUnauth(self.domain, queue).main()
+        total = 0
+        for targetService in self.ipPortServiceList:
+            total += len(targetService['ip'])
+        pbar = tqdm(total=total, desc="ServiceScan", ncols=150)  # total是总数
+        servicescan = PortServiceScan(self.domain, self.ipPortServiceList, pbar)
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(servicescan.main())
 
     def run(self):
         def init():
@@ -516,11 +524,18 @@ class Exploit(object):
         # self.thread_list.append(Thread(target=self.HttpUnauthScan))  # 未授权扫描http域名
         # self.thread_list.append(Thread(target=self.SqlScan)) # SQL注入扫描
 
-        for i in self.threadList:
-            i.start()
+        # webExp
+        self.webExploit()
+        # serviceExp
+        self.serviceExploit()
+        # sqlExp
+        self.sqlExploit()
 
-        for i in self.threadList:
-            i.join()
+        # for i in self.threadList:
+        #     i.start()
+        #
+        # for i in self.threadList:
+        #     i.join()
 
 
 def parse_args():
@@ -539,12 +554,14 @@ if __name__ == '__main__':
     ''')
     starttime = time.time()
     args = parse_args()
+    g_domain = args.domain
+    # g_portregisterType = args.
     if args.domain:
         if not os.path.exists(abs_path + args.domain + ".xlsx"):
             createXlsx(args.domain)
             spider = Spider(args.domain)
-            domainList, ipPortList, webParamsList = spider.run()
-            exploit = Exploit(args.domain, domainList, ipPortList, webParamsList)
+            domainList, ipPortServiceList, webParamsList = spider.run()
+            exploit = Exploit(args.domain, domainList, ipPortServiceList, webParamsList)
             exploit.run()
         else:
             print('文件{}.xlsx已存在，如果要运行的话需要将该文件{}.xlsx改名或者删除.'.format(args.domain, args.domain))

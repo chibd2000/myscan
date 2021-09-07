@@ -1,6 +1,7 @@
 # coding=utf-8
 
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -9,7 +10,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 # 自己写js没成功，这里用了selenium 所以需要配合google浏览器的驱动了
-class DnsDataSpider(Spider):
+class DnsDataSpider(BaseSpider):
     def __init__(self, domain):
         super().__init__()
         self.source = 'DnsBuffer'

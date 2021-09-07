@@ -1,9 +1,10 @@
 # coding=utf-8
 # @Author   : ske
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 
 
-class Ip2domainSpider(Spider):
+class Ip2domainSpider(BaseSpider):
     def __init__(self, domain, gIpList):
         super().__init__()
         self.source = 'ip2domain'
@@ -70,21 +71,3 @@ if __name__ == '__main__':
     w = Ip2domainSpider('zjhu.edu.cn', testList)
     t = loop.run_until_complete(w.main())
     print(t)
-    # domain = ''
-    # allTargets_Queue = Queue(-1)
-    # allTargets_Queue.put('')
-    # allTargets_Queue.put('')
-    # ip2domain_dict, _newDomains = run_ip2domain(domain, allTargets_Queue)
-    # # for ip in ip2domain_dict:
-    # #     print('[{}] -> {}'.format(ip, ip2domain_dict[ip]))
-    #
-    # print(ip2domain_dict)
-    # subdomains = []
-    # for subdomain in ip2domain_dict.values():
-    #     subdomains.extend(subdomain)
-    #
-    # setSubdomains = list(set(subdomains))
-    # print('[{}] {}'.format(len(setSubdomains), setSubdomains))
-    # print(_newDomains)
-
-#

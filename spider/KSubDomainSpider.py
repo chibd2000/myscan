@@ -3,7 +3,7 @@ import os
 
 abs_path = os.getcwd() + os.path.sep
 
-
+# @author: ske
 def run_ksubdomain(domain):
     ksubdomains = []
     ksubdomain_folder = './ksubdomain'

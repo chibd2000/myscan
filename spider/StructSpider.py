@@ -1,13 +1,14 @@
 # coding=utf-8
 # @Author   : HengGe's team
 # @Time     : 2021-08-25 1:15
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 
 import concurrent.futures
 from tldextract import extract
 
 
-class CompanyStructSpider(Spider):
+class CompanyStructSpider(BaseSpider):
     def writeFile(self, web_lists, page):
         pass
 

@@ -1,12 +1,14 @@
 # coding=utf-8
 
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
+
 from urllib.parse import quote, urlparse
 import threading
 from bs4 import BeautifulSoup
 
 
-class BingSpider(Spider):
+class BingSpider(BaseSpider):
 
     def __init__(self, domain):
         super().__init__()

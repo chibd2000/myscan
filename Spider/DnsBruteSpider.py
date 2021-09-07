@@ -1,5 +1,7 @@
 # coding=utf-8
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
+
 
 import subprocess
 import os
@@ -8,7 +10,7 @@ import re
 abs_path = os.getcwd() + os.path.sep
 
 '''subDomainsdBrute模块'''
-class subDomaindBrute(Spider):
+class subDomaindBrute(BaseSpider):
     def __init__(self, target):
         super().__init__()
         self.source = 'DomainBrute'

@@ -2,10 +2,11 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-26 0:10
 
-from spider.thirdLib.third import *
+from spider.thirdLib.public import *
+from spider.thirdLib import BaseThird
 
 
-class Threatbook(ThirdBase):
+class Threatbook(BaseThird):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain

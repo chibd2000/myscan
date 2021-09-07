@@ -2,11 +2,12 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-09-01 22:23
 
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 
 
 # @keefe @hangniu
-class SSLSpider(Spider):
+class SSLSpider(BaseSpider):
     def writeFile(self, web_lists, page):
         pass
 

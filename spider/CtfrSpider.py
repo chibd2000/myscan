@@ -1,9 +1,11 @@
 # coding=utf-8
 
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 
 
-class CtfrSpider(Spider):
+
+class CtfrSpider(BaseSpider):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain

@@ -1,6 +1,7 @@
 # coding=utf-8
 
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 from urllib.parse import quote, urlparse
 from lxml import etree
 # 一个搜索引擎爬取的过程：
@@ -17,7 +18,8 @@ if sys.platform == 'win32':
 abs_path = os.getcwd() + os.path.sep
 
 
-class BaiduSpider(Spider):
+class BaiduSpider(BaseSpider):
+
     def __init__(self, domain):
         super().__init__()
         self.source = 'BaiduSpider'  #

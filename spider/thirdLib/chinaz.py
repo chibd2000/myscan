@@ -2,10 +2,11 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-25 23:46
 
-from spider.thirdLib.third import *
+from spider.thirdLib.public import *
+from spider.thirdLib import BaseThird
 
 
-class Chinaz(ThirdBase):
+class Chinaz(BaseThird):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain

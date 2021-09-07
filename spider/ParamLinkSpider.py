@@ -3,7 +3,8 @@
 # @Time     : 2021-08-25 13:28
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 
 
 class ParamsLinkSpider():

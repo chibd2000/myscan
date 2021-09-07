@@ -1,10 +1,11 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-26 21:25
-from spider.thirdLib.third import *
+from spider.thirdLib.public import *
+from spider.thirdLib import BaseThird
 
 
-class Bufferover(ThirdBase):
+class Bufferover(BaseThird):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain

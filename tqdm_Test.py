@@ -43,9 +43,10 @@ async def main():
     pass
 
 if __name__ == '__main__':
+    pass
     # freeze_support()
     # p = Pool(processes=None, initargs=(RLock(),), initializer=tqdm.set_lock)
     # p.map(progresser, L)
     # print('\n' * (len(L) + 1))
 
-    asyncio.run(main())
+    # asyncio.run(main())

@@ -1,14 +1,15 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-26 13:46
-from spider.BaseSpider import *
+from spider.public import *
+from spider import BaseSpider
 import math
 from urllib.parse import quote
 from termcolor import cprint
 from lxml import etree
 
 
-class BeianSpider(Spider):
+class BeianSpider(BaseSpider):
     def __init__(self, domain):
         super().__init__()
         self.source = 'Beian'
