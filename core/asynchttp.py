@@ -6,12 +6,12 @@ import asyncio
 from typing import Union, Tuple, Any
 
 import aiohttp
-import socket
 import random
 import ssl
 import certifi
 
-# @ harv
+
+# @ Harvester
 class AsyncFetcher:
 
     @staticmethod
@@ -41,7 +41,7 @@ class AsyncFetcher:
                     await asyncio.sleep(2)
                     return await response.text() if json is False else await response.json()
         except Exception as e:
-            print(f'An exception has occurred: {e.args}')
+            # print('An exception has occurred, {}'.format(e.__str__()))
             return ''
 
     @staticmethod
@@ -56,10 +56,24 @@ class AsyncFetcher:
                 sslcontext = ssl.create_default_context(cafile=certifi.where())
                 async with session.get(url, ssl=sslcontext) as response:
                     await asyncio.sleep(2)
-                    print(await response.text())
                     return response
         except Exception as e:
-            print(f'An exception has occurred: {e.args}')
+            # print('An exception has occurred, {}'.format(e.__str__()))
+            return ''
+
+    @staticmethod
+    async def fetch3(session, url, params='', json=False) -> Union[str, dict, list]:
+        try:
+            if params != '':
+                async with session.get(url, verify_ssl=False, params=params) as response:
+                    await asyncio.sleep(2)
+                    return await response.text() if json is False else await response.json()
+            else:
+                async with session.get(url, verify_ssl=False) as response:
+                    await asyncio.sleep(2)
+                    return await response.text() if json is False else await response.json()
+        except Exception as e:
+            # print('An exception has occurred, {}'.format(e.__str__()))
             return ''
 
     @classmethod
@@ -80,7 +94,7 @@ class AsyncFetcher:
                         await asyncio.sleep(3)
                         return await resp.text() if json is False else await resp.json()
         except Exception as e:
-            print(f'An exception has occurred: {e.args}')
+            # print('An exception has occurred, {}'.format(e.__str__()))
             return ''
 
     @staticmethod
@@ -96,7 +110,7 @@ class AsyncFetcher:
                     await asyncio.sleep(3)
                     return await resp.text() if json is False else await resp.json()
         except Exception as e:
-            print(f'An exception has occurred: {e.args}')
+            # print('An exception has occurred, {}'.format(e.__str__()))
             return ''
 
     @staticmethod
@@ -109,6 +123,17 @@ class AsyncFetcher:
                 return url, await response.text()
         except Exception:
             return url, ''
+
+    @staticmethod
+    async def takeoverFetch2(session, url) -> Union[Tuple[Any, Any], str]:
+        try:
+            # TODO determine if method for post requests is necessary
+            url = f'http://{url}' if str(url).startswith(('http:', 'https:')) is False else url
+            async with session.get(url) as response:
+                await asyncio.sleep(2)
+                await response.text()
+        except Exception:
+            return ''
 
     @classmethod
     async def fetchAll(cls, urls, headers='', params='', json=False, takeover=False) -> list:

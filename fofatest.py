@@ -14,12 +14,21 @@ import json
 
 if __name__ == '__main__':
     res = []
-    resp = requests.get(
-        'https://fofa.so/api/v1/search/all?email=496347658@qq.com&key=627c0a4e86e7111baf74c731f8e77f14&qbase64=InJtaSIgJiYgY291bnRyeT0iQ04i&size=1000&&fields=host')
-    result = json.loads(resp.content.decode('utf-8'))
+    # fineReport
+    fineReport = 'https://fofa.so/api/v1/search/all?email=496347658@qq.com&key=627c0a4e86e7111baf74c731f8e77f14&qbase64=RmluZVJlcG9ydA==&size=1000&&fields=host'
+    resp = requests.get(url=fineReport)
 
-    ipList = []
+
+
+    result = json.loads(resp.content.decode('utf-8'))
+    # webExploit
+    domainList = []
     for _ in result.get('results'):
-        ipList.append(_)
-    res.append({'service': 'rmi', 'ip': ipList})
-    print(res)
+        domainList.append(_)
+    print(domainList)
+    # serviceExploit
+    # ipList = []
+    # for _ in result.get('results'):
+    #     ipList.append(_)
+    # res.append({'service': 'rmi', 'ip': ipList})
+    # print(res)

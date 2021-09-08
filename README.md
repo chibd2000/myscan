@@ -8,27 +8,29 @@
 
 信息搜集（多线程+异步IO）：
 
-- 1-DNS枚举爆破 (ksubdomain) 
+- 1-DNS枚举查询(ksubdomain) 
 
-- 2-百度/Bing关键词爬取 
+- 2-百度/Bing关键词查询
 
-- 3-FOFA/SHODAN/QUAKE 域名爬取 C段爬取 等。。。。
+- 3-FOFA/SHODAN/QUAKE查询
 
 - 4-ctfr证书查询
 
 - 5-第三方接口查询
 
-- 6-github域名爬取
+- 6-github查询
 
-- 7-域名DNS解析IP
+- 7-域名DNS解析IP查询
 
 - 8-IP反查域名
 
 - 9-nmap指纹库socket异步探测开放端口服务
 
-- 10-子域名内容正则匹配域名
+- 10-友链爬取
 
 - 11-爱企查股权结构查询
+
+- 12-微信公众号信息搜集
 
 中间环节
 
@@ -77,7 +79,7 @@ gJavaScriptParamList = []
 
 #用法：
 
-```angular2
+```
 python batch.py -d zjhzu.edu.cn
 
 python batch.py -file topDomainList.txt

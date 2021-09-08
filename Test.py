@@ -98,13 +98,19 @@ def test0303():
     raise ConnectionResetError("aaaaaaaaaaaa")
 
 
+class A(object):
+    def __test(self):
+        print('test')
+
+    def test(self):
+        self.__test()
+
+
 if __name__ == '__main__':
     # l = asyncio.get_event_loop()
     # l.run_until_complete(test())
-    try:
-        test0303()
-    except:
-        pass
+    a = A()
+
     # start = time.time()
     # asyncio.run(test02())
     # print(time.time() - start)
