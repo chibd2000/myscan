@@ -5,17 +5,25 @@
 
 import os
 
+abs_path = os.getcwd() + os.path.sep
+
 
 class InformationProvider(object):
     fileType = 'r'
     # dictPath = 'dict/information'
-    dictPath = r'D:/ALL/myscan/dict/information'
+    dictPath = abs_path + '../dict/information' # 本地测试
+    # dictPath = abs_path + '/dict/information' # 真实测试
+
+    print(dictPath)
 
     @staticmethod
     def readFile(filename):
         if os.path.isfile(filename):
-            with open(filename, InformationProvider.fileType) as f:
-                return f.readlines()
+            try:
+                with open(filename, InformationProvider.fileType) as f:
+                    return f.readlines()
+            except FileNotFoundError as e:
+                print('username.txt/password.txt not found, {}'.format(e.__str__()))
         return None
 
     @staticmethod
@@ -32,11 +40,11 @@ class InformationProvider(object):
                 password = password.replace('\r', '').replace('\n', '').strip().rstrip()
                 yield username, password
 
-                # 首位大写也爆破下
-                if len(password) > 2:
-                    password2 = password[0].upper() + password[1:]
-                    if password2 != password:
-                        yield username, password2
+                # 首位大写也爆破下，再看，每次套接字时间花费太多
+                # if len(password) > 2:
+                #     password2 = password[0].upper() + password[1:]
+                #     if password2 != password:
+                #         yield username, password2
 
     @staticmethod
     def getRedisInfor():

@@ -57,7 +57,7 @@ class NetSpider(BaseSpider):
             else:
                 raise Exception
         except Exception as e:
-            print('[-] _getFaviconAndMD5 first failed, error is {}'.format(e.args))
+            print('[-] _getFaviconAndMD5 first failed, error is {}'.format(e.__str__()))
             print('[-] _getFaviconAndMD5 second ...')
             try:
                 resp_ = requests.get(getUrl('www.' + self.domain) + '/favicon.ico')
@@ -75,7 +75,7 @@ class NetSpider(BaseSpider):
             except Exception as e:
                 self.iconHash = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
                 self.iconMD5 = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-                print('[-] _getFaviconAndMD5 second failed, error is {}'.format(e.args))
+                print('[-] _getFaviconAndMD5 second failed, error is {}'.format(e.__str__()))
 
     def _getBeianCompany(self):
         try:
@@ -88,10 +88,10 @@ class NetSpider(BaseSpider):
             self.beian = compangyName[0]
         except IndexError as e:
             self.beian = 'xxxxxxxxxxxxxxxxxxxxx'
-            print('[-] curl beian no company, {}'.format(e.args))
+            print('[-] curl beian no company, {}'.format(e.__str__()))
         except Exception as e:
             self.beian = 'xxxxxxxxxxxxxxxxxxxxx'
-            print('[-] curl chinaz.com error, {}'.format(e.args))
+            print('[-] curl chinaz.com error, {}'.format(e.__str__()))
 
     # 保存文件
     def writeFile(self, web_lists: list, page: int):
@@ -189,7 +189,7 @@ class NetSpider(BaseSpider):
 
                     self.writeFile(getUniqueList(domainList), 7)
                 except Exception as e:
-                    print('curl fofa.so api error, error is {}'.format(e.args))
+                    print('curl fofa.so api error, error is {}'.format(e.__str__()))
 
     async def quakeDomainSpider(self):
         headers = {"X-QuakeToken": self.quakeApi, "Content-Type": "application/json"}
@@ -271,7 +271,7 @@ class NetSpider(BaseSpider):
                     domainList = getUniqueList(domainList)
                     self.writeFile(domainList, 8)
                 except Exception as e:
-                    print('curl quake.360.cn api error, error is {}'.format(e.args))
+                    print('curl quake.360.cn api error, error is {}'.format(e.__str__()))
 
     async def shodanDomainSpider(self):
         # 这里用shodan模块的原因是正常请求会存在cloudflare，具体原因没研究，直接用shodan模块会方便
@@ -358,7 +358,7 @@ class NetSpider(BaseSpider):
                                     p['port'].append(int(_port))
                 self.writeFile(getUniqueList(domainList), 9)
             except Exception as e:
-                print('curl shodan api error, error is {}'.format(e.args))
+                print('curl shodan api error, error is {}'.format(e.__str__()))
             # async with aiohttp.ClientSession(headers=headers) as session:
             #     for keyword in self.shodanKeywordList:
             #         domainList = []
@@ -546,7 +546,7 @@ class NetSpider(BaseSpider):
                 self.web_ip_lists_shodan.extend(temp_list)
 
         except IOError as e:
-            print('[-] curl shodan.io error. {}'.format(e.args))
+            print('[-] curl shodan.io error. {}'.format(e.__str__))
 
         except KeyError as e:
             # KeyError 为 API无效

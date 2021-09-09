@@ -7,7 +7,6 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 
-
 # def getUniqueList(L):
 #     (output, temp) = ([], [])
 #     for l in L:

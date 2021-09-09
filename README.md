@@ -26,11 +26,11 @@
 
 - 9-nmap指纹库socket异步探测开放端口服务
 
-- 10-友链爬取
+- 10-子域名友链查询
 
 - 11-爱企查股权结构查询
 
-- 12-微信公众号信息搜集
+- 12-微信公众号查询
 
 中间环节
 
@@ -115,7 +115,7 @@ python batch.py -v
 
 6、https://github.com/knownsec/ksubdomain
 
-7、https://mp.weixin.qq.com/s?__biz=MzI0NzEwOTM0MA==&mid=2652476301&idx=1&sn=498748d68c27cdd5ef05ce7d990fd64c&chksm=f258303ec52fb928989a2dc56d68791b89576d8cff8b4832e8d103c7525d95948d803aae8e27&scene=178&cur_album_id=1368680445315235841#rd
+7、https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzI0NzEwOTM0MA==&action=getalbum&album_id=1368680445315235841
 
 #需要优化
 
@@ -124,5 +124,4 @@ python batch.py -v
 2、基于fofa/quake 指定关键词 -> 利用探测，有时候新写的EXP需要待验证
 
 3、基于C段 -> 利用探测，指定IP段多资产存活需要进行单独探测
-
 

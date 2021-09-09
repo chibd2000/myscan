@@ -6,7 +6,7 @@ from spider.public import *
 from spider import BaseSpider
 
 
-# @keefe @hangniu
+# @keefe @hangniu @ske
 class SSLSpider(BaseSpider):
     def writeFile(self, web_lists, page):
         pass

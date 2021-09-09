@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 import random
 
 
+# 最一开始写的，就直接放着了，后面全是异步，这个就用不上了
 class HackRequest(object):
     def __init__(self, domain, cookie=None, hash=None, md5=None):
         self.domain = domain

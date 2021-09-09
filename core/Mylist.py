@@ -3,4 +3,5 @@
 # @Time     : 2021-09-06 20:49
 
 class Mylist(list):
-    pass
+    def __getattr__(self, item):
+        pass

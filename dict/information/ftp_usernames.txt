@@ -3,7 +3,4 @@ administrator
 ftp
 test
 admin
-web
-weblogic
 root
-oracle

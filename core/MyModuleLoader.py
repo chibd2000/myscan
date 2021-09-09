@@ -25,12 +25,12 @@ class ModuleLoader(object):
                 if type == 'third':
                     pass
                 elif type == 'exploit':
-                    for a, dirnames, filenameList in os.walk(self.modulePath, followlinks=True):
+                    for parent, dirnames, filenameList in os.walk(self.modulePath, followlinks=True):
                         for filename in filenameList:
                             if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py':
                                 continue
                             try:
-                                filePath = os.path.join(a, filename)
+                                filePath = os.path.join(parent, filename)
                                 module = importlib.import_module('.'.join(re.split('[\\\\/]', filePath[len(abs_path):-3])))
                                 # module = importlib.import_module('FineReport')
                                 if hasattr(module, self.object):
@@ -56,13 +56,14 @@ class ModuleLoader(object):
         except ModuleNotFoundError as e:
             print('module not found, {}'.format(e.__str__()))
 
+    # 后面的用于单个payload检测，要不然每次都需要写个py文件来跑，太麻烦
     # for single 单个测试
     def singleModuleLoad(self, module: str):
-        return self.__moduleLoad(module, type=None)
+        return self.__moduleLoad(module=module, type=None)
 
     # for twp/three poc exp 加载>2
     def multiModuleLoad(self, module: str):
-        return self.__moduleLoad(module, type=None)
+        return self.__moduleLoad(module=module, type=None)
 
     # default, all module 加载所有的
     def defaultModuleLoad(self, type):

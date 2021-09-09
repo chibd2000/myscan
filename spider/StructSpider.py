@@ -9,6 +9,15 @@ from tldextract import extract
 
 
 class CompanyStructSpider(BaseSpider):
+    def __init__(self, domain):
+        super().__init__()
+        self.domain = domain
+        self.root_domain = set()
+        self.save_name = ''
+        self.urls = []
+        self.qiye = []
+        self.id = ''
+
     def writeFile(self, web_lists, page):
         pass
 
@@ -17,14 +26,6 @@ class CompanyStructSpider(BaseSpider):
 
     def main(self):
         pass
-
-    def __init__(self):
-        super().__init__()
-        self.root_domain = set()
-        self.save_name = ''
-        self.urls = []
-        self.qiye = []
-        self.id = ''
 
     def put_s(self, url):
         mu = extract(url).domain + '.' + extract(url).suffix

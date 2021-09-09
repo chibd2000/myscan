@@ -430,6 +430,7 @@ class PortScan(BaseSpider):
                 task = asyncio.create_task(self.scan(semaphore, ip, port))
                 taskList.append(task)
         await asyncio.gather(*taskList)
+        # http 处理 会放到self.domainList，交给cmsExp来进行处理
         for target in self.ipPortServiceList:
             service = target.get('service')
             if service == 'http':
@@ -447,7 +448,7 @@ class PortScan(BaseSpider):
 
 
 if __name__ == '__main__':
-    portscan = PortScan('zjhu.edu.cn', [{'ip': '150.158.186.39', 'port': [80]}])
+    portscan = PortScan('zjhu.edu.cn', [{'ip': '117.78.34.114', 'port': [389]}])
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(portscan.main())
     print(res)

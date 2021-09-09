@@ -3,7 +3,6 @@ from spider.thirdLib.public import *
 from spider.thirdLib import BaseThird
 
 
-
 class Hacketarget(BaseThird):
     def __init__(self, domain):
         super().__init__()

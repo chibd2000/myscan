@@ -2,23 +2,24 @@
 from spider.public import *
 from spider import BaseSpider
 
-
 import subprocess
 import os
 import re
 
 abs_path = os.getcwd() + os.path.sep
 
-'''subDomainsdBrute模块'''
+
+# subDomainsdBrute模块
 class subDomaindBrute(BaseSpider):
     def __init__(self, target):
         super().__init__()
         self.source = 'DomainBrute'
         self.target = target
-        self.dnsbrute_list = list()
+        self.dnsbrute_list = []
 
     def spider(self):
-        cmd = 'python2 ' + abs_path + 'subDomainsBrute' + os.path.sep + 'subDomainsBrute.py ' + str(self.target) + ' -i'  # --full'
+        cmd = 'python2 ' + abs_path + 'subDomainsBrute' + os.path.sep + 'subDomainsBrute.py ' + str(
+            self.target) + ' -i'  # --full'
         res = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         result = res.stdout.read().decode()
 

@@ -85,7 +85,7 @@ def test02():
 
 
 async def test():
-    async for url in _baidu("inurl:nbcc.cn", 5):
+    async for url in _baidu("inurl:zjhu.edu.cn", 5):
         print(url)
 
 
