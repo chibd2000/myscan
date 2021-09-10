@@ -5,7 +5,6 @@ from spider.public import *
 from spider import BaseSpider
 from lxml import etree
 from core.MyRequest import *
-from urllib.parse import quote, urlparse
 from common.tools import *
 from spider.common import config
 import base64

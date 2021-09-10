@@ -43,7 +43,7 @@ class Bufferover(BaseThird):
                     else:
                         print('[-] bufferover API No Subdomains.')
         except Exception as e:
-            print('[-] curl dns.bufferover.run api error. {}'.format(e.args))
+            print('[-] curl dns.bufferover.run api error. {}'.format(e.__str__()))
 
     async def spider(self):
         async def getProxy():

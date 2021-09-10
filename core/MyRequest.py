@@ -33,7 +33,7 @@ class HackRequest(object):
             print('[+] get iconHash: ', self.iconHash)
             print('[+] get iconMD5: ', self.iconMD5)
         except Exception as e:
-            print('[-] _getFaviconAndMD5 first failed, error is {}'.format(e.args))
+            print('[-] _getFaviconAndMD5 first failed, error is {}'.format(e.__str__()))
             print('[+] _getFaviconAndMD5 second ...')
             try:
                 resp_ = requests.get(self.getUrl('www.' + self.domain) + '/favicon.ico')
@@ -46,7 +46,7 @@ class HackRequest(object):
                 print('[+] get iconHash: ', self.iconHash)
                 print('[+] get iconMD5: ', self.iconMD5)
             except Exception as e:
-                print('[-] _getFaviconAndMD5 second failed, error is {}'.format(e.args))
+                print('[-] _getFaviconAndMD5 second failed, error is {}'.format(e.__str__()))
 
     async def getRequest(self, url):
         try:

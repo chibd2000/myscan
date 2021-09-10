@@ -4,13 +4,16 @@
 from enum import Enum
 
 
+# About bug 相关的描述枚举类
 class BugType(Enum):
-    SQLINJECTION = 'SqlInjection'
+    SQLINJECTION = 'SQL Injection'
     RCE = 'RCE'
     READFILE = 'READ FILE'
     XXE = 'XXE'
     SSRF = 'SSRF'
     DESERIALIZE = 'Deserialize'
+    CODELEAKAGE = 'Code Leakage'
+    UPLOADFILE = 'Upload File'
 
 
 class BugLevel(Enum):

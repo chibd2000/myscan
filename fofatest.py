@@ -34,19 +34,20 @@ if __name__ == '__main__':
     # zookeeper = 'https://fofa.so/api/v1/search/all?email=496347658@qq.com&key=627c0a4e86e7111baf74c731f8e77f14&qbase64=KCJ6b29rZWVwZXIiKSAmJiAoaXNfaG9uZXlwb3Q9ZmFsc2UgJiYgaXNfZnJhdWQ9ZmFsc2Up&size=1000&&fields=host'
 
     # ssh = 'https://fofa.so/api/v1/search/all?email=496347658@qq.com&key=627c0a4e86e7111baf74c731f8e77f14&qbase64=c3No&size=1000&fields=host'
-    mysql = 'https://fofa.so/api/v1/search/all?email=496347658@qq.com&key=627c0a4e86e7111baf74c731f8e77f14&qbase64=Im15c3FsIg==&size=300&fields=host'
-    resp = requests.get(url=mysql)
+    # mysql = 'https://fofa.so/api/v1/search/all?email=496347658@qq.com&key=627c0a4e86e7111baf74c731f8e77f14&qbase64=Im15c3FsIg==&size=300&fields=host'
+    v2Conference = 'https://fofa.so/api/v1/search/all?email=496347658@qq.com&key=627c0a4e86e7111baf74c731f8e77f14&qbase64=IlYyLUNvbmZlcmVuY2UiICYmIGNvdW50cnk9IkNOIg==&size=300&fields=host'
+    resp = requests.get(url=v2Conference)
     result = json.loads(resp.content.decode('utf-8'))
 
-    # serviceExploit
-    ipList = []
-    for _ in result.get('results'):
-        ipList.append(_)
-    res.append({'service': 'mysql', 'ip': ipList})
-    print(res)
-
     # webExploit
-    # domainList = []
+    domainList = []
+    for _ in result.get('results'):
+        domainList.append(_)
+    print(domainList)
+
+    # serviceExploit
+    # ipList = []
     # for _ in result.get('results'):
-    #     domainList.append(_)
-    # print(domainList)
+    #     ipList.append(_)
+    # res.append({'service': 'mysql', 'ip': ipList})
+    # print(res)

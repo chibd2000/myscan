@@ -8,25 +8,25 @@
 
 信息搜集（多线程+异步IO）：
 
-- 1-DNS枚举查询(ksubdomain) 
+- 1-DNS枚举查询(ksubdomain)子域名 
 
-- 2-百度/Bing关键词查询
+- 2-百度/Bing关键词查询子域名
 
-- 3-FOFA/SHODAN/QUAKE查询
+- 3-FOFA/SHODAN/QUAKE查询子域名
 
-- 4-ctfr证书查询
+- 4-ctfr证书查询子域名
 
-- 5-第三方接口查询
+- 5-第三方接口查询子域名
 
-- 6-github查询
+- 6-github查询子域名
 
-- 7-域名DNS解析IP查询
+- 7-子域名查询IP
 
-- 8-IP反查域名
+- 8-IP反查子域名
 
 - 9-nmap指纹库socket异步探测开放端口服务
 
-- 10-子域名友链查询
+- 10-子域名友链查询子域名
 
 - 11-爱企查股权结构查询
 
@@ -78,7 +78,6 @@ gJavaScriptParamList = []
 3、SQL注入漏洞
 
 #用法：
-
 ```
 python batch.py -d zjhzu.edu.cn
 
@@ -124,4 +123,6 @@ python batch.py -v
 2、基于fofa/quake 指定关键词 -> 利用探测，有时候新写的EXP需要待验证
 
 3、基于C段 -> 利用探测，指定IP段多资产存活需要进行单独探测
+
+4、portSpider portWrapper类实现
 

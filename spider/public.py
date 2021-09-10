@@ -19,10 +19,9 @@ try:
 
     abs_path = os.getcwd() + os.path.sep  # 路径
 
-    from core.asynchttp import *
-    from threading import Lock
+    from core.MyAsyncHttp import *
     from spider.common.config import *
-    # from common.tools import *
+    from common.tools import *
 
     if sys.platform == 'win32':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())

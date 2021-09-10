@@ -107,10 +107,11 @@ class A(object):
 
 
 if __name__ == '__main__':
+    pass
     # l = asyncio.get_event_loop()
     # l.run_until_complete(test())
-    a = A()
-
+    # a = A()
+    # print(os.path.abspath('.').join('/exploit/web/'))
     # start = time.time()
     # asyncio.run(test02())
     # print(time.time() - start)

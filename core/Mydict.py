@@ -4,4 +4,13 @@
 
 class Mydict(dict):
     def __getattr__(self, item):
-        pass
+        try:
+            return self.__getitem__(item)
+        except KeyError:
+            raise AttributeError("unable to access item '{}'".format(item))
+
+
+if __name__ == '__main__':
+    a = Mydict()
+    a['a'] = 1
+    print(a['b'])

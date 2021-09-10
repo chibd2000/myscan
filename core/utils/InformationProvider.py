@@ -11,10 +11,10 @@ abs_path = os.getcwd() + os.path.sep
 class InformationProvider(object):
     fileType = 'r'
     # dictPath = 'dict/information'
-    dictPath = abs_path + '../dict/information' # 本地测试
-    # dictPath = abs_path + '/dict/information' # 真实测试
+    # dictPath = abs_path + '../dict/information' # 本地测试
+    dictPath = abs_path + '/dict/information'  # 真实测试
 
-    print(dictPath)
+    # print(dictPath)
 
     @staticmethod
     def readFile(filename):

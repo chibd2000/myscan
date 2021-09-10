@@ -5,11 +5,11 @@ from spider import BaseSpider
 
 
 class Ip2domainSpider(BaseSpider):
-    def __init__(self, domain, gIpList):
+    def __init__(self, domain, ipList):
         super().__init__()
         self.source = 'ip2domain'
         self.domain = domain
-        self.ipList = gIpList
+        self.ipList = ipList
         self.addr = 'http://api.webscan.cc/?action=query&ip={}'
 
     def writeFile(self, web_lists, page):
@@ -41,10 +41,9 @@ class Ip2domainSpider(BaseSpider):
                             for _ in domains:
                                 if self.domain in _:
                                     self.resList.append(_)
-                    await asyncio.sleep(1)
 
         except Exception as e:
-            print('[error] ip2domain: {} {}'.format(ip, e.args))
+            print('[error] ip2domain: {} {}'.format(ip, e.__str__()))
 
     async def spider(self):
         concurrency = 50  # 这里的话稍微控制下并发量
