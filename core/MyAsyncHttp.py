@@ -32,12 +32,12 @@ class AsyncFetcher:
         try:
             if params != '':
                 sslcontext = ssl.create_default_context(cafile=certifi.where())
-                async with session.get(url, ssl=sslcontext, params=params) as response:
+                async with session.get(url, ssl=sslcontext, params=params, timeout=10) as response:
                     await asyncio.sleep(2)
                     return await response.text() if json is False else await response.json()
             else:
                 sslcontext = ssl.create_default_context(cafile=certifi.where())
-                async with session.get(url, ssl=sslcontext) as response:
+                async with session.get(url, ssl=sslcontext, timeout=10) as response:
                     await asyncio.sleep(2)
                     return await response.text() if json is False else await response.json()
         except Exception as e:

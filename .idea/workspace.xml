@@ -13,23 +13,28 @@
     <SUITE FILE_PATH="coverage/myscan$MyModuleLoader__1_.coverage" NAME="MyModuleLoader (1) Coverage Results" MODIFIED="1631280311285" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core" />
     <SUITE FILE_PATH="coverage/myscan$AsyncThirdHacktarget.coverage" NAME="AsyncThirdHacktarget Coverage Results" MODIFIED="1629992483595" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
     <SUITE FILE_PATH="coverage/myscan$getssl.coverage" NAME="getssl Coverage Results" MODIFIED="1630491810527" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/myscan$SQLExploit.coverage" NAME="SQLExploit Coverage Results" MODIFIED="1631294047250" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit" />
     <SUITE FILE_PATH="coverage/myscan_master$test_write_mul.coverage" NAME="test_write_mul Coverage Results" MODIFIED="1594870652532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$batch.coverage" NAME="batch Coverage Results" MODIFIED="1631204386883" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$__init__.coverage" NAME="__init__ Coverage Results" MODIFIED="1629981025901" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="D:/python38/Lib/site-packages/cloudscraper" />
     <SUITE FILE_PATH="coverage/myscan_master$BaiduSpider.coverage" NAME="BaiduSpider Coverage Results" MODIFIED="1629816109673" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider" />
     <SUITE FILE_PATH="coverage/myscan_master$qiye_jiagou.coverage" NAME="qiye_jiagou Coverage Results" MODIFIED="1629896900795" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tusi" />
+    <SUITE FILE_PATH="coverage/myscan$axis2_getshell.coverage" NAME="axis2_getshell Coverage Results" MODIFIED="1631324989043" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit/web/Axis2" />
     <SUITE FILE_PATH="coverage/myscan$asyncalienvault.coverage" NAME="asyncalienvault Coverage Results" MODIFIED="1630433859498" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
+    <SUITE FILE_PATH="coverage/myscan$mock_rce.coverage" NAME="mock_rce Coverage Results" MODIFIED="1631357513491" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit/web/Yapi" />
     <SUITE FILE_PATH="coverage/myscan$CtfrSpider.coverage" NAME="CtfrSpider Coverage Results" MODIFIED="1630234493502" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider" />
     <SUITE FILE_PATH="coverage/myscan_master$ThirdSitedossier.coverage" NAME="ThirdSitedossier Coverage Results" MODIFIED="1629870978977" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
     <SUITE FILE_PATH="coverage/myscan$sitedossier.coverage" NAME="sitedossier Coverage Results" MODIFIED="1630243891713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
     <SUITE FILE_PATH="coverage/myscan$masscan_test.coverage" NAME="masscan_test Coverage Results" MODIFIED="1630128304451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$PortSpider.coverage" NAME="PortSpider Coverage Results" MODIFIED="1631200228606" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider" />
+    <SUITE FILE_PATH="coverage/myscan$SaltStack_unauth_rce.coverage" NAME="SaltStack_unauth_rce Coverage Results" MODIFIED="1631341171846" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit/web/SaltStack" />
     <SUITE FILE_PATH="coverage/myscan$resolve2.coverage" NAME="resolve2 Coverage Results" MODIFIED="1630418820977" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/common" />
     <SUITE FILE_PATH="coverage/myscan$shodantest.coverage" NAME="shodantest Coverage Results" MODIFIED="1630301656761" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$asyncsocket.coverage" NAME="asyncsocket Coverage Results" MODIFIED="1630647929841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/core" />
     <SUITE FILE_PATH="coverage/myscan_master$test.coverage" NAME="test Coverage Results" MODIFIED="1594721132743" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan_master$Test.coverage" NAME="Test Coverage Results" MODIFIED="1629899003076" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$rapiddns.coverage" NAME="rapiddns Coverage Results" MODIFIED="1630243062313" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
+    <SUITE FILE_PATH="coverage/myscan$axis2_high.coverage" NAME="axis2_high Coverage Results" MODIFIED="1631322299328" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit/web/Axis2" />
     <SUITE FILE_PATH="coverage/myscan$tools.coverage" NAME="tools Coverage Results" MODIFIED="1630681032114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/common" />
     <SUITE FILE_PATH="coverage/myscan$certspotter.coverage" NAME="certspotter Coverage Results" MODIFIED="1630242455148" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
     <SUITE FILE_PATH="coverage/myscan$AsyncThirdAlienvault__1_.coverage" NAME="AsyncThirdAlienvault (1) Coverage Results" MODIFIED="1630075455802" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider/thirdLib" />
@@ -75,6 +80,7 @@
     <SUITE FILE_PATH="coverage/myscan$favico.coverage" NAME="favico Coverage Results" MODIFIED="1630056486725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$AsyncThirdVirustotal.coverage" NAME="AsyncThirdVirustotal Coverage Results" MODIFIED="1629951323646" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
     <SUITE FILE_PATH="coverage/myscan$testtesttest.coverage" NAME="testtesttest Coverage Results" MODIFIED="1630577975951" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/myscan$Solr_CVE_2019_17558.coverage" NAME="Solr_CVE_2019_17558 Coverage Results" MODIFIED="1631334972303" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit/web/Solr" />
     <SUITE FILE_PATH="coverage/myscan$yapi.coverage" NAME="yapi Coverage Results" MODIFIED="1630310193126" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit/web" />
     <SUITE FILE_PATH="coverage/myscan_master$ThirdChaziyu.coverage" NAME="ThirdChaziyu Coverage Results" MODIFIED="1629947809293" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
     <SUITE FILE_PATH="coverage/myscan$testtt.coverage" NAME="testtt Coverage Results" MODIFIED="1631165325125" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -96,12 +102,14 @@
     <SUITE FILE_PATH="coverage/myscan$ServiceExploit.coverage" NAME="ServiceExploit Coverage Results" MODIFIED="1631200046647" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit" />
     <SUITE FILE_PATH="coverage/myscan$test3.coverage" NAME="test3 Coverage Results" MODIFIED="1630135031701" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$resolve__1_.coverage" NAME="resolve (1) Coverage Results" MODIFIED="1630422026796" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/common" />
+    <SUITE FILE_PATH="coverage/myscan$ueditor.coverage" NAME="ueditor Coverage Results" MODIFIED="1631346019006" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit/web/Editor" />
     <SUITE FILE_PATH="coverage/myscan$BingSpider.coverage" NAME="BingSpider Coverage Results" MODIFIED="1630127025160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider" />
     <SUITE FILE_PATH="coverage/myscan$AsyncThirdAlienvault.coverage" NAME="AsyncThirdAlienvault Coverage Results" MODIFIED="1630072975599" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Spider/ThirdLib" />
     <SUITE FILE_PATH="coverage/myscan$testslots.coverage" NAME="testslots Coverage Results" MODIFIED="1630927857665" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$mssql.coverage" NAME="mssql Coverage Results" MODIFIED="1631199643611" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit/service" />
     <SUITE FILE_PATH="coverage/myscan$MyModuleLoader.coverage" NAME="MyModuleLoader Coverage Results" MODIFIED="1631250975545" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$zentao.coverage" NAME="zentao Coverage Results" MODIFIED="1630998191234" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit/web" />
+    <SUITE FILE_PATH="coverage/myscan$backup_file.coverage" NAME="backup_file Coverage Results" MODIFIED="1631345398381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exploit/web/Backup" />
     <SUITE FILE_PATH="coverage/myscan$SSLSpider.coverage" NAME="SSLSpider Coverage Results" MODIFIED="1630681800746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spider" />
     <SUITE FILE_PATH="coverage/myscan_master$shodan_test.coverage" NAME="shodan_test Coverage Results" MODIFIED="1594729541965" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/myscan$resolve3.coverage" NAME="resolve3 Coverage Results" MODIFIED="1630419454428" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/common" />
@@ -132,75 +140,18 @@
     <expand />
     <select />
   </component>
+  <component name="FavoritesManager">
+    <favorites_list name="myscan" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/batch.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="589" lean-forward="true" selection-start-line="589" selection-end-line="589" />
-              <folding>
-                <element signature="e#16#60#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/exploit/CmsExploit.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="11" column="8" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
-              <folding>
-                <element signature="e#77#105#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/api/MyNetApi.py">
+        <entry file="file://$PROJECT_DIR$/exploit/web/Yapi/mock_rce.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="242">
-              <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
               <folding>
-                <element signature="e#76#89#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/MyModuleLoader.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="80" column="8" selection-start-line="80" selection-start-column="8" selection-end-line="80" selection-end-column="8" />
-              <folding>
-                <element signature="e#77#93#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/exploit/web/Atlassian/crowd_upload_file.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-813">
-              <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
-              <folding>
-                <element signature="e#77#102#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/exploit/web/v2Conference/sql_inject.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="58" selection-start-line="58" selection-end-line="73" selection-end-column="23" />
-              <folding>
-                <element signature="e#77#102#0" expanded="true" />
+                <element signature="e#76#90#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -217,25 +168,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>//</find>
-      <find>sql</find>
-      <find>150</find>
-      <find>threading</find>
-      <find>Linux R RL</find>
-      <find>getPortService</find>
-      <find>ict/information</find>
-      <find>ModuleLoader</find>
-      <find>self</find>
-      <find>version</find>
-      <find>ModulePath</find>
-      <find>webParamsList</find>
-      <find>iplist</find>
-      <find>PortServiceList</find>
-      <find>AsyncFetcher</find>
-      <find>asynchttp</find>
-      <find>first failed, error is</find>
-      <find>ksubdomainSpider</find>
-      <find>domain2</find>
       <find>ipSegmentList</find>
       <find>dns.bufferover.run api</find>
       <find>tempIpSegmentList = getIpSegment(gIpList)</find>
@@ -247,6 +179,25 @@
       <find>session.get</find>
       <find>nc with session</find>
       <find>aObject</find>
+      <find>module</find>
+      <find>CmsScan</find>
+      <find>os_run</find>
+      <find>lace('.htm', '*.htm</find>
+      <find>socket</find>
+      <find>command</find>
+      <find>exec</find>
+      <find>freemarker</find>
+      <find>%3d</find>
+      <find>whoami</find>
+      <find>{}</find>
+      <find>execList</find>
+      <find>.text</find>
+      <find>ssrf</find>
+      <find>UPLOADF</find>
+      <find>ncols=150</find>
+      <find>ncols=100</find>
+      <find>application/</find>
+      <find>headers = {</find>
     </findStrings>
     <dirStrings>
       <dir>D:\ALL\myscan\spider</dir>
@@ -263,57 +214,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/exploit/web/unauth/couchdb_high.py" />
-        <option value="$PROJECT_DIR$/exploit/web/unauth/jupyter_high.py" />
-        <option value="$PROJECT_DIR$/exploit/service/rsync.py" />
-        <option value="$PROJECT_DIR$/exploit/web/report/FineReport.py" />
-        <option value="$PROJECT_DIR$/fofatest.py" />
-        <option value="$PROJECT_DIR$/exploit/web/webserver/readfile.py" />
-        <option value="$PROJECT_DIR$/exploit/web/activemq/activemq.py" />
-        <option value="$PROJECT_DIR$/exploit/web/v2Conference/v2Conference.py" />
-        <option value="$PROJECT_DIR$/exploit/web/v2Conference/Injection-getshell.py" />
-        <option value="$PROJECT_DIR$/exploit/web/tomcat/putFile.py" />
-        <option value="$PROJECT_DIR$/exploit/web/thinkphp/thinkphp_high.py" />
-        <option value="$PROJECT_DIR$/exploit/ServiceExploit.py" />
-        <option value="$PROJECT_DIR$/spider/BingSpider.py" />
-        <option value="$PROJECT_DIR$/core/MyDnslog.py" />
-        <option value="$PROJECT_DIR$/core/Mydict.py" />
-        <option value="$PROJECT_DIR$/core/utils/InformationProvider.py" />
-        <option value="$PROJECT_DIR$/core/MyModuleManager.py" />
-        <option value="$PROJECT_DIR$/Test.py" />
-        <option value="$PROJECT_DIR$/common/tools.py" />
-        <option value="$PROJECT_DIR$/core/MyEnums.py" />
         <option value="$PROJECT_DIR$/exploit/web/__init__.py" />
-        <option value="$PROJECT_DIR$/exploit/web/zimbra/CVE-2019-9670.py" />
-        <option value="$PROJECT_DIR$/spider/thirdLib/public.py" />
-        <option value="$PROJECT_DIR$/exploit/web/__template__.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/struts2_rce.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-005.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-008-1.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-008-2.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-009.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-013.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-016.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-019.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-devmode.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-032.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-033.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-037.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-048.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-052.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-053.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Struts/ST2-057.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Solr/Solr_template_rce.py" />
+        <option value="$PROJECT_DIR$/exploit/web/CodeLeakage/git.py" />
+        <option value="$PROJECT_DIR$/exploit/web/CodeLeakage/svn.py" />
+        <option value="$PROJECT_DIR$/exploit/web/CodeLeakage/ds_store.py" />
+        <option value="$PROJECT_DIR$/exploit/web/XXLJob/rce.py" />
+        <option value="$PROJECT_DIR$/exploit/web/XXLJob/xxl-job-rce.py" />
+        <option value="$PROJECT_DIR$/exploit/service/dubbo.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Atlassian/confluence_rce.py" />
         <option value="$PROJECT_DIR$/exploit/web/Report/FineReport.py" />
-        <option value="$PROJECT_DIR$/core/MyRequest.py" />
-        <option value="$PROJECT_DIR$/spider/public.py" />
-        <option value="$PROJECT_DIR$/spider/thirdLib/asyncbufferrun.py" />
-        <option value="$PROJECT_DIR$/spider/ip2domainSpider.py" />
-        <option value="$PROJECT_DIR$/exploit/cms/qizhi.py" />
+        <option value="$PROJECT_DIR$/exploit/web/SaltStack/SaltStack_unauth_rce.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Esafenet/Esafenet_unauth.py" />
+        <option value="$PROJECT_DIR$/core/MyEnums.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Axis2/axis2_getshell.py" />
+        <option value="$PROJECT_DIR$/exploit/web/ActiveMQ/activemq_putfile.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Backup/backup_file.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Editor/FCKeditor.py" />
         <option value="$PROJECT_DIR$/exploit/web/Qizhi/rce_getshell.py" />
-        <option value="$PROJECT_DIR$/exploit/web/Activemq/activemq_put_file.py" />
-        <option value="$PROJECT_DIR$/exploit/web/v2Conference/Injection_Getshell.py" />
-        <option value="$PROJECT_DIR$/core/MyAsyncHttp.py" />
         <option value="$PROJECT_DIR$/exploit/CmsExploit.py" />
-        <option value="$PROJECT_DIR$/exploit/web/ActiveMQ/activemq_put_file.py" />
-        <option value="$PROJECT_DIR$/exploit/web/Atlassian/atlassianCloud.py" />
-        <option value="$PROJECT_DIR$/exploit/web/Atlassian/atlassianCrowd_rce.py" />
-        <option value="$PROJECT_DIR$/exploit/web/Atlassian/atlassianCrowd_uploadfile.py" />
-        <option value="$PROJECT_DIR$/exploit/web/Atlassian/atlassian_Uploadfile.py" />
-        <option value="$PROJECT_DIR$/spider/PortSpider.py" />
-        <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/core/MyConstant.py" />
-        <option value="$PROJECT_DIR$/spider/api.py" />
-        <option value="$PROJECT_DIR$/spider/NetSpaceSpider.py" />
-        <option value="$PROJECT_DIR$/spider/api/netApi.py" />
         <option value="$PROJECT_DIR$/core/api/MyNetApi.py" />
-        <option value="$PROJECT_DIR$/core/MyModuleLoader.py" />
-        <option value="$PROJECT_DIR$/exploit/web/Atlassian/upload_file.py" />
-        <option value="$PROJECT_DIR$/exploit/web/Atlassian/crowd_upload_file.py" />
-        <option value="$PROJECT_DIR$/batch.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Editor/Editor_high.py" />
+        <option value="$PROJECT_DIR$/core/MyAsyncHttp.py" />
+        <option value="$PROJECT_DIR$/exploit/web/zimbra/CVE-2019-9670.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Editor/webuploader.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Hashicorp/hashicorp.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Hashicorp/rce.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Hashicorp/api_unauth_rce.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Editor/fckeditor.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Editor/ueditor.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Editor/fckeditor_uploadfile.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Apache/Solr/template_rce.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Cacti/test.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Yapi/yapi_high.py" />
+        <option value="$PROJECT_DIR$/exploit/web/Yapi/mock_rce.py" />
+        <option value="$PROJECT_DIR$/exploit/web/__template__.py" />
       </list>
     </option>
   </component>
@@ -370,18 +321,7 @@
               <item name="myscan" type="462c0819:PsiDirectoryNode" />
               <item name="exploit" type="462c0819:PsiDirectoryNode" />
               <item name="web" type="462c0819:PsiDirectoryNode" />
-              <item name="v2Conference" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="myscan" type="b2602c69:ProjectViewProjectNode" />
-              <item name="myscan" type="462c0819:PsiDirectoryNode" />
-              <item name="spider" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="myscan" type="b2602c69:ProjectViewProjectNode" />
-              <item name="myscan" type="462c0819:PsiDirectoryNode" />
-              <item name="spider" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
+              <item name="Yapi" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="myscan" type="b2602c69:ProjectViewProjectNode" />
@@ -400,22 +340,22 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="fileTemplates" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\ALL\myscan\exploit\web" />
-      <recent name="D:\ALL\myscan\exploit\web\v2Conference" />
-      <recent name="D:\ALL\myscan" />
-      <recent name="D:\ALL\myscan\exploit\web\unauth" />
-      <recent name="D:\ALL\myscan\exploit\web\oa" />
+      <recent name="D:\ALL\myscan\exploit\web\Minio" />
+      <recent name="D:\ALL\myscan\exploit\web\XXLJob" />
+      <recent name="D:\ALL\myscan\exploit\web\Struts" />
+      <recent name="D:\ALL\myscan\exploit\web\Jumpserver" />
+      <recent name="D:\ALL\myscan\exploit\web\Vpn" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\ALL\myscan\exploit\web\WebServer" />
+      <recent name="D:\ALL\myscan\exploit\web\Apache" />
+      <recent name="D:\ALL\myscan\exploit\web" />
+      <recent name="D:\ALL\myscan\exploit\web\CodeLeakage" />
       <recent name="D:\ALL\myscan\core" />
-      <recent name="D:\ALL\myscan\spider\api" />
-      <recent name="D:\ALL\myscan\spider" />
-      <recent name="D:\ALL\myscan\exploit\web\ruoyi" />
-      <recent name="D:\ALL\myscan\exploit\web\swagger" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -430,8 +370,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.MyModuleLoader (1)">
-    <configuration name="MyModuleLoader (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.mock_rce">
+    <configuration name="SaltStack_unauth_rce" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="myscan-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -439,12 +379,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/core" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/exploit/web/SaltStack" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/core/MyModuleLoader.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/exploit/web/SaltStack/SaltStack_unauth_rce.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -453,7 +393,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="MyNetApi" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="Solr_CVE_2019_17558" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="myscan-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -461,12 +401,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/core/api" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/exploit/web/Solr" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/core/api/MyNetApi.py" />
+      <option name="SCRIPT_NAME" value="D:\ALL\myscan\exploit\web\Solr\Solr_template_rce.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -475,7 +415,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="backup_file" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="myscan-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -483,12 +423,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/exploit/web/Backup" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/exploit/web/Backup/backup_file.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -497,7 +437,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="activemq_put_file" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="mock_rce" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="myscan-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -505,12 +445,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/exploit/web/ActiveMQ" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/exploit/web/Yapi" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="D:\ALL\myscan\exploit\web\ActiveMQ\activemq_putfile.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/exploit/web/Yapi/mock_rce.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -519,7 +459,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="netApi" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="ueditor" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="myscan-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -527,12 +467,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/spider/api" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/exploit/web/Editor" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spider/api/netApi.py" />
+      <option name="SCRIPT_NAME" value="D:\ALL\myscan\exploit\web\Editor\ueditor_uploadfile.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -542,19 +482,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.Test" />
-      <item itemvalue="Python.activemq_put_file" />
-      <item itemvalue="Python.netApi" />
-      <item itemvalue="Python.MyNetApi" />
-      <item itemvalue="Python.MyModuleLoader (1)" />
+      <item itemvalue="Python.Solr_CVE_2019_17558" />
+      <item itemvalue="Python.SaltStack_unauth_rce" />
+      <item itemvalue="Python.backup_file" />
+      <item itemvalue="Python.ueditor" />
+      <item itemvalue="Python.mock_rce" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.MyModuleLoader (1)" />
-        <item itemvalue="Python.MyNetApi" />
-        <item itemvalue="Python.netApi" />
-        <item itemvalue="Python.activemq_put_file" />
-        <item itemvalue="Python.Test" />
+        <item itemvalue="Python.mock_rce" />
+        <item itemvalue="Python.ueditor" />
+        <item itemvalue="Python.backup_file" />
+        <item itemvalue="Python.SaltStack_unauth_rce" />
+        <item itemvalue="Python.Solr_CVE_2019_17558" />
       </list>
     </recent_temporary>
   </component>
@@ -599,23 +539,26 @@
       <workItem from="1631035454773" duration="782000" />
       <workItem from="1631068368402" duration="36367000" />
       <workItem from="1631162213864" duration="40642000" />
-      <workItem from="1631250001996" duration="27360000" />
+      <workItem from="1631250001996" duration="35583000" />
+      <workItem from="1631318926081" duration="4957000" />
+      <workItem from="1631324410950" duration="9915000" />
+      <workItem from="1631337499911" duration="14454000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="574943000" />
+    <option name="totallyTimeSpent" value="612492000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19029851" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49945828" visible="true" weight="0.19669509" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info id="Favorites" order="2" sideWeight="0.5005417" side_tool="true" weight="0.1924307" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.3336945" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4989339" visible="true" weight="0.3336945" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39761648" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -623,7 +566,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50053304" side_tool="true" weight="0.2654388" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5010661" side_tool="true" weight="0.3336945" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.468039" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -697,388 +640,397 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/python38/Lib/urllib/parse.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="786" column="4" selection-start-line="786" selection-start-column="4" selection-end-line="786" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/AliveSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="56" selection-start-line="56" selection-end-line="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python38/site-packages/jedi/third_party/django-stubs/django-stubs/views/i18n.pyi">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="23" column="8" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/BingSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="5" column="40" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/typeshed/stdlib/2and3/threading.pyi">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="81" column="8" selection-start-line="81" selection-start-column="8" selection-end-line="81" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/DnsBruteSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/Mydict.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/MyDnslog.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="5" column="8" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="109" column="8" selection-start-line="109" selection-start-column="8" selection-end-line="109" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/python38/Lib/ntpath.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="523" column="8" selection-start-line="523" selection-start-column="8" selection-end-line="523" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/utils/InformationProvider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/public.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="18" column="11" lean-forward="true" selection-start-line="18" selection-start-column="11" selection-end-line="18" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" column="17" lean-forward="true" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/SQLExploit.py">
+    <entry file="file://$PROJECT_DIR$/core/MyConstant.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
-          <caret line="8" selection-start-line="8" selection-end-line="9" selection-end-column="53" />
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/python38/Lib/argparse.py">
+    <entry file="file://D:/python38/Lib/enum.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-296">
-          <caret line="1344" column="18" lean-forward="true" selection-start-line="1344" selection-start-column="18" selection-end-line="1344" selection-end-column="18" />
+        <state relative-caret-position="-493">
+          <caret line="550" column="6" selection-start-line="550" selection-start-column="6" selection-end-line="550" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/MyAsyncSocket.py">
+    <entry file="file://$PROJECT_DIR$/exploit/web/Confluence/confluence_getshell.py" />
+    <entry file="file://$PROJECT_DIR$/exploit/web/SharePoint/sharepoint_high.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="46" column="1" lean-forward="true" selection-start-line="46" selection-start-column="1" selection-end-line="46" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/CodeLeakage/leak.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1298">
+          <caret line="63" selection-start-line="63" selection-end-line="63" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/CodeLeakage/git.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/public.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="34" selection-start-line="8" selection-start-column="34" selection-end-line="8" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/web/__template__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
-          <folding>
-            <element signature="e#92#125#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/web/zimbra/CVE-2019-9670.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
-          <folding>
-            <element signature="e#75#88#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/web/Report/FineReport.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
-          <folding>
-            <element signature="e#75#88#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/MyEnums.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="21" column="15" selection-start-line="21" selection-start-column="15" selection-end-line="21" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/cms/qizhi.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/ip2domainSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/MyRequest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="34" column="30" lean-forward="true" selection-start-line="34" selection-start-column="30" selection-end-line="34" selection-end-column="30" />
-          <folding>
-            <element signature="e#77#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/web/Qizhi/rce_getshell.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="13" column="8" lean-forward="true" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
-          <folding>
-            <element signature="e#76#101#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/FriendChainsSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="56" lean-forward="true" selection-start-line="56" selection-end-line="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/thirdLib/asyncbufferrun.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/web/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="6" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/python38/Lib/site-packages/aiohttp/client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="322" column="23" lean-forward="true" selection-start-line="322" selection-start-column="23" selection-end-line="322" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/web/ActiveMQ/activemq_putfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-953">
-          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/service/ftp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/service/postgresql.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/service/zookeeper.py">
+    <entry file="file://$PROJECT_DIR$/exploit/web/CodeLeakage/svn.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/spider/PortSpider.py">
+    <entry file="file://$PROJECT_DIR$/exploit/web/CodeLeakage/ds_store.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5655">
-          <caret line="422" lean-forward="true" selection-start-line="422" selection-end-line="422" />
-          <folding>
-            <element signature="e#76#89#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="44">
+          <caret line="2" column="28" selection-start-line="2" selection-start-column="28" selection-end-line="2" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
+    <entry file="file://$PROJECT_DIR$/exploit/web/Vpn/SonicWall SSL-VPN 未授权RCE漏洞.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="286">
-            <caret line="79" column="4" selection-start-line="79" selection-start-column="4" selection-end-line="79" selection-end-column="4" />
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Apache/Struts/Struts2 s2-061 Poc (CVE-2020-17530).md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/XXLJob/rce.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="38" selection-start-line="4" selection-start-column="38" selection-end-line="4" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Jumpserver/JumpServer远程执行漏洞.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="704">
+            <caret line="100" selection-start-line="100" selection-end-line="100" selection-end-column="60" />
           </first_editor>
           <second_editor />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spider/CtfrSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
-          <folding>
-            <element signature="e#16#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/tools.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="87" column="4" selection-start-line="87" selection-start-column="4" selection-end-line="87" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/MyConstant.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MyModuleLoader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/api.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/common/config.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/MyModuleManager.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/MyAsyncHttp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/NetSpaceSpider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="131" column="49" lean-forward="true" selection-start-line="131" selection-start-column="49" selection-end-line="131" selection-end-column="49" />
-          <folding>
-            <element signature="e#17#44#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spider/public.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/api/MyNetApi.py">
+    <entry file="file://$PROJECT_DIR$/exploit/web/Jumpserver/rce.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="242">
-          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+          <caret line="44" lean-forward="true" selection-start-line="44" selection-end-line="44" />
           <folding>
-            <element signature="e#76#89#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/MyModuleLoader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="80" column="8" selection-start-line="80" selection-start-column="8" selection-end-line="80" selection-end-column="8" />
-          <folding>
-            <element signature="e#77#93#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/exploit/web/v2Conference/sql_inject.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1011" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/XXLJob/xxl-job-rce.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="147">
-          <caret line="58" selection-start-line="58" selection-end-line="73" selection-end-column="23" />
+          <caret line="30" column="31" lean-forward="true" selection-start-line="30" selection-start-column="31" selection-end-line="30" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/service/dubbo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Report/FineReport.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Ruoyi/ruoyi_medium.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/SaltStack/SaltStack_unauth_rce.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="29" column="12" lean-forward="true" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/MyEnums.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Apache/ActiveMQ/activemq_putfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-22">
+          <caret line="19" column="41" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="41" />
           <folding>
-            <element signature="e#77#102#0" expanded="true" />
+            <element signature="e#76#101#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exploit/web/Atlassian/crowd_upload_file.py">
+    <entry file="file://$PROJECT_DIR$/exploit/web/Backup/backup_file.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-813">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+        <state relative-caret-position="1056">
+          <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
           <folding>
-            <element signature="e#77#102#0" expanded="true" />
+            <element signature="e#15#24#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/exploit/CmsExploit.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="11" column="8" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
+        <state relative-caret-position="218">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/python38/Lib/site-packages/tqdm/std.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="841" column="8" selection-start-line="841" selection-start-column="8" selection-end-line="841" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/python38/Lib/site-packages/aiohttp/client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="343" column="22" selection-start-line="343" selection-start-column="12" selection-end-line="343" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/api/MyNetApi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="9" column="81" selection-start-line="9" selection-start-column="81" selection-end-line="9" selection-end-column="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/MyModuleLoader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="135" lean-forward="true" selection-start-line="135" selection-end-line="135" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/MyModuleManager.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/MyAsyncHttp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Editor/Editor_high.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-473">
+          <caret line="61" lean-forward="true" selection-start-line="61" selection-end-line="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/E-Mobile/emobile_high.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
           <folding>
-            <element signature="e#77#105#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/batch.py">
+    <entry file="file://$PROJECT_DIR$/exploit/web/Esafenet/Esafenet_unauth.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="589" lean-forward="true" selection-start-line="589" selection-end-line="589" />
+        <state relative-caret-position="323">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
           <folding>
-            <element signature="e#16#60#0" expanded="true" />
+            <element signature="e#176#201#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Baota/phpmyadmin_unauth.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/zimbra/CVE-2019-9670.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="521">
+          <caret line="70" lean-forward="true" selection-start-line="70" selection-end-line="70" />
+          <folding>
+            <element signature="e#75#88#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Qizhi/rce_getshell.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+          <folding>
+            <element signature="e#77#102#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Axis2/axis2_getshell.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="32" column="34" selection-start-line="32" selection-start-column="34" selection-end-line="32" selection-end-column="34" />
+          <folding>
+            <element signature="e#77#86#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Hashicorp/api_unauth_rce.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+          <folding>
+            <element signature="e#471#496#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Glassfish/readFile.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Hillstone/HILLSTONE.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="44" selection-start-line="44" selection-end-line="44" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Editor/fckeditor_uploadfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="455">
+          <caret line="40" column="44" selection-start-line="40" selection-start-column="44" selection-end-line="40" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Apache/Shiro/shiro_550.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-396">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/__template__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="411">
+          <caret line="66" column="95" selection-start-line="66" selection-start-column="95" selection-end-line="66" selection-end-column="95" />
+          <folding>
+            <element signature="e#77#102#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Minio/MinIO未授权SSRF漏洞（CVE-2021-21287）.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="198">
+            <caret line="12" selection-start-line="12" selection-end-line="12" selection-end-column="30" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Apache/Solr/template_rce.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="59" selection-start-line="59" selection-end-line="70" selection-end-column="37" />
+          <folding>
+            <element signature="e#77#102#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Atlassian/confluence_rce.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="389">
+          <caret line="26" column="1" lean-forward="true" selection-start-line="26" selection-start-column="1" selection-end-line="26" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Cacti/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="8" selection-start-line="4" selection-start-column="8" selection-end-line="4" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Editor/webuploader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Editor/ueditor_uploadfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="611">
+          <caret line="41" selection-start-line="41" selection-end-line="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/iOffice/iOffice.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Atlassian/crowd_upload_file_rce.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="93" selection-start-line="93" selection-end-line="96" selection-end-column="37" />
+          <folding>
+            <element signature="e#77#102#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exploit/web/Yapi/mock_rce.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+          <folding>
+            <element signature="e#76#90#0" expanded="true" />
           </folding>
         </state>
       </provider>

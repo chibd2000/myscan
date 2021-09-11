@@ -553,9 +553,9 @@ def parse_args():
     parser.add_argument('-m', '--module', type=str,
                         help='Load/Show Payload Module(exploit/third/all)，example: python batch.py -m exploit')
     parser.add_argument('-f', '--file', type=str, help='a file')
-    parser.add_argument('-fs', '--fofa', type=str, help='fofa scan title. for example: title="湖州学院"')
-    parser.add_argument('-ss', '--servicescan', type=str, default=0, help='for service scan')
-    parser.add_argument('-cs', '--cmsscan', type=str, help='for cms scan')
+    parser.add_argument('-fs', '--fofa', type=str, help='fofa scan title. for example: domain="zjhu.edu.cn"')
+    parser.add_argument('-ss', '--servicescan', action='store_true', help='for service scan')
+    parser.add_argument('-cs', '--cmsscan', action='store_true', help='for cms scan')
     parser.add_argument('-v', '--version', action='version', version=getVersion(), help='Display version')
     # parser.add_argument('-file', '--file', type=str, help='file')
     # parser.add_argument('-p', '--port', type=str, help='will all port scan in subdomain.')
@@ -583,8 +583,6 @@ if __name__ == '__main__':
             # exploit.run()
 
     if args.cmsscan:
-        print(args.cmsscan)
-
         if args.fofa is None:
             exit('[-] only cmsscan, need -fs')
 
@@ -593,13 +591,25 @@ if __name__ == '__main__':
             print('[+] load all module')
             moduleList = moduleLoader.moduleLoad(moduleType='exploit')
         else:
-            print('[+] load module -> {}'.format(args.module))
-            moduleList = moduleLoader.moduleLoad(moduleType='exploit')
-        from core.api import MyNetApi
+            print('[+] load module -> {}'.format(args.module.split(',')))
+            modulenameList = args.module.split(',')
+            if len(modulenameList) == 1:
+                moduleList = moduleLoader.moduleLoad(moduleType='exploit', moduleObject=args.module)
+            else:
+                moduleList = moduleLoader.moduleLoad(moduleType='exploit', moduleObject=modulenameList)
+            if not moduleList:
+                exit(0)
+        try:
+            from core.api import MyNetApi
+        except ImportError:
+            exit('Import Error from core.api import MyNetApi error')
         loop = asyncio.get_event_loop()
         domainList = loop.run_until_complete(MyNetApi.fofaSearch(args.fofa))
-        print(domainList)
+        cmsScan = CmsScan('test.com', domainList, moduleList)
+        loop.run_until_complete(cmsScan.main())
 
+    if args.module and args.domain is None:
+        ModuleLoader.showModule(args.module)
         # cmsScan = CmsScan('test.com', domainList, moduleList)
 
     # if domain and module is None:

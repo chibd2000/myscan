@@ -2,7 +2,7 @@
 
 没写完，等九月份去学校了有时间慢慢把要写的都写上...
 
-构建简单的信息搜集/漏洞扫描
+构建信息搜集/漏洞扫描
 
 已经实现的功能：
 
@@ -78,21 +78,48 @@ gJavaScriptParamList = []
 3、SQL注入漏洞
 
 #用法：
-```
-python batch.py -d zjhzu.edu.cn
 
-python batch.py -file topDomainList.txt
+###信息搜集/漏洞利用
 
-python batch.py -u zjhzu.edu.cn -p jira
+`python batch.py -d zjhu.edu.cn`
 
-python batch.py -fofa "cert=\"zjhzu.edu.cn\"" -p jira
+信息搜集测试域名：zjhu.edu.cn
 
-python batch.py -quake "cert:\"zjhzu.edu.cn\"" -p jira
+结果相关域名资产大概220，里面会包括部分隐藏资产IP之类的，该域名搜集时间加上数据清洗和整理，总共花费7分钟。
 
-python batch.py -shodan "ssl:\"zjhzu.edu.cn\"" -p jira
+![spider](img/spider.jpg)
 
-python batch.py -v
-```
+漏洞利用测试域名：zjhu.edu.cn
+
+文档展示：
+
+XXXXXXX
+
+###POC展示：
+
+`python batch.py -m exploit`
+
+![show-poc](img/show-poc.png)
+
+###FOFA 指定POC检测：
+
+`python batch.py -fs app=\"XXXXX\" -p exploit.web.xxx.xxx`
+
+![fofa-poc1](img/fofa-poc1.png)
+
+![fofa-poc2](img/fofa-poc2.png)
+
+###版本展示：
+
+`python batch.py -v`
+
+![version](img/version.png)
+
+#设计的思维导图
+
+个人感觉整体架构写的其实不是很好，可能是在写的过程中，想法同样也会发生变化，当后面觉得前面不完善的时候，又需要强行插入一些东西，看起来就十分的僵硬，还是有很多需要学习的地方。
+
+
 
 #总结：
 
@@ -116,13 +143,21 @@ python batch.py -v
 
 7、https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzI0NzEwOTM0MA==&action=getalbum&album_id=1368680445315235841
 
-#需要优化
+#需要增加的
 
-1、基于请求数据的时候实现进度可视化，比如进度条
+~~1、基于请求数据的时候实现进度可视化，比如进度条~~（已实现）
 
-2、基于fofa/quake 指定关键词 -> 利用探测，有时候新写的EXP需要待验证
+~~2、基于fofa指定关键词 -> 利用探测，有时候新写的EXP需要待验证~~（已实现）
 
 3、基于C段 -> 利用探测，指定IP段多资产存活需要进行单独探测
 
-4、portSpider portWrapper类实现
+4、portSpider portWrapper类还没实现
+
+5、github域名爬取还没实现
+
+6、微信公众号爬取还没实现
+
+7、企业公司相关爬取还没实现
+
+8、探测存活的时候没有爬取相关JS敏感接口信息
 

@@ -11,6 +11,7 @@ from core.MyConstant import ModulePath
 abs_path = os.getcwd() + os.path.sep  # 路径
 
 
+# 模块加载类，用于加载poc用的，相当于一个模块Manager，写这个是用到后面出现新POC检测配合fofa来进行使用，这样会比较方便处理
 # exp loader, study for python
 class ModuleLoader(object):
     def __init__(self):
@@ -48,22 +49,21 @@ class ModuleLoader(object):
             showExploitModule()
         elif moduleType == 'third':
             showThirdModule()
-        else:
-            pass
 
-    def moduleLoad(self, moduleType, module=None):
+    def moduleLoad(self, moduleType, moduleObject=None):
         try:
-            if module is None:
+            if moduleObject is None:
                 return self._defaultModuleLoad(moduleType=moduleType)  # moduleType: third | exploit
-            elif isinstance(module, str):
+            elif isinstance(moduleObject, str):
                 return self._singleModuleLoad(
-                    module=module)  # single module load, for example exploit.web.v2Conference.sql_inject
-            elif isinstance(module, list):
-                return self._multiModuleLoad(module=module)  # multi module load, for example exploit.web.v2Conference.sql_inject,
-            else:
-                pass
+                    module=moduleObject)  # single module load, for example exploit.web.v2Conference.sql_inject
+            elif isinstance(moduleObject, list):
+                print(moduleObject)
+                return self._multiModuleLoad(
+                    moduleList=moduleObject)  # multi module load, for example exploit.web.v2Conference.sql_inject,
         except ModuleNotFoundError as e:
             print('module not found, {}'.format(e.__str__()))
+            return None
 
     # 后面的用于单个payload检测，要不然每次都需要写个py文件来跑，太麻烦
     # for single 单个测试
@@ -79,14 +79,14 @@ class ModuleLoader(object):
 
     # for twp/three poc exp 加载>2
     def _multiModuleLoad(self, moduleList: list):
-        for modulePackage in moduleList:
+        for module in moduleList:
             try:
-                modulePY = importlib.import_module(modulePackage)
+                modulePY = importlib.import_module(module)
                 if hasattr(modulePY, 'Script'):
                     aModule = getattr(modulePY, 'Script')
                     self.moduleList.append(aModule)
             except Exception as e:
-                print('import module {} error, {}'.format(modulePackage, e.__str__()))
+                print('import module {} error, {}'.format(module, e.__str__()))
         return self.moduleList
 
     # default, all module 加载所有的

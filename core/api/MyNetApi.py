@@ -7,9 +7,11 @@ from spider.common import config
 
 
 async def fofaSearch(keyword):
-    url = "https://fofa.so/api/v1/search/all?email={}&key={}&qbase64={}&size=10000&&fields=host"
+    url = "https://fofa.so/api/v1/search/all?email={}&key={}&qbase64={}&size=1000&fields=host"
+    # print(url.format(config.fofaEmail, config.fofaApi, base64.b64encode(keyword.encode()).decode()))
     async with aiohttp.ClientSession() as session:
         jsonResult = await AsyncFetcher.fetch(session=session, url=url.format(config.fofaEmail, config.fofaApi, base64.b64encode(keyword.encode()).decode()), json=True)
+        print('[+] fofa get data success.')
         return jsonResult['results']
 
 
@@ -23,5 +25,5 @@ async def quekaSearch():
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    result = loop.run_until_complete(fofaSearch('domain="geely.com"'))
+    result = loop.run_until_complete(fofaSearch('domain="zjhu.edu.cn"'))
     print(result)
