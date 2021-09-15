@@ -16,6 +16,9 @@ class BeianSpider(BaseSpider):
         self.domain = domain
         self.addr = 'https://icp.chinaz.com/home/info?host={}'
 
+    def main(self):
+        pass
+
     def writeFile(self, web_lists, page):
         pass
 

@@ -57,7 +57,7 @@ gWebParamsList = []  # 存储可注入探测参数列表 ["http://www.baidu.com/
 
 # Spider
 class Spider(object):
-    def __init__(self):
+    def __init__(self, domain):
         self.threadList = []  # 线程启动列表
         self.ipSegmentList = []  # 存储资产IP区段分布以及资产IP在指定的区段出现的次数  [{"111.111.111.0/24":1},{"111.111.222.0/24":1}]
         self.asnList = []  # ASN记录
@@ -65,7 +65,7 @@ class Spider(object):
         self.ipPortList = []  # 存储端口+服务
         self.topDomainList = []  # 存储顶级域名记录 @ske
         self.javaScriptParamList = []  # 存储js文件中的js敏感接口 @小洲师傅
-
+        self.domain = domain
         self.clearTaskList = []  # 存储整理过后的域名 [{"subdomain": "www.zjhu.edu.cn","ip": "1.1.1.1","port":[7777,8888]}]
         self.lock = Lock()
         # self.moduleLoader = ModuleLoader()
@@ -390,7 +390,6 @@ class Spider(object):
 
         global gDomainList, gIpPortServiceList, gWebParamsList
         # -----------------------
-        self.domain = globals()['parser_domain']
         # 1、checkCdn
         checkCdn(self.domain)
         # 2、大师兄ske用的ksubdomain 自己后面跟着一起
@@ -456,9 +455,9 @@ class Spider(object):
 
 # Exploit
 class Exploit(object):
-    def __init__(self):
+    def __init__(self, domain):
         self.threadList = []
-        self.domain = ''
+        self.domain = domain
 
     def AliveScan(self):
         pass
@@ -522,24 +521,20 @@ class Exploit(object):
 
     def run(self):
         global gDomainList, gIpPortServiceList, gWebParamsList
+        # webExp
+        self.webExploit(gDomainList)
+        self.serviceExploit(gIpPortServiceList)
+        self.sqlExploit(gWebParamsList)
+        # serviceExp
+        # self.serviceExploit()
+        # sqlExp
+        # self.sqlExploit()
 
-        self.domain = globals()['parser_domain']
-
-        if globals()['parser_domain'] is not None:
-            # webExp
-            self.webExploit(gDomainList)
-            self.serviceExploit(gIpPortServiceList)
-            self.sqlExploit(gWebParamsList)
-            # serviceExp
-            # self.serviceExploit()
-            # sqlExp
-            # self.sqlExploit()
-
-            # for i in self.threadList:
-            #     i.start()
-            #
-            # for i in self.threadList:
-            #     i.join()
+        # for i in self.threadList:
+        #     i.start()
+        #
+        # for i in self.threadList:
+        #     i.join()
 
 
 def getVersion():
@@ -577,15 +572,16 @@ if __name__ == '__main__':
     if args.domain:
         if not os.path.exists(abs_path + args.domain + ".xlsx"):
             createXlsx(args.domain)
-            spider = Spider()
+            spider = Spider(args.domain)
             spider.run()
-            # exploit = Exploit()
+            # exploit = Exploit(args.domain)
             # exploit.run()
+        else:
+            exit('文件{}.xlsx已存在，如果要运行的话需要将该文件{}.xlsx改名或者删除.'.format(args.domain, args.domain))
 
     if args.cmsscan:
         if args.fofa is None:
             exit('[-] only cmsscan, need -fs')
-
         moduleLoader = ModuleLoader()
         if args.module is None:
             print('[+] load all module')
@@ -601,6 +597,7 @@ if __name__ == '__main__':
                 exit(0)
         try:
             from core.api import MyNetApi
+            # from core.api import MyNetApi.MyNetApi.fofaSearch()
         except ImportError:
             exit('Import Error from core.api import MyNetApi error')
         loop = asyncio.get_event_loop()

@@ -13,8 +13,11 @@ class BugType:
     DESERIALIZE = 'Deserialize'
     CODELEAKAGE = 'Code Leakage'
     UPLOADFILE = 'Upload File'
+    WRITEFILE = 'Write File'
     UNAUTH = 'UNAUTH'
     BACKUP = 'BACKUP'
+    DIRECTORYTRAVERSAL = 'Directory Traversal'
+    ANYUSERLOGIN = 'Any User Login'
 
 
 class BugLevel:

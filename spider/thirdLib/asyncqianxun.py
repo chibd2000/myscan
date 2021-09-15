@@ -9,17 +9,18 @@ class Qianxun(BaseThird):
         self.domain = domain
         self.addr = "https://www.dnsscan.cn/dns.html"
         self.source = "qianxun"
-        self.headers.update({'Upgrade': 'http/1.1'})
 
     async def spider(self):
         print('Load qianxun api ...')
+        headers = self.headers.copy()
+        headers.update({'Upgrade': 'http/1.1'})
         try:
             async with aiohttp.ClientSession() as session:
                 page = 1
                 while True:
                     time.sleep(0.25)
                     params = {'ecmsfrom': '8.8.8.8', 'show': 'none', 'keywords': self.domain, 'page': page}
-                    async with session.post(url=self.addr, data=params, headers=self.headers,
+                    async with session.post(url=self.addr, data=params, headers=headers,
                                             verify_ssl=False, timeout=self.reqTimeout) as response:
                         text = await response.text(encoding='utf-8')
                         re_data = re.findall(r'<a href="http[s]?://(.*?)"\srel', text, flags=re.S)[1:]

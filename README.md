@@ -103,7 +103,7 @@ XXXXXXX
 
 ###FOFA 指定POC检测：
 
-`python batch.py -fs app=\"XXXXX\" -p exploit.web.xxx.xxx`
+`python batch.py -fs app=\"XXXXX\" -p exploit.web.Apache.Solr.template_rce`
 
 ![fofa-poc1](img/fofa-poc1.png)
 
@@ -119,7 +119,7 @@ XXXXXXX
 
 个人感觉整体架构写的其实不是很好，可能是在写的过程中，想法同样也会发生变化，当后面觉得前面不完善的时候，又需要强行插入一些东西，看起来就十分的僵硬，还是有很多需要学习的地方。
 
-
+![version](img/myscan.png)
 
 #总结：
 
