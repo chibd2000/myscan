@@ -649,7 +649,7 @@ class NetSpider(BaseSpider):
         await self.spider()
         self.resList, self.asnList, self.ipList = list(set(self.resList)), list(set(self.asnList)), list(
             set(self.ipList))
-        return self.resList, self.asnList, self.ipList, self.IpPortList
+        return self.resList, self.asnList, self.ipList, self.IpPortList, self.IpPortList
 
 
 if __name__ == '__main__':

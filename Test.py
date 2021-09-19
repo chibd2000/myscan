@@ -4,6 +4,7 @@
 
 import asyncio
 import os
+import re
 import time
 
 # async def test(queue: asyncio.Queue):
@@ -106,8 +107,17 @@ class A(object):
         self.__test()
 
 
+def isIP(url):
+    p = re.compile(r'^\d+.\d+.\d+:?[\d+]$')
+    if p.match(url):
+        return True
+    else:
+        return False
+
+
 if __name__ == '__main__':
-    pass
+    flag = isIP('1.1.1.1')
+    print(flag)
     # l = asyncio.get_event_loop()
     # l.run_until_complete(test())
     # a = A()

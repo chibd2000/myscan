@@ -1,5 +1,6 @@
 # coding=utf-8
 import xlsxwriter
+import random
 
 url_rules = {'.com.cn', '.org.cn', '.net.cn', '.com', '.cn', '.cc', '.net', '.org', '.info', '.fun', '.one', '.xyz',
              '.name', '.io', '.top', '.me', '.club', '.tv', '.uk', '.hk'}
@@ -266,3 +267,5 @@ def Common_url_by_port(domain, port):
         for protocol in protocols:
             url.append(f'{protocol}{domain}:{port}')
         return url
+
+

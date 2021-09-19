@@ -18,6 +18,11 @@ class BugType:
     BACKUP = 'BACKUP'
     DIRECTORYTRAVERSAL = 'Directory Traversal'
     ANYUSERLOGIN = 'Any User Login'
+    BYPASSPERMISSION = 'Bypass Permission'
+    SENSITIVE = 'Sensitive'
+    FINGER = 'Finger'
+    BLAST = 'Blast'
+    NONE = 'None'
 
 
 class BugLevel:

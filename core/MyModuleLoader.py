@@ -23,7 +23,7 @@ class ModuleLoader(object):
             fileLength = 0
             for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.EXPLOIT, followlinks=True):
                 for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py':
+                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[-3:] != '.py':
                         continue
                     fileLength += 1
                     filePath = os.path.join(parent, filename)
@@ -34,7 +34,7 @@ class ModuleLoader(object):
             fileLength = 0
             for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.THIRDLIB, followlinks=True):
                 for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py':
+                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[-3:] != '.py':
                         continue
                     fileLength += 1
                     filePath = os.path.join(parent, filename)
@@ -97,7 +97,7 @@ class ModuleLoader(object):
         if moduleType == 'third':
             for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.THIRDLIB, followlinks=True):
                 for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py':
+                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[-3:] != '.py':
                         continue
                     try:
                         filePath = os.path.join(parent, filename)
@@ -112,7 +112,7 @@ class ModuleLoader(object):
         elif moduleType == 'exploit':
             for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.EXPLOIT, followlinks=True):
                 for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py':
+                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[-3:] != '.py':
                         continue
                     try:
                         filePath = os.path.join(parent, filename)

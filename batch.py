@@ -545,8 +545,7 @@ def parse_args():
     parser = argparse.ArgumentParser(prog='MyScan', description='The tool is beneficial to attack web/service')
     parser.add_argument('-u', '--url', type=str, help='a url')
     parser.add_argument('-d', '--domain', type=str, help='Target domain. for example: zjhu.edu.cn')
-    parser.add_argument('-m', '--module', type=str,
-                        help='Load/Show Payload Module(exploit/third/all)，example: python batch.py -m exploit')
+    parser.add_argument('-m', '--module', type=str, help='Load/Show Payload Module(exploit/third/all)，example: python batch.py -m exploit')
     parser.add_argument('-f', '--file', type=str, help='a file')
     parser.add_argument('-fs', '--fofa', type=str, help='fofa scan title. for example: domain="zjhu.edu.cn"')
     parser.add_argument('-ss', '--servicescan', action='store_true', help='for service scan')

@@ -22,6 +22,7 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="dict.__await__" />
+          <option value="str.get" />
         </list>
       </option>
     </inspection_tool>
