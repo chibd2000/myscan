@@ -431,10 +431,11 @@ class PortScan(BaseSpider):
                 taskList.append(task)
         await asyncio.gather(*taskList)
         # http 处理 会放到self.domainList，交给cmsExp来进行处理
-        for target in self.ipPortServiceList:
+        for index, target in enumerate(self.ipPortServiceList):
             service = target.get('service')
-            if 'http' in service:
-                self.httpProtocolList = target['ip']
+            if ('ssl' in service or 'http' in service) and 'proxy' not in service:
+                self.ipPortServiceList.__delitem__(index)
+                self.httpProtocolList.extend(target.get('ip'))
         self.writeFile(self.resList, 10)
 
     async def main(self):

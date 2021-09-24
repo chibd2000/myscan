@@ -19,7 +19,6 @@ abs_path = os.getcwd() + os.path.sep
 
 
 class BaiduSpider(BaseSpider):
-
     def __init__(self, domain):
         super().__init__()
         self.source = 'BaiduSpider'  #
@@ -52,13 +51,11 @@ class BaiduSpider(BaseSpider):
     # 爬取链接
     async def keyword(self, session, kw, page=1):
         try:
-            async with session.get(url=self.addr.format(quote(kw), page),
-                                   headers=self.headers, verify_ssl=False,
-                                   timeout=self.reqTimeout) as response:
+            async with session.get(url=self.addr.format(quote(kw), page), headers=self.headers, verify_ssl=False, timeout=10) as response:
                 await asyncio.sleep(2)
                 text = await response.text(encoding='utf-8')
                 selector = etree.HTML(text)
-                print(text)
+                # print(text)
                 resList = []
                 for i in range(9):
                     linkList = selector.xpath('//*[@id="' + str(i+1) + '"]/h3/a/@href')
@@ -88,10 +85,10 @@ class BaiduSpider(BaseSpider):
             try:
                 async with aiohttp.ClientSession() as session:
                     redirectlinkList = await self.keyword(session, word + " site:*." + self.domain, page)
-                    print(redirectlinkList)
+                    # print(redirectlinkList)
                     for _ in redirectlinkList:
                         link = await self.location(session, _)
-                        print(link)
+                        # print(link)
                         title, service, respContent = await self.getTitleAndService(session, link)  # 该函数写在基类中
                         # print(title, service)
                         self.resList.extend(self.matchSubdomain(self.domain, respContent))
@@ -105,13 +102,11 @@ class BaiduSpider(BaseSpider):
     # 爬取
     async def spider(self):
         await asyncio.gather(*[asyncio.create_task(self.fetch(word)) for word in self.words])
-
-        # 列表中的字典去重/写入文件
-        self.writeFile(getUniqueList(self.webList), 1)
-
         # 返回结果
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
+        # 列表中的字典去重/写入文件
+        self.writeFile(getUniqueList(self.webList), 1)
         return self.resList
 
     # 主函数
@@ -120,6 +115,6 @@ class BaiduSpider(BaseSpider):
 
 
 if __name__ == '__main__':
-    baidu = BaiduSpider('4399.com')
+    baidu = BaiduSpider('geely.com')
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(baidu.main())

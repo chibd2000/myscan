@@ -1,7 +1,5 @@
 # myscan
 
-没写完，等九月份去学校了有时间慢慢把要写的都写上...
-
 构建信息搜集/漏洞扫描
 
 已经实现的功能：
@@ -12,11 +10,13 @@
 
 - 2-百度/Bing关键词查询子域名
 
-- 3-FOFA/SHODAN/QUAKE查询子域名
+- 3-fofa/shodan/quake查询子域名
 
 - 4-ctfr证书查询子域名
 
 - 5-第三方接口查询子域名
+
+![thirdLib](img/thirdLib.png)
 
 - 6-github查询子域名
 
@@ -24,13 +24,17 @@
 
 - 8-IP反查子域名
 
+![ip-to-domain](img/ip2domain.png)
+
 - 9-nmap指纹库socket异步探测开放端口服务
+
+![port-scan](img/portscan.png)
 
 - 10-子域名友链查询子域名
 
 - 11-爱企查股权结构查询
 
-- 12-微信公众号查询
+~~- 12-微信公众号查询()~~
 
 中间环节
 
@@ -142,20 +146,28 @@ XXXXXXX
 7、https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzI0NzEwOTM0MA==&action=getalbum&album_id=1368680445315235841
 
 #需要增加的
-
+;
 ~~1、基于请求数据的时候实现进度可视化，比如进度条~~（已实现）
 
-~~2、基于fofa指定关键词 -> 利用探测，有时候新写的EXP需要待验证~~（已实现）
+~~2、基于fofa指定关键词 -> 利用POC探测，有时候新写的POC需要待验证，这时候都可以用到FOFA之类的来进行采取测试~~（已实现）
 
 3、基于C段 -> 利用探测，指定IP段多资产存活需要进行单独探测
 
 4、portSpider portWrapper类还没实现
 
-5、github域名爬取还没实现
+~~5、github域名爬取还没实现~~
 
 6、微信公众号爬取还没实现
 
 7、企业公司相关爬取还没实现
 
 8、探测存活的时候没有爬取相关JS敏感接口信息
+
+~~9、exploit web利用模块补充~~
+
+![exp-module](img/expModule.png)
+
+~~10、单域名 漏洞指定模块探测~~
+
+![url-exploit](img/urlexploit.png)
 

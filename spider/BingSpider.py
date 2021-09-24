@@ -46,7 +46,7 @@ class BingSpider(BaseSpider):
                 first_value = tmp * 10 + 2
             try:
                 async with aiohttp.ClientSession() as session:
-                    print(self.addr.format(quote(word + " site:*." + self.domain), first_value))
+                    # print(self.addr.format(quote(word + " site:*." + self.domain), first_value))
                     async with session.get(url=self.addr.format(quote(word + " site:*." + self.domain), first_value),
                                            headers=self.headers, verify_ssl=False, timeout=self.reqTimeout) as response:
                         text = await response.text(encoding='utf-8')

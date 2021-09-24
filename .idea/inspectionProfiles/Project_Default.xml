@@ -23,6 +23,7 @@
         <list>
           <option value="dict.__await__" />
           <option value="str.get" />
+          <option value="typing.Coroutine.get" />
         </list>
       </option>
     </inspection_tool>

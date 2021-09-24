@@ -18,19 +18,7 @@ class GithubSpider(BaseSpider):
         self.keyword = []
 
     def writeFile(self, web_lists, page):
-        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
-        worksheet = workbook.worksheets[page]
-        index = 0
-        while index < len(web_lists):
-            web = list()
-            web.append(web_lists[index]['spider'])
-            web.append(web_lists[index]['keyword'])
-            web.append(web_lists[index]['link'])
-            web.append(web_lists[index]['title'])
-            worksheet.append(web)
-            index += 1
-        workbook.save(abs_path + str(random) + ".xlsx")
-        workbook.close()
+        pass
 
     def process_pages(self, _contents, _keyword):
 
@@ -57,7 +45,9 @@ class GithubSpider(BaseSpider):
             }
 
     def spider(self):
+        # 获取github请求会话
         session = Github(login_or_token=self.githubApi, per_page=self.page)
+        # 获取请求页数
         while True:
             try:
                 response = session.search_code(self.keyword, sort='indexed', order='desc', highlight=True)
@@ -66,31 +56,29 @@ class GithubSpider(BaseSpider):
                 break
             except GithubException as e:
                 if 'rate limit' in e.data.get('message', ''):
-                    print('[-] Github token error, {}', e.args)
+                    print('[-] Github token error, {}'.format(e.__str__()))
                     return
             # 防止由于网络原因导致的获取失败
             except Exception as e:
-                print(e.args)
+                print('[-] Github search error, error is {}'.format(e.__str__()))
                 return
+
         # E.G. total = 50，max_page = 1; total = 51, max_page = 2
         # 需要搜索的页数为max_page和task.page中最小的值
         max_page = (total // self.page) if (not total % self.page) else (total // self.page + 1)
-        pages = min(max_page, self.task.pages) if self.task.pages else max_page
         # 搜索代码
         page = 0
-        while page < pages:
+        # 获取每页的内容
+        while page < max_page:
             try:
                 page_content = response.get_page(page)
                 page += 1
             except GithubException as e:
-                if 'abuse-rate-limits' in e.data.get('documentation_url'):
-                    session, _token = self._reset_token(session, _token)
-                else:
-                    logger.exception(e)
+                # print('[-] GithubException, error is {}'.format(e.__str__()))
                 continue
             # 防止由于网络原因导致的获取失败
             except Exception as e:
-                print(e.args)
+                print('[-] Github search error, error is {}'.format(e.__str__()))
                 return
             self.process_pages(page_content, self.keyword)
 

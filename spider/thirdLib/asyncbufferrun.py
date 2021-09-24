@@ -31,8 +31,7 @@ class Bufferover(BaseThird):
             async with aiohttp.ClientSession(headers=self.headers) as session:
                 proxies = 'http://{}'.format(proxy)
                 resList = []
-                async with session.get(url=self.addr.format(self.domain), verify_ssl=False, timeout=10,
-                                       proxy=proxies) as response:
+                async with session.get(url=self.addr.format(self.domain), verify_ssl=False, timeout=10, proxy=proxies) as response:
                     text = await response.text(encoding='utf-8')
                     FDNS_A_value = json.loads(text)['FDNS_A']
                     if FDNS_A_value:
@@ -47,19 +46,19 @@ class Bufferover(BaseThird):
 
     async def spider(self):
         async def getProxy():
-            url = 'https://api.proxyscrape.com/?request=displayproxies&proxytype=http&country=all&anonymity=all&ssl=yes&timeout=2000'
+            url = 'https://api.proxyscrape.com/?request=displayproxies&proxytype=http&country=all&anonymity=all&ssl=yes&timeout=5000'
             try:
                 async with aiohttp.ClientSession(headers=self.headers) as session:
-                    async with session.get(url=url, verify_ssl=False, timeout=10,
-                                           proxy='http://127.0.0.1:7890') as response:
-                        text = await response.text(encoding='utf-8')
-                        if text:
-                            proxyList = [x for x in text.split('\r\n') if x != '']
-                            print('[+] api.proxyscrape.com grabbed proxy.')
-                            return proxyList
-                        else:
-                            print('[-] api.proxyscrape.com No proxy.')
-            except TimeoutError:
+                    async with session.get(url=url, verify_ssl=False, timeout=self.reqTimeout, proxy='http://127.0.0.1:7890') as response:
+                        if response is not None:
+                            text = await response.text()
+                            if text:
+                                proxyList = [x for x in text.split('\r\n') if x != '']
+                                print('[+] api.proxyscrape.com grabbed proxy.')
+                                return proxyList
+                            else:
+                                print('[-] api.proxyscrape.com No proxy.')
+            except asyncio.TimeoutError:
                 print("[-] curl api.proxyscrape.com Timeout, check your proxy.")
                 return []
 

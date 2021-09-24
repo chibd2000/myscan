@@ -14,9 +14,8 @@ class Hacketarget(BaseThird):
         print('Load hackertarget api ...')
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(url=self.addr.format(self.domain), headers=self.headers, verify_ssl=False,
-                                       timeout=self.reqTimeout, proxy='http://127.0.0.1:7890') as response:
-                    text = await response.text(encoding='utf-8')
+                async with session.get(url=self.addr.format(self.domain), headers=self.headers, verify_ssl=False, timeout=self.reqTimeout, proxy='http://127.0.0.1:7890') as response:
+                    text = await response.text()
                     if text != 'error check your search parameter':
                         for _ in text.split('\n'):
                             subdomain = _.split(',')[0]

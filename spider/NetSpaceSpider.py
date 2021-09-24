@@ -7,8 +7,12 @@ from lxml import etree
 from core.MyRequest import *
 from common.tools import *
 from spider.common import config
-import base64
 from shodan import Shodan
+import mmh3
+import base64
+import codecs
+
+requests.packages.urllib3.disable_warnings()
 
 
 class NetSpider(BaseSpider):
@@ -37,13 +41,13 @@ class NetSpider(BaseSpider):
                                 'host="{}"'.format(self.domain), 'icon_hash="{}"'.format(self.iconHash)]
         # self.quakeKeywordList = ['cert:"{}"'.format(self.beian)]
         self.quakeKeywordList = ['domain:"{}"'.format(self.domain), 'cert:"{}"'.format(self.beian),
-                                 'host="{}"'.format(self.domain), 'favicon:"{}"'.format(self.iconMD5)]
+                                 'host:"{}"'.format(self.domain), 'favicon:"{}"'.format(self.iconMD5)]
         self.shodanKeywordList = ['hostname:"{}"'.format(self.domain), 'ssl:"{}"'.format(self.domain),
                                   'http.favicon.hash:{}'.format(self.iconHash)]
 
     def _getFaviconAndMD5(self):
         try:
-            resp = requests.get(getUrl(self.domain) + '/favicon.ico')
+            resp = requests.get(getUrl(self.domain) + '/favicon.ico', headers=self.headers, allow_redirects=True, verify=False)
             if resp.status_code == 200:
                 m1 = hashlib.md5()
                 m1.update(resp.content)
@@ -56,10 +60,10 @@ class NetSpider(BaseSpider):
             else:
                 raise Exception
         except Exception as e:
-            print('[-] _getFaviconAndMD5 first failed, error is {}'.format(e.__str__()))
+            print('[-] _getFaviconAndMD5 first failed, error is {}'.format(e.args))
             print('[-] _getFaviconAndMD5 second ...')
             try:
-                resp_ = requests.get(getUrl('www.' + self.domain) + '/favicon.ico')
+                resp_ = requests.get(getUrl('www.' + self.domain) + '/favicon.ico', headers=self.headers, allow_redirects=True, verify=False)
                 if resp_.status_code == 200:
                     m1_ = hashlib.md5()
                     m1_.update(resp_.content)
@@ -74,7 +78,7 @@ class NetSpider(BaseSpider):
             except Exception as e:
                 self.iconHash = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
                 self.iconMD5 = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-                print('[-] _getFaviconAndMD5 second failed, error is {}'.format(e.__str__()))
+                print('[-] _getFaviconAndMD5 second failed, error is {}'.format(e.args))
 
     def _getBeianCompany(self):
         try:
@@ -649,7 +653,7 @@ class NetSpider(BaseSpider):
         await self.spider()
         self.resList, self.asnList, self.ipList = list(set(self.resList)), list(set(self.asnList)), list(
             set(self.ipList))
-        return self.resList, self.asnList, self.ipList, self.IpPortList, self.IpPortList
+        return self.resList, self.asnList, self.ipList, self.IpPortList
 
 
 if __name__ == '__main__':

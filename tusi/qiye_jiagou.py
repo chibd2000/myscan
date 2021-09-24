@@ -105,7 +105,7 @@ class Enterprise(object):
                              "Accept-Language": "zh-CN,zh;q=0.9", "Connection": "close"}
             s = requests.session()
             s.keep_alive = False
-            data = s.get(url, headers=burp0_headers, cookies=burp0_cookies, timeout=10)
+            data = s.get(url, headers=burp0_headers, cookies=burp0_cookies, timeout=self.reqTimeout)
             html = data.text
             title = re.findall('entName":"(.*?)"', html)
             title = title[0].encode('utf-8').decode('unicode_escape')

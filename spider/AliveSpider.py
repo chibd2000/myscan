@@ -27,6 +27,7 @@ class AliveSpider(BaseSpider):
         self.domain = domain
         self.domainList = domainList
         self.linkList = []
+        self.titleCompile = re.compile('<title>(.*?)</title>')
 
     def writeFile(self, web_lists, page):
         workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
@@ -53,16 +54,14 @@ class AliveSpider(BaseSpider):
         htht = []
         try:
             async with semaphore:
-                async with aiohttp.ClientSession(headers=self.headers) as session:
-                    async with session.get(url) as resp:
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(url, headers=self.headers, verify_ssl=False) as resp:
                         hthtx = []
                         ididx = []
                         text = await resp.text()
                         soup = BeautifulSoup(text, 'html.parser')
-                        # 标题
-                        title_pattern = '<title>(.*?)</title>'
                         try:
-                            title = re.search(title_pattern, text, re.S | re.I)[1].strip(' ').strip('\r\n').strip(
+                            title = self.titleCompile.search(text, re.S | re.I)[1].strip(' ').strip('\r\n').strip(
                                 '\n').strip('\r')
                         except:
                             title = ''
@@ -70,7 +69,7 @@ class AliveSpider(BaseSpider):
                         status = resp.status
                         # frame
                         frame = resp.headers.get('X-Powered-By', '')
-                        self.resList.append({'url': str(url), 'title': title, 'status': status, 'frame': frame})
+                        self.resList.append({'url': url, 'title': title, 'status': status, 'frame': frame})
                         links = soup.findAll('a')
                         for link in links:  # 判断是不是一个新的网站
                             _url = link.get('href')
@@ -115,20 +114,21 @@ class AliveSpider(BaseSpider):
                                                 'http://' + domain.strip() + '/' + rurl.strip().lstrip('/'))
                             for x1 in html_links:  # 对于爬取到的后缀是html等等参数链接进行二次处理 是否能够访问
                                 try:
-                                    async with session.get(url=x1, timeout=self.reqTimeout) as resp1:
+                                    async with session.get(url=x1, timeout=self.reqTimeout, headers=self.headers, verify_ssl=False) as resp1:
                                         if resp1.status == 200:
                                             htht.append(x1)
                                 except Exception as e:
-                                    print('[-] curl {} error.'.format(x1))
+                                    print('[-] curl {} error, the error is {}'.format(x1, e.__str__()))
 
                             for x2 in id_links:  # 平常的id?=1 这种参数进行二次处理 是否能够访问
                                 try:
-                                    async with session.get(x2, timeout=self.reqTimeout) as resp2:
+                                    async with session.get(x2, timeout=self.reqTimeout, headers=self.headers, verify_ssl=False) as resp2:
                                         if resp2.status == 200:
                                             if str(resp2.url).find('=') > 0:
                                                 idid.append(x2)
                                 except Exception as e:
-                                    print('[-] curl {} error.'.format(x2))
+                                    print('[-] curl {} error, the error is {}'.format(x2, e.__str__()))
+
                             dic_1 = []
                             dic_2 = []
                             dic_3 = []
@@ -182,13 +182,14 @@ class AliveSpider(BaseSpider):
                                 self.linkList.append(u.replace('.htm', '*.htm').replace('.shtm', '*.shtm'))
         except Exception as e:
             self.resList.append({'url': url, 'title': '', 'status': '无法访问', 'frame': ''})
-            print('[-] curl error is {}'.format(e.args))
+            print('[-] curl {} error, the error is {}'.format(url, e.__str__()))
 
     async def spider(self):
         concurrency = 500  # 这里的话稍微控制下并发量
         semaphore = asyncio.Semaphore(concurrency)
 
         await asyncio.gather(*[asyncio.create_task(self.getLinks(semaphore, i)) for i in self.domainList])
+
         self.linkList = list(set(self.linkList))
         self.writeFile(getUniqueList(self.resList), 11)
 

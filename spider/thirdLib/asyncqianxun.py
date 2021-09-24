@@ -7,7 +7,7 @@ class Qianxun(BaseThird):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
-        self.addr = "https://www.dnsscan.cn/dns.html"
+        self.addr = "http://www.dnsscan.cn/dns.html"
         self.source = "qianxun"
 
     async def spider(self):
@@ -48,4 +48,4 @@ async def do(domain):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    res = loop.run_until_complete(do('zjhu.edu.cn'))
+    res = loop.run_until_complete(do('nbcc.cn'))

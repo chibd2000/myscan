@@ -31,13 +31,13 @@ class AsyncFetcher:
     async def fetch(session, url, params='', json=False) -> Union[str, dict, list]:
         try:
             if params != '':
-                sslcontext = ssl.create_default_context()
-                async with session.get(url, ssl=sslcontext, params=params, timeout=10) as response:
+                # sslcontext = ssl.create_default_context()
+                async with session.get(url, verify_ssl=False, params=params, timeout=15) as response:
                     await asyncio.sleep(2)
                     return await response.text() if json is False else await response.json()
             else:
-                sslcontext = ssl.create_default_context()
-                async with session.get(url, ssl=sslcontext, timeout=20) as response:
+                # sslcontext = ssl.create_default_context()
+                async with session.get(url, verify_ssl=False, timeout=15) as response:
                     await asyncio.sleep(2)
                     return await response.text() if json is False else await response.json()
         except Exception as e:
@@ -46,16 +46,17 @@ class AsyncFetcher:
 
     @staticmethod
     async def fetch2(session, url, params=''):
+        headers = {'User-Agent': AsyncFetcher.getUserAgent()}
         try:
             if params != '':
                 sslcontext = ssl.create_default_context(cafile=certifi.where())
-                async with session.get(url, ssl=sslcontext, params=params, timeout=10) as response:
+                async with session.get(url, ssl=sslcontext, headers=headers, params=params, timeout=10) as response:
                     # print(response)
                     await asyncio.sleep(2)
                     return response
             else:
                 sslcontext = ssl.create_default_context(cafile=certifi.where())
-                async with session.get(url, ssl=sslcontext, timeout=10) as response:
+                async with session.get(url, ssl=sslcontext, headers=headers, timeout=10) as response:
                     await asyncio.sleep(2)
                     return response
         except Exception as e:

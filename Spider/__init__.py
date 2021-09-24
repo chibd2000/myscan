@@ -39,8 +39,8 @@ class BaseSpider(metaclass=abc.ABCMeta):
         try:
             async with session.get(url=link, headers=self.headers,
                                    verify_ssl=False,
-                                   timeout=self.reqTimeout) as response:
-                text = await response.text(encoding='utf-8')
+                                   timeout=10) as response:
+                text = await response.text()
                 title = re.findall(r'<title>(.*?)</title>', text, re.S)[0].strip(
                     ' ').strip('\r\n').strip('\n').strip('\r')
             try:

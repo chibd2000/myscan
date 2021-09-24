@@ -27,8 +27,7 @@ class Binaryedge(BaseThird):
             page = 1
             async with aiohttp.ClientSession(headers=self.headers) as session:
                 while 1:
-                    result = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain, page),
-                                                      json=True)
+                    result = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain, page), json=True)
                     if result['events']:
                         for _ in result['events']:
                             self.resList.append(_)

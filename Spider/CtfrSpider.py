@@ -4,7 +4,6 @@ from spider.public import *
 from spider import BaseSpider
 
 
-
 class CtfrSpider(BaseSpider):
     def __init__(self, domain):
         super().__init__()
@@ -28,19 +27,20 @@ class CtfrSpider(BaseSpider):
     async def spider(self):
         sslInfo = []
         try:
-            async with aiohttp.ClientSession(headers=self.headers) as session:
-                result = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), json=True)
-                for (key, value) in enumerate(result):
-                    subdomainSSL = value['name_value'].split('\n')
-                    if len(subdomainSSL) == 2:
-                        domainInfo = {'ssl': subdomainSSL[0], 'subdomain': subdomainSSL[1]}
-                        self.resList.append(subdomainSSL[1])
-                    else:
-                        domainInfo = {'ssl': 'None', 'subdomain': subdomainSSL[0]}
-                        self.resList.append(subdomainSSL[0])
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url=self.addr.format(self.domain), verify_ssl=False, headers=self.headers, proxy='http://192.168.1.104:7890') as response:
+                    text = await response.json()
+                    for (key, value) in enumerate(text):
+                        subdomainSSL = value['name_value'].split('\n')
+                        if len(subdomainSSL) == 2:
+                            domainInfo = {'ssl': subdomainSSL[0], 'subdomain': subdomainSSL[1]}
+                            self.resList.append(subdomainSSL[1])
+                        else:
+                            domainInfo = {'ssl': 'None', 'subdomain': subdomainSSL[0]}
+                            self.resList.append(subdomainSSL[0])
 
-                    # 一起放到列表中进行存储
-                    sslInfo.append(domainInfo)
+                        # 一起放到列表中进行存储
+                        sslInfo.append(domainInfo)
         except Exception as e:
             print('[-] curl crt.sh error. {}'.format(e.args))
 
@@ -57,4 +57,6 @@ class CtfrSpider(BaseSpider):
 
 
 if '__main__' == __name__:
-    CtfrSpider('nbcc.cn').main()
+    baidu = CtfrSpider('geely.com')
+    loop = asyncio.get_event_loop()
+    res = loop.run_until_complete(baidu.main())

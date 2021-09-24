@@ -11,6 +11,19 @@ from core.MyConstant import ModulePath
 abs_path = os.getcwd() + os.path.sep  # 路径
 
 
+# 减少同类型多模块加载的时间消耗
+class ModuleRule(object):
+    # favicon的
+    Jboss = []
+    EWeaver = []
+    Landray = []
+    Seeyon = []
+    Tongda = []
+    Yonyou = []
+    Zabbix = []
+    Couchdb = []
+
+
 # 模块加载类，用于加载poc用的，相当于一个模块Manager，写这个是用到后面出现新POC检测配合fofa来进行使用，这样会比较方便处理
 # exp loader, study for python
 class ModuleLoader(object):
@@ -23,7 +36,8 @@ class ModuleLoader(object):
             fileLength = 0
             for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.EXPLOIT, followlinks=True):
                 for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[-3:] != '.py':
+                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
+                                                                                                     -3:] != '.py':
                         continue
                     fileLength += 1
                     filePath = os.path.join(parent, filename)
@@ -34,7 +48,8 @@ class ModuleLoader(object):
             fileLength = 0
             for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.THIRDLIB, followlinks=True):
                 for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[-3:] != '.py':
+                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
+                                                                                                     -3:] != '.py':
                         continue
                     fileLength += 1
                     filePath = os.path.join(parent, filename)
@@ -58,7 +73,6 @@ class ModuleLoader(object):
                 return self._singleModuleLoad(
                     module=moduleObject)  # single module load, for example exploit.web.v2Conference.sql_inject
             elif isinstance(moduleObject, list):
-                print(moduleObject)
                 return self._multiModuleLoad(
                     moduleList=moduleObject)  # multi module load, for example exploit.web.v2Conference.sql_inject,
         except ModuleNotFoundError as e:
@@ -97,7 +111,8 @@ class ModuleLoader(object):
         if moduleType == 'third':
             for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.THIRDLIB, followlinks=True):
                 for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[-3:] != '.py':
+                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
+                                                                                                     -3:] != '.py':
                         continue
                     try:
                         filePath = os.path.join(parent, filename)
@@ -112,7 +127,8 @@ class ModuleLoader(object):
         elif moduleType == 'exploit':
             for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.EXPLOIT, followlinks=True):
                 for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[-3:] != '.py':
+                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
+                                                                                                     -3:] != '.py':
                         continue
                     try:
                         filePath = os.path.join(parent, filename)

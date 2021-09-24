@@ -17,7 +17,7 @@ class Chaziyu(BaseThird):
             async with aiohttp.ClientSession() as session:
                 async with session.get(url=self.addr.format(self.domain), headers=self.headers, verify_ssl=False,
                                        timeout=self.reqTimeout) as response:
-                    text = await response.text(encoding='utf-8')
+                    text = await response.text()
                     status_code = response.status
                     if status_code != 404:
                         results = re.findall(r'target="_blank">(.*\.{})</a></td>'.format(self.domain), text)
