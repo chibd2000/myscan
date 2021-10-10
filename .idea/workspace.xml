@@ -208,11 +208,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/utils/PortWrapper.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="66">
               <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="330">
+                <caret line="122" lean-forward="true" selection-start-line="122" selection-end-line="122" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -304,7 +316,6 @@
         <option value="$PROJECT_DIR$/spider/common/config.py" />
         <option value="$PROJECT_DIR$/sss.py" />
         <option value="$PROJECT_DIR$/tusi/qiye_jiagou.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/spider/public.py" />
         <option value="$PROJECT_DIR$/common/tools.py" />
         <option value="$PROJECT_DIR$/spider/StructSpider.py" />
@@ -331,6 +342,7 @@
         <option value="$PROJECT_DIR$/spider/GithubSpider.py" />
         <option value="$PROJECT_DIR$/Test.py" />
         <option value="$PROJECT_DIR$/core/utils/PortWrapper.py" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -369,6 +381,11 @@
               <item name="myscan" type="462c0819:PsiDirectoryNode" />
               <item name="core" type="462c0819:PsiDirectoryNode" />
               <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="myscan" type="b2602c69:ProjectViewProjectNode" />
+              <item name="myscan" type="462c0819:PsiDirectoryNode" />
+              <item name="img" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="myscan" type="b2602c69:ProjectViewProjectNode" />
@@ -611,12 +628,12 @@
       <workItem from="1633744131997" duration="25639000" />
       <workItem from="1633835296582" duration="3162000" />
       <workItem from="1633858789365" duration="3032000" />
-      <workItem from="1633862064446" duration="15140000" />
+      <workItem from="1633862064446" duration="15449000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1008397000" />
+    <option name="totallyTimeSpent" value="1008706000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -720,13 +737,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/python38/Lib/site-packages/github/PaginatedList.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-955">
-          <caret line="109" column="8" selection-start-line="109" selection-start-column="8" selection-end-line="109" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/python38/Lib/site-packages/github/MainClass.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="401">
@@ -815,16 +825,6 @@
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="-330">
-            <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
-          </first_editor>
-          <second_editor />
         </state>
       </provider>
     </entry>
@@ -1058,6 +1058,19 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="66">
           <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/img/urlExploit.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="330">
+            <caret line="122" lean-forward="true" selection-start-line="122" selection-end-line="122" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
