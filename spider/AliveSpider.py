@@ -180,6 +180,8 @@ class AliveSpider(BaseSpider):
                         if hthtx:
                             for u in hthtx:
                                 self.linkList.append(u.replace('.htm', '*.htm').replace('.shtm', '*.shtm'))
+        except aiohttp.ClientPayloadError as e:
+            pass
         except Exception as e:
             self.resList.append({'url': url, 'title': '', 'status': '无法访问', 'frame': ''})
             print('[-] curl {} error, the error is {}'.format(url, e.__str__()))
@@ -191,7 +193,7 @@ class AliveSpider(BaseSpider):
         await asyncio.gather(*[asyncio.create_task(self.getLinks(semaphore, i)) for i in self.domainList])
 
         self.linkList = list(set(self.linkList))
-        self.writeFile(getUniqueList(self.resList), 11)
+        self.writeFile(getUniqueList(self.resList), 12)
 
     async def main(self):
         await self.spider()

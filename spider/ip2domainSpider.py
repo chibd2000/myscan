@@ -52,7 +52,7 @@ class Ip2domainSpider(BaseSpider):
         taskList = [asyncio.create_task(self.getSubdomain(semaphore, ip, ip2domainList)) for ip in self.ipList]
         await asyncio.gather(*taskList)
         # 写文件
-        self.writeFile(getUniqueList(ip2domainList), 6)
+        self.writeFile(getUniqueList(ip2domainList), 7)
         # 返回结果
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

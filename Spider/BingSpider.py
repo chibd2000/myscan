@@ -79,7 +79,7 @@ class BingSpider(BaseSpider):
     # 爬子域名
     async def spider(self):
         await asyncio.gather(*[asyncio.create_task(self.fetch(word)) for word in self.words])
-        self.writeFile(getUniqueList(self.webList), 1)
+        self.writeFile(getUniqueList(self.webList), 2)
 
         # 返回结果
         self.resList = list(set(self.resList))

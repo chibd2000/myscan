@@ -12,18 +12,22 @@ class Chinaz(BaseThird):
         self.domain = domain
         self.addr = "https://api.sublist3r.com/search.php?domain={}"
         self.source = 'chinaz'
+        self.api = config.chinazApi
 
     async def spider(self):
         print('Load chinaz api ...')
         try:
-            res = requests.get(url=self.addr.format(self.domain), headers=self.headers, verify=False,
-                               timeout=self.reqTimeout)
-            text = res.text
-            if text != 'null':
-                for subdomain in eval(text):
-                    self.resList.append(subdomain)
-            else:
-                print('chinaz API No Subdomains.')
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url=self.addr.format(self.api, self.domain), headers=self.headers,
+                                       verify_ssl=False,
+                                       timeout=self.reqTimeout) as response:
+                    if response is not None:
+                        text = await response.text()
+                        if text != 'null':
+                            for subdomain in eval(text):
+                                self.resList.append(subdomain)
+                        else:
+                            print('chinaz API No Subdomains.')
         except Exception as e:
             print('[-] curl chinaz.com api error. {}'.format(e.args))
 
@@ -33,18 +37,12 @@ class Chinaz(BaseThird):
 
 
 # async def do(domain):
-#     pass
-# sublist3r = Sublist3r(domain)
-# res = await sublist3r.spider()
-# return res
+#     chinaz = Chinaz(domain)
+#     res = await chinaz.spider()
+#     return res
 
 
 if __name__ == '__main__':
     pass
-    # do('baidu.com')
-    # asyncio.run(do('baidu.com'))
-    # asyncio.create_task(do('baidu.com'))
-    # taskList = [asyncio.create_task(do('baidu.com'))]
     # loop = asyncio.get_event_loop()
-    # res = loop.run_until_complete(asyncio.wait(*taskList))
-    # print(res)
+    # res = loop.run_until_complete(do('zjhu.edu.cn'))

@@ -2,7 +2,7 @@
 from spider.thirdLib.public import *
 from spider.thirdLib import BaseThird
 
-
+# Censys还没写上去
 class Censys(BaseThird):
     def __init__(self, domain):
         super().__init__()

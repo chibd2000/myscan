@@ -436,7 +436,7 @@ class PortScan(BaseSpider):
             if ('ssl' in service or 'http' in service) and 'proxy' not in service:
                 self.ipPortServiceList.__delitem__(index)
                 self.httpProtocolList.extend(target.get('ip'))
-        self.writeFile(self.resList, 10)
+        self.writeFile(self.resList, 11)
 
     async def main(self):
         await self.spider()

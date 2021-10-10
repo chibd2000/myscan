@@ -45,7 +45,7 @@ class CtfrSpider(BaseSpider):
             print('[-] curl crt.sh error. {}'.format(e.args))
 
         # 列表中的字典去重
-        self.writeFile(getUniqueList(sslInfo), 2)
+        self.writeFile(getUniqueList(sslInfo), 3)
 
         # 返回结果
         self.resList = list(set(self.resList))
@@ -57,6 +57,6 @@ class CtfrSpider(BaseSpider):
 
 
 if '__main__' == __name__:
-    baidu = CtfrSpider('geely.com')
+    baidu = CtfrSpider('zjhu.edu.cn')
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(baidu.main())

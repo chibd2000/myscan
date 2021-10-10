@@ -32,9 +32,7 @@
 
 - 10-子域名友链查询子域名
 
-- 11-爱企查股权结构查询
-
-~~- 12-微信公众号查询()~~
+- 11-爱企查股权结构查询(微信公众号查询，备案，APP)
 
 中间环节
 
@@ -97,7 +95,7 @@ gJavaScriptParamList = []
 
 文档展示：
 
-XXXXXXX
+![show-excel](img/excel.png)
 
 ###POC展示：
 
@@ -146,7 +144,7 @@ XXXXXXX
 7、https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzI0NzEwOTM0MA==&action=getalbum&album_id=1368680445315235841
 
 #需要增加的
-;
+
 ~~1、基于请求数据的时候实现进度可视化，比如进度条~~（已实现）
 
 ~~2、基于fofa指定关键词 -> 利用POC探测，有时候新写的POC需要待验证，这时候都可以用到FOFA之类的来进行采取测试~~（已实现）
@@ -155,19 +153,21 @@ XXXXXXX
 
 4、portSpider portWrapper类还没实现
 
-~~5、github域名爬取还没实现~~
+~~5、github域名爬取还没实现~~（已实现）
 
-6、微信公众号爬取还没实现
+![exp-github](img/github.png)
 
-7、企业公司相关爬取还没实现
+~~6、微信公众号爬取还没实现（直接用了爱企查）~~（已实现）
+
+~~7、企业公司相关爬取还没实现（通过爱企查）~~（已实现）
 
 8、探测存活的时候没有爬取相关JS敏感接口信息
 
-~~9、exploit web利用模块补充~~
+~~9、exploit web利用模块补充~~（已实现）
 
 ![exp-module](img/expModule.png)
 
-~~10、单域名 漏洞指定模块探测~~
+~~10、单域名 漏洞指定模块探测~~（已实现）
 
 ![url-exploit](img/urlexploit.png)
 

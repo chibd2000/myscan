@@ -10,19 +10,21 @@ class Securitytrails(BaseThird):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
-        self.addr = 'https://api.securitytrails.com/v1/domain/{}/subdomains'
+        self.addr = 'https://api.securitytrails.com/v1/domain/{}/subdomains?children_only=false&include_inactive=true'
         self.source = 'securitytrails'
         self.api = config.securitytrailsApi
 
     async def spider(self):
         print('Load securitytrails api ...')
+        headers = self.headers.copy()
+        headers.update({'APIKEY': self.api, 'Accept': 'application/json'})
         try:
-            async with aiohttp.ClientSession() as session:
-                text = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain))
-                results = re.findall(r'<th scope="row ">\d+</th>\n<td>(.*)</td>'.format(self.domain), text, re.S | re.I)
+            async with aiohttp.ClientSession(headers=headers) as session:
+                text = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), json=True)
+                results = text.get('subdomains', '')
                 if results:
                     for _ in results:
-                        self.resList.append(_)
+                        self.resList.append('{}.{}'.format(_, self.domain))
                 else:
                     print('securitytrails API No Subdomains.')
         except Exception as e:
@@ -33,12 +35,11 @@ class Securitytrails(BaseThird):
         return self.resList
 
 
-# def do(domain):
-#     query = Securitytrails(domain)
-#     return query.spider()
-
+async def do(domain):
+    s = Securitytrails(domain)
+    res = await s.spider()
+    return res
 
 if __name__ == '__main__':
-    pass
-    # res = do('baidu.com') # ok
-    # print(res)
+    loop = asyncio.get_event_loop()
+    res = loop.run_until_complete(do('nbcc.cn'))

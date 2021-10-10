@@ -106,7 +106,7 @@ class BaiduSpider(BaseSpider):
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         # 列表中的字典去重/写入文件
-        self.writeFile(getUniqueList(self.webList), 1)
+        self.writeFile(getUniqueList(self.webList), 2)
         return self.resList
 
     # 主函数
@@ -115,6 +115,6 @@ class BaiduSpider(BaseSpider):
 
 
 if __name__ == '__main__':
-    baidu = BaiduSpider('geely.com')
+    baidu = BaiduSpider('zjhu.edu.cn')
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(baidu.main())

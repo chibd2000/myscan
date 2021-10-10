@@ -132,11 +132,17 @@ def getPortService(port):
 def createXlsx(target):
     workbook = xlsxwriter.Workbook(target + ".xlsx")
 
-    worksheet1 = workbook.add_worksheet('备案查询')
+    worksheet1 = workbook.add_worksheet('备案')
     headings1 = ['域名', '主备案号']
     worksheet1.set_column('A:A', 12)
     worksheet1.set_column('B:B', 28)
     worksheet1.write_row('A1', headings1)
+
+    worksheet2323 = workbook.add_worksheet('企业架构')
+    headings2323 = ['域名', '主备案号']
+    worksheet2323.set_column('A:A', 12)
+    worksheet2323.set_column('B:B', 28)
+    worksheet2323.write_row('A1', headings2323)
 
     worksheet2 = workbook.add_worksheet('爬虫')
     headings2 = ['爬虫', '关键字', '链接', '标题']  # 设置表头

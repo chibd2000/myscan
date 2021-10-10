@@ -46,7 +46,7 @@ class Bufferover(BaseThird):
 
     async def spider(self):
         async def getProxy():
-            url = 'https://api.proxyscrape.com/?request=displayproxies&proxytype=http&country=all&anonymity=all&ssl=yes&timeout=5000'
+            url = 'https://api.proxyscrape.com/?request=displayproxies&proxytype=http&country=all&anonymity=all&ssl=yes&timeout=2000'
             try:
                 async with aiohttp.ClientSession(headers=self.headers) as session:
                     async with session.get(url=url, verify_ssl=False, timeout=self.reqTimeout, proxy='http://127.0.0.1:7890') as response:

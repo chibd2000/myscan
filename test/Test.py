@@ -147,7 +147,7 @@ async def getFaviconAndMD5():
         'X-Forwarded-For': '127.0.0.1',
     }
     async with aiohttp.ClientSession() as session:
-        async with session.get('https://www.geely.com/favicon.ico', headers=headers, verify_ssl=False) as response:
+        async with session.get('https://www.zjhu.edu.cn/favicon.ico', headers=headers, verify_ssl=False) as response:
             m1 = hashlib.md5()
             text = await response.read()
             m1.update(text)
@@ -166,7 +166,7 @@ async def getFaviconAndMD5():
     # print('[-] _getFaviconAndMD5 second ...')
     # try:
     #     async with aiohttp.ClientSession() as session:
-    #         async with session.get(getUrl('www.geely.com') + '/favicon.ico', verify_ssl=False,
+    #         async with session.get(getUrl('www.zjhu.edu.cn') + '/favicon.ico', verify_ssl=False,
     #                                allow_redirects=False) as response:
     #             print(getUrl('proton.com') + '/favicon.ico')
     #             if response.status == 200:

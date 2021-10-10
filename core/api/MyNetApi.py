@@ -34,6 +34,12 @@ async def quekaSearch(keyword):
         return result.get('results')
 
 
+async def zoomeyeSearch(keyword):
+    url = ''
+    pass
+    # url -X GET 'https://api.zoomeye.org/host/search?query=hostname%3A%20zjhu.edu.cn&pageSize=200&facets=hostname,ip,port,service,asn' -H "API-KEY:12104626-7ce8-a2c9f-4997-f3ba52738f3"
+
+
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     result = loop.run_until_complete(fofaSearch('app="泛微-EMobile" && country="CN"'))

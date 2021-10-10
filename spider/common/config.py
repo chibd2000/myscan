@@ -8,14 +8,14 @@ shodanApi = 'E00hXnOQ4ep8aM309o5QsCH1JyArnAr8'
 quakeApi = '9fd0da05-93f9-49d2-b5e5-d43243268e80'
 
 # https://search.censys.io/account/api
-censysId = 'Chiling123'
+censysId = '22c4776c-a4ff-4330-a05f-2705289ce918'
 censysSecret = 'fqtIaTq9BuZFxRbZ8NZZJ1j8E9Jab8FG'
 
 # virustotal.com
 virustotalApi = '34d473105d67a4b13252201801c60bee683661924c3d51c1f9d7394342f8a704'
 
 # https://github.com/settings/tokens
-githubApi = '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'
+githubApi = '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'
 
 # http://api.chinaz.com/ApiDetails/Alexa
 chinazApi = '885857687dbc47dfae60dde6480b6ae2'
@@ -30,6 +30,7 @@ binaryedgeApi = 'd4622310-d99e-4bff-93f4-7bac11c2c03b'
 threatbookApi = 'c9c4de91c4cc460e9b0745872d0310e9623ef3c208784bebb714eea6f5b3bc0c'
 
 ip_scan_mode = 'small'
+
 url_scan_mode = 'default'
 
 # 默认端口

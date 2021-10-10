@@ -5,115 +5,96 @@ from spider.public import *
 from spider import BaseSpider
 import math
 from urllib.parse import quote
-from termcolor import cprint
-from lxml import etree
-
 
 class BeianSpider(BaseSpider):
     def __init__(self, domain):
         super().__init__()
-        self.source = 'Beian'
+        self.source = 'Chinaz Beian'
         self.domain = domain
-        self.addr = 'https://icp.chinaz.com/home/info?host={}'
-
-    def main(self):
-        pass
+        self.addr1 = 'http://icp.chinaz.com/{}'
+        self.addr2 = 'http://icp.chinaz.com/Home/PageData'
 
     def writeFile(self, web_lists, page):
-        pass
-
-    def chinaz(self):
-        try:
-            response = requests.get(url=self.addr.format(self.domain), headers=self.headers)
-            html = etree.HTML(response.text)
-            url_href = html.xpath('//div[@class="siteInfo"]/p/text()')
-            if not url_href[0].startswith('--'):
-                urls = url_href[2:]
-                print(urls)
-        except Exception as e:
-            print(e)
+        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
+        worksheet = workbook.worksheets[page]
+        index = 0
+        while index < len(web_lists):
+            web = list()
+            web.append(web_lists[index]['host'])
+            web.append(web_lists[index]['webName'])
+            web.append(web_lists[index]['owner'])
+            web.append(web_lists[index]['permit'])
+            web.append(web_lists[index]['typ'])
+            web.append(web_lists[index]['verifyTime'])
+            worksheet.append(web)
+            index += 1
+        workbook.save(abs_path + str(self.domain) + ".xlsx")
+        workbook.close()
 
     # 解析chinaz返回结果的json数据
-    def parse_json(self, json_ret):
-        chinazNewDomains = []
+    # @ske@ske
+    def parseJson(self, json_ret):
         results = json_ret['data']
         for result in results:
-            companyName = result['webName']
-            newDomain = result['host']
-            time = result['verifyTime']
-            chinazNewDomains.append((companyName, newDomain, time))  #
-        chinazNewDomains = list(set(chinazNewDomains))
-        return chinazNewDomains
+            self.resList.append(result)
+            # companyName = result['webName']
+            # newDomain = result['host']
+            # time = result['verifyTime']
+            # chinazNewDomains.append((companyName, newDomain, time))  #
 
-    def spider(self):
-
-        cprint('Load chinazApi: ', 'green')
-
-        chinazNewDomains = []
-        tempDict = {}
-        tempList = []
-
-        # 获取域名的公司名字
-        url = r'http://icp.chinaz.com/{}'.format(self.domain)
+    async def spider(self):
         try:
-            res = requests.get(url=url, headers=self.headers, allow_redirects=False, verify=False)
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url=self.addr1.format(self.domain), headers=self.headers,
+                                       timeout=self.reqTimeout,
+                                       verify_ssl=False, allow_redirects=False) as response:
+                    if response is not None:
+                        # @ske 第一个请求查询公司名称
+                        text = await response.text()
+                        companyName = re.search("var kw = '([\S]*)'", text)
+                        if companyName:
+                            companyName = companyName.group(1)
+                            print('公司名: {}'.format(companyName))
+                            companyNameUrlEncode = quote(str(companyName))
+                            # @ske 第二个请求查询该公司的顶级域名
+                            headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+                            data = 'pageNo=1&pageSize=20&Kw={}'.format(companyNameUrlEncode)
+                            try:
+                                async with session.post(url=self.addr2.format(self.domain), headers=headers, data=data, timeout=self.reqTimeout, verify_ssl=False, allow_redirects=False) as response2:
+                                    if response2 is not None:
+                                        text2 = await response2.json()
+                                        if 'amount' in text2.keys():
+                                            amount = text2.get('amount')
+                                            pages = math.ceil(amount / 20)
+                                            print('页数: {}'.format(pages))
+                                            self.parseJson(text2)
+                                            for page in range(2, pages + 1):
+                                                print('请求第{}页'.format(page))
+                                                data = 'pageNo={}&pageSize=20&Kw={}'.format(page, companyNameUrlEncode)
+                                                async with session.post(url=self.addr2.format(self.domain), headers=headers,
+                                                                        data=data, timeout=self.reqTimeout,
+                                                                        verify_ssl=False,
+                                                                        allow_redirects=False) as response3:
+                                                    if response2 is not None:
+                                                        text3 = await response3.json()
+                                                        self.parseJson(text3)
+                            except Exception as e:
+                                print('[-] curl {} error, {}'.format(self.addr2, e.__str__()))
+                        else:
+                            print('没有匹配到公司名')
         except Exception as e:
-            print('[error] request : {}\n{}'.format(url, e.args))
-            return []
-        text = res.text
+            print('[-] curl BeianSpider error, {}'.format(self.addr1.format(self.domain), e.__str__()))
 
-        companyName = re.search("var kw = '([\S]*)'", text)
-        if companyName:
-            companyName = companyName.group(1)
-            print('公司名: {}'.format(companyName))
-            companyNameUrlEncode = quote(str(companyName))
-        else:
-            print('没有匹配到公司名')
-            return []
+        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
+        # 列表中的字典去重/写入文件
+        self.writeFile(getUniqueList(self.resList), 0)
 
-        # 备案反查域名
-        headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
-        url = 'http://icp.chinaz.com/Home/PageData'
-        data = 'pageNo=1&pageSize=20&Kw=' + companyNameUrlEncode
-        try:
-            res = requests.post(url=url, headers=headers, data=data, allow_redirects=False, verify=False)
-        except Exception as e:
-            print('[error] request : {}\n{}'.format(url, e.args))
-            return []
-
-        json_ret = json.loads(res.text)
-        # print(json_ret)
-        if 'amount' not in json_ret.keys():
-            return chinazNewDomains
-        amount = json_ret['amount']
-        pages = math.ceil(amount / 20)
-        print('页数: {}'.format(pages))
-        # 解析返回的json数据包，过滤出公司名，域名，时间
-        tempList.extend(self.parse_json(json_ret))
-        # for _ in chinazNewDomains:
-        #     print(_)
-
-        # 继续获取后面页数
-        for page in range(2, pages + 1):
-            print('请求第{}页'.format(page))
-            data = 'pageNo={}&pageSize=20&Kw='.format(page) + companyNameUrlEncode
-            try:
-                res = requests.post(url=url, headers=headers, data=data, allow_redirects=False, verify=False)
-                json_ret = json.loads(res.text)
-                tempList.extend(self.parse_json(json_ret))
-            except Exception as e:
-                print('[error] request : {}\n{}'.format(url, e.args))
-
-        for each in tempList:
-            if each[1] not in tempDict:
-                tempDict[each[1]] = each
-                chinazNewDomains.append(each)
-
-        print('chinazApi去重后共计{}个顶级域名'.format(len(chinazNewDomains)))
-        # for _ in chinazNewDomains:
-        #     print(_)
-        return chinazNewDomains
+    async def main(self):
+        await self.spider()
 
 
 if __name__ == '__main__':
-    BeianSpider("zjhu.edu.cn")
+    beian = BeianSpider('zjhu.edu.cn')
+    loop = asyncio.get_event_loop()
+    res = loop.run_until_complete(beian.main())
+

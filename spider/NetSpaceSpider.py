@@ -190,7 +190,7 @@ class NetSpider(BaseSpider):
                                 if p['ip'] == _ip:
                                     p['port'].append(int(_port))
 
-                    self.writeFile(getUniqueList(domainList), 7)
+                    self.writeFile(getUniqueList(domainList), 8)
                 except Exception as e:
                     print('curl fofa.so api error, error is {}'.format(e.__str__()))
 
@@ -272,7 +272,7 @@ class NetSpider(BaseSpider):
                                     if p['ip'] == _ip:
                                         p['port'].append(int(_port))
                     domainList = getUniqueList(domainList)
-                    self.writeFile(domainList, 8)
+                    self.writeFile(domainList, 9)
                 except Exception as e:
                     print('curl quake.360.cn api error, error is {}'.format(e.__str__()))
 
@@ -359,7 +359,7 @@ class NetSpider(BaseSpider):
                             for p in self.IpPortList:
                                 if p['ip'] == _ip:
                                     p['port'].append(int(_port))
-                self.writeFile(getUniqueList(domainList), 9)
+                self.writeFile(getUniqueList(domainList), 10)
             except Exception as e:
                 print('curl shodan api error, error is {}'.format(e.__str__()))
             # async with aiohttp.ClientSession(headers=headers) as session:
