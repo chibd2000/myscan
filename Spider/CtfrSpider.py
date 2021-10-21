@@ -28,7 +28,7 @@ class CtfrSpider(BaseSpider):
         sslInfo = []
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(url=self.addr.format(self.domain), verify_ssl=False, headers=self.headers, proxy='http://192.168.1.104:7890') as response:
+                async with session.get(url=self.addr.format(self.domain), verify_ssl=False, headers=self.headers, proxy='http://192.168.0.108:7890') as response:
                     text = await response.json()
                     for (key, value) in enumerate(text):
                         subdomainSSL = value['name_value'].split('\n')

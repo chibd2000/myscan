@@ -139,9 +139,16 @@ def createXlsx(target):
     worksheet1.write_row('A1', headings1)
 
     worksheet2323 = workbook.add_worksheet('企业架构')
-    headings2323 = ['域名', '主备案号']
-    worksheet2323.set_column('A:A', 12)
-    worksheet2323.set_column('B:B', 28)
+    headings2323 = ['类型', '公司名称', 'Information', '邮箱', '联系电话', '域名', '备案'] #  'APP', '微信公众号'
+    worksheet2323.set_column('A:A', 10)
+    worksheet2323.set_column('B:B', 35)
+    worksheet2323.set_column('C:C', 25)
+    worksheet2323.set_column('D:D', 15)
+    worksheet2323.set_column('E:E', 14)
+    worksheet2323.set_column('F:F', 24)
+    worksheet2323.set_column('G:G', 15)
+    worksheet2323.set_column('H:H', 30)
+    worksheet2323.set_column('I:I', 30)
     worksheet2323.write_row('A1', headings2323)
 
     worksheet2 = workbook.add_worksheet('爬虫')
@@ -246,7 +253,6 @@ def createXlsx(target):
     worksheet11.set_column('B:B', 28)
     worksheet11.set_column('C:C', 28)
     worksheet11.write_row('A1', headings11)
-
     workbook.close()
 
 
@@ -273,5 +279,3 @@ def Common_url_by_port(domain, port):
         for protocol in protocols:
             url.append(f'{protocol}{domain}:{port}')
         return url
-
-

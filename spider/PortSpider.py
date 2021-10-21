@@ -151,8 +151,9 @@ class ServiceScan(object):
                 writer.write(payload)
                 await writer.drain()
                 data = await reader.read(1024)
+                writer.close()
                 return data
-        except Exception as e:
+        except Exception:
             return None
         finally:
             writer.close()
@@ -170,7 +171,7 @@ class ServiceScan(object):
                     if not _:
                         break
                     data += _
-        except Exception as err:
+        except Exception:
             return None
         return data
 
@@ -373,20 +374,23 @@ class PortScan(BaseSpider):
         self.httpProtocolList = []
 
     def writeFile(self, web_lists, page):
-        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
-        worksheet = workbook.worksheets[page]
-        index = 0
-        while index < len(web_lists):
-            web = list()
-            web.append(str(web_lists[index]['ip']))  # scan_ip
-            web.append(str(web_lists[index]['port']))  # port
-            web.append(str(web_lists[index]['service']))  # service
-            web.append(str(web_lists[index]['title']))  # service
-            web.append(str(web_lists[index]['versioninfo']))  # versioninfo
-            worksheet.append(web)
-            index += 1
-        workbook.save(abs_path + str(self.domain) + ".xlsx")
-        workbook.close()
+        try:
+            workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
+            worksheet = workbook.worksheets[page]
+            index = 0
+            while index < len(web_lists):
+                web = list()
+                web.append(str(web_lists[index]['ip']))  # scan_ip
+                web.append(str(web_lists[index]['port']))  # port
+                web.append(str(web_lists[index]['service']))  # service
+                web.append(str(web_lists[index]['title']))  # service
+                web.append(str(web_lists[index]['versioninfo']))  # versioninfo
+                worksheet.append(web)
+                index += 1
+            workbook.save(abs_path + str(self.domain) + ".xlsx")
+            workbook.close()
+        except Exception as e:
+            print('[-] writeFile error, {}'.format(e.args))
 
     async def scan(self, semaphore, ip, port):
         async with semaphore:

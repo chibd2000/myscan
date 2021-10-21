@@ -61,7 +61,7 @@ class GithubSpider(BaseSpider):
         # extension:pfx 指定后缀在q参数里，使用extension参数
         headers = {"Authorization": 'token {}'.format(self.githubApi)}
         try:
-            async with session.get(url=self.addr.format(self.domain, page, self.per_page, proxy='http://127.0.0.1:7890'),
+            async with session.get(url=self.addr.format(self.domain, page, self.per_page, proxy='http://192.168.0.108:7890'),
                                    headers=headers, timeout=self.reqTimeout, verify_ssl=False) as response:
                 text = await response.json()
                 await asyncio.sleep(2)
@@ -70,8 +70,7 @@ class GithubSpider(BaseSpider):
             print('[-] curl {} error, {}'.format(self.addr, e.__str__()))
 
     async def getSubdomains(self, session, url):
-        async with session.get(url=url, headers=self.headers, timeout=self.reqTimeout, verify_ssl=False,
-                               proxy='http://127.0.0.1:7890') as response:
+        async with session.get(url=url, headers=self.headers, timeout=self.reqTimeout, verify_ssl=False, proxy='http://192.168.0.108:7890') as response:
             text = await response.text('utf-8', 'ignore')
             subdomains = self.matchSubdomain(self.domain, text)
             self.resList.extend(subdomains)
@@ -108,7 +107,7 @@ class GithubSpider(BaseSpider):
             max_page = (total_count // self.per_page) if (not total_count % self.per_page) else (
                     total_count // self.per_page + 1)
             pages = min(max_page, 300)
-            print('[+] github pages is {}'.format(pages))
+            print('[+] github get pages is {}.'.format(pages))
             for page in range(1, pages):  # pages page 20 is test something
                 json_text = await self.githubSearch(session, page)
                 if json_text and 'items' in json_text.keys():

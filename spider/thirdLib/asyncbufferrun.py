@@ -49,7 +49,7 @@ class Bufferover(BaseThird):
             url = 'https://api.proxyscrape.com/?request=displayproxies&proxytype=http&country=all&anonymity=all&ssl=yes&timeout=2000'
             try:
                 async with aiohttp.ClientSession(headers=self.headers) as session:
-                    async with session.get(url=url, verify_ssl=False, timeout=self.reqTimeout, proxy='http://127.0.0.1:7890') as response:
+                    async with session.get(url=url, verify_ssl=False, timeout=self.reqTimeout, proxy='http://192.168.0.108:7890') as response:
                         if response is not None:
                             text = await response.text()
                             if text:

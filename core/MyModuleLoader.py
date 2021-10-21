@@ -11,17 +11,24 @@ from core.MyConstant import ModulePath
 abs_path = os.getcwd() + os.path.sep  # 路径
 
 
-# 减少同类型多模块加载的时间消耗
+# 减少同类型多模块加载的时间消耗，作用于框架探测的时候来进行减少大量EXP探测的时间
 class ModuleRule(object):
     # favicon的
-    Jboss = []
-    EWeaver = []
-    Landray = []
-    Seeyon = []
-    Tongda = []
-    Yonyou = []
-    Zabbix = []
-    Couchdb = []
+    Jboss = []  # JBOSS
+
+    # OA系列
+    Weaver = []  # 泛微系列OA
+    Landray = []  # 蓝凌系列OA
+    Seeyon = []  # 致远系列OA
+    Tongda = []  # 通达系列OA
+    Yonyou = []  # 用友系列OA
+
+    # 第三方服务系统
+    Zabbix = []  # ZABBIX
+    Couchdb = []  # Couchdb
+
+    # 邮件系统
+    Coremail = []
 
 
 # 模块加载类，用于加载poc用的，相当于一个模块Manager，写这个是用到后面出现新POC检测配合fofa来进行使用，这样会比较方便处理
