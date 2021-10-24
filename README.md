@@ -1,17 +1,41 @@
-# 横戈安全团队
 # myscan
 
-配置API spider/common/config.py
+横戈安全团队  
+横戈安全团队  
+横戈安全团队  
+横戈安全团队  
+
+#用法
+
+配置API：spider/common/config.py
 
 ![api-config](img/api-config.png)
 
-构建信息搜集/漏洞扫描
+运行环境：linux centos7 + py3.8
+
+这里自己再说下为什么要在linux上面跑，python的asyncio是基于selectors事件循环的windows上的文件描述符限制量为512实在是太少了，所以要跑的话都放在linux上面（默认为1024），并且跑的时候最好改下文件描述符
+
+在 Linux 平台，可以使用 ulimit 命令来修改最大文件描述符限制：
+
+查看当前会话最大文件描述符限制（默认1024）：ulimit -n
+
+临时修改限制，只对当前的会话有效：ulimit -SHn 65536
+
+永久修改限制，在 /etc/security/limits.conf 文件里新增以下内容：
+```
+* hard nofile 65536
+* soft nofile 65536
+```
+
+说明：这个脚本纯属自用，只是开源到github上，要用的话一般的用法下面都有讲到
+
+#构建信息搜集/漏洞扫描
 
 已经实现的功能：
 
 信息搜集（多线程+异步IO）：
 
-- 1-DNS枚举查询(ksubdomain)子域名 
+- 1-DNS枚举查询(ksubdomain)子域名 (默认没开起来，要开的话自己在代码里面改下，batch.py 418行)
 
 - 2-百度/Bing关键词查询子域名
 
