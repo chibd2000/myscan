@@ -435,6 +435,6 @@ class CompanyStructSpider(BaseSpider):
 
 
 if __name__ == '__main__':
-    spider = CompanyStructSpider('huolala.cn', '浙江吉利控股集团有限公司')
+    spider = CompanyStructSpider('huolala.cn', '浙江XXXX集团有限公司')
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(spider.main())

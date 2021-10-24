@@ -1,4 +1,9 @@
+# 横戈安全团队
 # myscan
+
+配置API spider/common/config.py
+
+![api-config](img/api-config.png)
 
 构建信息搜集/漏洞扫描
 
@@ -26,9 +31,9 @@
 
 ![ip-to-domain](img/ip2domain.png)
 
-- 9-nmap指纹库socket异步探测开放端口服务
+- 9-nmap指纹库socket异步探测开放端口服务，top100高危端口，并发量50，一个C段扫描时间为3分钟
 
-![port-scan](img/portscan.png)
+![port-scan-test](img/portscan-test.png)
 
 - 10-子域名友链查询子域名
 
@@ -77,7 +82,14 @@ gJavaScriptParamList = []
 
 2、端口服务漏洞
 
+一个C段端口扫描TOP100 + Service扫描 总共300秒，个人推荐就是扫描TOP100就足够了，因为是快速漏洞利用的脚本，如果真的想要准确的扫描端口，建议
+还是挂着masscan+nmap来进行扫描
+
+![C-servicescan](img/C-servicescan.png)
+
 3、SQL注入漏洞
+
+只写了参数爬取，用的方法是langzi的方法
 
 #用法：
 
@@ -93,10 +105,6 @@ gJavaScriptParamList = []
 
 漏洞利用测试域名：zjhu.edu.cn
 
-文档展示：
-
-![show-excel](img/excel.png)
-
 ###POC展示：
 
 `python batch.py -m exploit`
@@ -111,7 +119,7 @@ gJavaScriptParamList = []
 
 ![fofa-poc2](img/fofa-poc2.png)
 
-###版本展示：
+#版本展示：
 
 `python batch.py -v`
 
@@ -177,7 +185,12 @@ gJavaScriptParamList = []
 
 ![url-exploit](img/urlExploit.png)
 
-11、优化CMS扫描（对于同类型多EXP的探测进行优化，加快总扫描速度）
+11、HOST碰撞
+
+自己在挖掘src的时候碰到过很多，也同样撞出过挺多的资产，考虑要不要写进去，自己用HOST碰撞的时候都是用ffuf感觉这个速度很快，并且很准确，考虑
+要不要写上去，发现GO写的程序速度相当快
+
+12、优化CMS扫描（对于同类型多EXP的探测进行优化，加快总扫描速度）
 
 这里要优化的是什么？
 
@@ -193,4 +206,4 @@ gJavaScriptParamList = []
 而此时为“一个系统对应的漏洞有多个EXP”，那么就会造成每次漏洞利用之前先进行探测的请求的数量就会多上(同种漏洞模块的数量-1)*当前所有要检测的域名数量，
 明明只需要第一次进行探测的时候知道了是这个系统，那么后面的同类型利用模块它每次就会跳过CMS识别，直接进行漏洞利用，这里优化的就是这个情况。
 
-相同量的数据，没优化之前的总EXP扫描速度为18分钟，目前为12分钟
+FOFA上搜索的1000条域名数据测试，没优化之前的总EXP扫描速度为48分钟，目前为40分钟，写的还是不好，之后慢慢改好了，之后随着时间慢慢往上面改。

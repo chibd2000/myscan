@@ -6,36 +6,35 @@ import importlib
 import os
 import re
 from core.MyConstant import ModulePath
+from core.MyGlobalVariableManager import GlobalVariableManager
 
 # import sys
 abs_path = os.getcwd() + os.path.sep  # 路径
 
 
-# 减少同类型多模块加载的时间消耗，作用于框架探测的时候来进行减少大量EXP探测的时间
-class ModuleRule(object):
-    # favicon的
-    Jboss = []  # JBOSS
-
-    # OA系列
-    Weaver = []  # 泛微系列OA
-    Landray = []  # 蓝凌系列OA
-    Seeyon = []  # 致远系列OA
-    Tongda = []  # 通达系列OA
-    Yonyou = []  # 用友系列OA
-
-    # 第三方服务系统
-    Zabbix = []  # ZABBIX
-    Couchdb = []  # Couchdb
-
-    # 邮件系统
-    Coremail = []
-
-
 # 模块加载类，用于加载poc用的，相当于一个模块Manager，写这个是用到后面出现新POC检测配合fofa来进行使用，这样会比较方便处理
 # exp loader, study for python
 class ModuleLoader(object):
-    def __init__(self):
+    def __init__(self, moduleType):
         self.moduleList = []
+        self.initMultiModuleDict(moduleType)
+
+    # 减少同类型多模块加载的时间消耗所写的类
+    def initMultiModuleDict(self, moduleType):
+        if moduleType == 'exploit':
+            exploitRule = {}
+            for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.EXPLOIT, followlinks=True):
+                dirFileLength = 0
+                for filename in filenameList:
+                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
+                                                                                                     -3:] != '.py':
+                        continue
+                    dirFileLength += 1
+
+                if dirFileLength >= 2:
+                    dirName = re.split('[\\\\/]', parent)[-1]
+                    exploitRule[dirName] = []
+            GlobalVariableManager.setValue('exploitRule', exploitRule)
 
     @staticmethod
     def showModule(moduleType='exploit'):

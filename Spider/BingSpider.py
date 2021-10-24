@@ -61,7 +61,7 @@ class BingSpider(BaseSpider):
                             webInfo = {'spider': 'Bing', 'keyword': word, 'link': link, 'title': title}
                             self.webList.append(webInfo)
             except Exception as e:
-                print(e.args)
+                print('[-] curl error, {}'.format(e.__str__()))
                 # pass
 
                 # headers = {
@@ -86,7 +86,6 @@ class BingSpider(BaseSpider):
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
 
     async def main(self):
-        logging.info("BingSpider Start")
         await self.spider()
         return self.resList
 

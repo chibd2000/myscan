@@ -21,7 +21,7 @@ class ProxyProvider(object):
     async def getProxy(self):
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(url=self.addr, verify_ssl=False, timeout=10, proxy='http://192.168.0.108:7890') as response:
+                async with session.get(url=self.addr, verify_ssl=False, timeout=10, proxy='http://127.0.0.1:7890') as response:
                     if response is not None:
                         text = await response.text()
                         if text:

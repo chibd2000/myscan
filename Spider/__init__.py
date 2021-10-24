@@ -14,10 +14,10 @@ class BaseSpider(metaclass=abc.ABCMeta):
             'Cache-Control': 'max-age=0',
             'DNT': '1',
             'Referer': 'https://www.google.com/',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                          '(KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
             'Upgrade-Insecure-Requests': '1',
             'X-Forwarded-For': '127.0.0.1',
+            # 'Connection': 'keep-alive'  # 实战中遇到过的BUG，有些站点需要保持KEEP
         }
         self.reqTimeout = 10
         self.resList = []

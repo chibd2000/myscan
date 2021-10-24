@@ -4,6 +4,8 @@
 
 from spider.common.config import top_banner_port
 import IPy
+from socket import inet_ntoa
+from struct import pack
 
 
 # for port wrapper，用来包装端口的类，默认最低扫描合并TOP100端口加上fofa/quake/shodan，配合异步端口探测
@@ -17,46 +19,45 @@ class PortWrapper(object):
                 # 这种情况就是 192.168.1.1-192.168.1.255 或者 192.168.1.0-192.168.1.255,192.168.3.0-192.168.3.255
                 if ',' in ips:
                     # 192.168.1.0-192.168.1.255,192.168.3.0-192.168.3.255
-                    print("1111111")
                     ipSegments = ips.split(',')
-                    # print(ipSegments)
                     for ipSegment in ipSegments:
                         ipList = IPy.IP(ipSegment)
+                        # print(ipList)
                         for ip in ipList:
                             ipPortList.append({'ip': ip, 'port': []})
                 else:
                     # 192.168.1.1-192.168.1.255
-                    print("2222222")
                     ipList = IPy.IP(ips)
+                    # print(ipList)
                     for ip in ipList:
                         ipPortList.append({'ip': ip, 'port': []})
             elif ',' in ips:
                 if '/' in ips:
                     # 192.168.1.0/24,192.168.3.0/24
-                    print("3333333")
                     ipSegments = ips.split(',')
                     ipList = []
                     for ipSegment in ipSegments:
                         ipList.extend(IPy.IP(ipSegment))
+                    # print(ipList)
                     for ip in ipList:
-                        ipPortList.append({'ip': ip, 'port': []})
+                        ipPortList.append({'ip': inet_ntoa(pack("!I", ip.int())), 'port': []})
                 else:
                     # 192.168.1.1,192.168.1.2
-                    print("4444444")
                     ipList = ips.split(',')
+                    # print(ipList)
                     for ip in ipList:
                         ipPortList.append({'ip': ip, 'port': []})
             else:
                 if '/' in ips:
                     # 192.168.1.0/24
-                    print("5555555")
                     ipList = IPy.IP(ips)
                     for ip in ipList:
-                        ipPortList.append({'ip': ip, 'port': []})
+                        ipPortList.append({'ip': inet_ntoa(pack("!I", ip.int())), 'port': []})
                 else:
                     # 192.168.1.1
-                    print("6666666")
+                    # print(ips)
                     ipPortList.append({'ip': ips, 'port': []})
+            # print(ipPortList)
             return ipPortList
         except Exception:
             print('[-] please check your ips format -> {}'.format(ips))
@@ -112,8 +113,7 @@ class PortWrapper(object):
             #     if i not in port_list and (0 < i <= 65535):
             #         port_list.append(i)
         except Exception as e:
-            print(e)
-            print('[-] please check your port format!')
+            print('[-] please check your port format, {}'.format(e.__str__()))
             exit(0)
 
     # generate ports

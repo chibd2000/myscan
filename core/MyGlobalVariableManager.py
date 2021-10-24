@@ -26,18 +26,18 @@ def test():
 class GlobalVariableManager:
     @staticmethod
     def init():
-        """初始化"""
+        # 初始化
         global _global_dict
         _global_dict = {}
 
     @staticmethod
     def setValue(key, value):
-        """ 定义一个全局变量 """
+        # 定义一个全局变量
         _global_dict[key] = value
 
     @staticmethod
     def getValue(key, defValue=None):
-        """ 获得一个全局变量,不存在则返回默认值 """
+        # 获得一个指定的全局变量, 不存在则返回默认值
         try:
             return _global_dict[key]
         except KeyError:

@@ -56,6 +56,7 @@ abs_path = os.getcwd() + os.path.sep  # 路径
 gParserConfig = {}
 
 gDomainList = []  # 用来存储所有匹配到的子域名和一些隐形资产
+gDomainAliveList = []
 gIpPortServiceList = []
 gWebParamsList = []  # 存储可注入探测参数列表 ["http://www.baidu.com/?id=1111*"]
 
@@ -289,12 +290,13 @@ class Spider(object):
     # 存活探测，限制并发数
     def aliveSpider(self):
         logging.info("aliveSpider Start")
-        global gDomainList, gWebParamsList
-        aliveSpider = AliveSpider(self.domain, gDomainList)
+        global gDomainList, gWebParamsList, gDomainAliveList
+        pbar = tqdm(total=len(gDomainList), desc='[{}]'.format('aliveSpider'), ncols=100)
+        aliveSpider = AliveSpider(self.domain, gDomainList, pbar)
         loop = asyncio.get_event_loop()
-        resList = loop.run_until_complete(aliveSpider.main())
+        linkList, gDomainAliveList = loop.run_until_complete(aliveSpider.main())
         self.lock.acquire()
-        gWebParamsList.extend(resList)
+        gWebParamsList.extend(linkList)
         self.lock.release()
 
     # main start
@@ -400,7 +402,7 @@ class Spider(object):
             workbook.save(abs_path + str(domain) + ".xlsx")
             workbook.close()
 
-        global gDomainList, gIpPortServiceList, gWebParamsList
+        global gDomainList, gDomainAliveList, gIpPortServiceList, gWebParamsList
         # -----------------------
         # 0、备案查询
         self.beianSpider()
@@ -457,28 +459,30 @@ class Spider(object):
         # 13、port scan in self.ipPortList
         # self.ipPortList portwrapper
         portConfig = GlobalVariableManager.getValue('portConfig')
-        print('portConfig: ', portConfig)
+        # print('portConfig: ', portConfig)
         PortWrapper.generatePorts(portConfig, self.ipPortList)
         self.ipPortSpider()
         # 最后去重子域名
         gDomainList = list(set(gDomainList))
 
-        print('=============')
+        print('==========================')
         print('[+] [AsnList] [{}] {}'.format(len(self.asnList), self.asnList))
-        print('=============')
+        print('==========================')
         print('[+] [IpList] [{}] {}'.format(len(self.ipList), self.ipList))
-        print('=============')
+        print('==========================')
         print('[+] [IpSegmentList] [{}] {}'.format(len(self.ipSegmentList), self.ipSegmentList))
-        print('=============')
+        print('==========================')
         print('[+] [IpPortList] [{}] {}'.format(len(self.ipPortList), self.ipPortList))
-        print('=============')
+        print('==========================')
         print('[+] [JavaScriptParamsList] [{}] {}'.format(len(self.javaScriptParamList), self.javaScriptParamList))
-        print('=============')
+        print('==========================')
         print('[+] [gWebParamsList] [{}] {}'.format(len(gWebParamsList), gWebParamsList))
-        print('=============')
+        print('==========================')
         print('[+] [gIpPortServiceList] [{}] {}'.format(len(gIpPortServiceList), gIpPortServiceList))
-        print('=============')
+        print('==========================')
         print('[+] [gDomainList] [{}] {}'.format(len(gDomainList), gDomainList))
+        print('==========================')
+        print('[+] [gDomainAliveList] [{}] {}'.format(len(gDomainAliveList), gDomainAliveList))
 
 
 # Exploit
@@ -523,7 +527,7 @@ class Exploit(object):
     # 基于网站框架的漏扫
     def webExploit(self, domainList):
         logging.info('CmsScan Start')
-        moduleLoader = ModuleLoader()
+        moduleLoader = ModuleLoader('exploit')
         moduleList = moduleLoader.moduleLoad(moduleType='exploit')
         cmsScan = CmsScan(self.domain, domainList, moduleList)
         loop = asyncio.get_event_loop()
@@ -548,9 +552,9 @@ class Exploit(object):
         loop.run_until_complete(servicescan.main())
 
     def run(self):
-        global gDomainList, gIpPortServiceList, gWebParamsList
+        global gDomainAliveList, gIpPortServiceList, gWebParamsList
         # webExp
-        self.webExploit(gDomainList)
+        self.webExploit(gDomainAliveList)
         self.serviceExploit(gIpPortServiceList)
         self.sqlExploit(gWebParamsList)
 
@@ -589,7 +593,7 @@ def parse_args():
 
 
 if __name__ == '__main__':
-    print('Come From HengGe\'s Team ^.^')
+    print('[+] Come From HengGe\'s Team ^.^')
     GlobalVariableManager.init()
     starttime = time.time()
     args = parse_args()
@@ -605,13 +609,14 @@ if __name__ == '__main__':
             createXlsx(args.domain)
             spider = Spider(args.domain)
             spider.run()
-            # exploit = Exploit(args.domain)
-            # exploit.run()
+            exploit = Exploit(args.domain)
+            exploit.run()
+            exit(0)
         else:
-            exit(f'文件{args.domain}.xlsx已存在，如果要运行的话需要将该文件{args.domain}.xlsx改名或者删除.')
+            exit('[-] 文件名{}已存在，如果要运行的话需要将该文件{}.xlsx改名或者删除.'.format(args.domain, args.domain))
     if args.cmsscan:
         if args.url:
-            moduleLoader = ModuleLoader()
+            moduleLoader = ModuleLoader('exploit')
             if args.module is None:
                 print('[+] load all module')
                 moduleList = moduleLoader.moduleLoad(moduleType='exploit')
@@ -628,10 +633,10 @@ if __name__ == '__main__':
             domainList = [args.url]
             cmsScan = CmsScan('test.com', domainList, moduleList)
             loop.run_until_complete(cmsScan.main())
-            print("总花费时间: " + str(time.time() - starttime))
+            print("[+] 总花费时间: " + str(time.time() - starttime))
             exit(0)
         if args.fofa:
-            moduleLoader = ModuleLoader()
+            moduleLoader = ModuleLoader('exploit')
             if args.module is None:
                 print('[+] load all module')
                 moduleList = moduleLoader.moduleLoad(moduleType='exploit')
@@ -648,13 +653,32 @@ if __name__ == '__main__':
                 from core.api import MyNetApi
                 # from core.api import MyNetApi.MyNetApi.fofaSearch()
             except ImportError:
-                exit('Import Error from core.api import MyNetApi error')
+                exit('[-] Import Error from core.api import MyNetApi error')
             loop = asyncio.get_event_loop()
             domainList = loop.run_until_complete(MyNetApi.fofaSearch(args.fofa))
             cmsScan = CmsScan('test.com', domainList, moduleList)
             loop.run_until_complete(cmsScan.main())
-            print("总花费时间: " + str(time.time() - starttime))
+            print("[+] 总花费时间: " + str(time.time() - starttime))
             exit(0)
+    # servicescan + portscan
+    if args.servicescan:
+        if args.ips:
+            ipPortList = PortWrapper.generateFormat(args.ips)
+            PortWrapper.generatePorts(args.port, ipPortList)
+            portscan = PortScan('test.com', ipPortList)
+            loop = asyncio.get_event_loop()
+            ipPortServiceList, httpList = loop.run_until_complete(portscan.main())
+            total = 0
+            for targetService in ipPortServiceList:
+                total += len(targetService['ip'])
+            pbar = tqdm(total=total, desc="ServiceScan", ncols=100)  # total是总数
+            servicescan = PortServiceScan('test.com', ipPortServiceList, pbar)
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(servicescan.main())
+            print("[+] 总花费时间: " + str(time.time() - starttime))
+            exit(0)
+        else:
+            exit('[-] 输入要进行服务扫描的IP')
     # 单独端口扫描选择
     if args.ips:
         # 生成ipPortList格式
@@ -663,8 +687,12 @@ if __name__ == '__main__':
         PortWrapper.generatePorts(args.port, ipPortList)
         portscan = PortScan('test.com', ipPortList)
         loop = asyncio.get_event_loop()
-        gIpPortServiceList, httpList = loop.run_until_complete(portscan.main())
-        print("总花费时间: " + str(time.time() - starttime))
+        ipPortServiceList, httpList = loop.run_until_complete(portscan.main())
+        print("=========Service=========")
+        print(ipPortServiceList)
+        print("=========HTTP============")
+        print(httpList)
+        print("[+] 总花费时间: " + str(time.time() - starttime))
         exit(0)
     if args.module and args.domain is None:
         ModuleLoader.showModule(args.module)

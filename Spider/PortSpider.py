@@ -404,10 +404,10 @@ class PortScan(BaseSpider):
                 data = await self.serviceScan.scan(ip, port, 'tcp')
                 if data.get('error') is None:
                     # self.format_log(self.ip, port, data)
-                    self.resList.append(
-                        {'ip': ip, 'port': port, 'service': data.get('service'), 'title': data.get('title'),
-                         'versioninfo': data.get('versioninfo')})
-                    print(data)
+                    result = {'ip': ip, 'port': port, 'service': data.get('service'), 'title': data.get('title'),
+                              'versioninfo': data.get('versioninfo')}
+                    self.resList.append(result)
+                    print(result)
                     # for i in self.vulList:
                     #     if i['service'] ==
                     flag = True
@@ -426,8 +426,9 @@ class PortScan(BaseSpider):
                 pass
 
     async def spider(self):
-        semaphore = asyncio.Semaphore(500)
+        semaphore = asyncio.Semaphore(200)
         taskList = []
+        print(self.ipPortList)
         for target in self.ipPortList:
             for port in target['port']:
                 ip = target['ip']

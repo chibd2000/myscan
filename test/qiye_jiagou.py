@@ -247,4 +247,4 @@ class Enterprise(object):
 if __name__ == '__main__':
     data = Enterprise()
     # 公司全称
-    data.start("吉利集团有限公司")
+    data.start("XXXXX有限公司")

@@ -25,6 +25,11 @@ try:
 
     if sys.platform == 'win32':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+    # if sys.platform == 'win32':
+    #     loop = asyncio.ProactorEventLoop()
+    #     asyncio.set_event_loop(loop)
+
     requests.packages.urllib3.disable_warnings()
     logging.basicConfig(level=logging.INFO, filemode='a', format="[%(levelname)s]%(asctime)s %(message)s")
     filename = './logs/log.txt'

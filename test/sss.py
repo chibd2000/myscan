@@ -297,5 +297,5 @@ def run_aiqicha(searchContent):
 
 
 if __name__ == '__main__':
-    searchContent = "浙江吉利控股集团有限公司"
+    searchContent = "浙江XXXXX集团有限公司"
     run_aiqicha(searchContent)
