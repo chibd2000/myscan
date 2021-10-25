@@ -233,8 +233,7 @@ class AliveSpider(BaseSpider):
             async with semaphore:
                 async with aiohttp.ClientSession() as session:
                     async with session.get(url, headers=self.headers, verify_ssl=False) as response:
-                        if response is not None and response.status == 200:
-                            self.aliveList.append(originUrl)
+                        if response is not None:
                             hthtx = []
                             ididx = []
                             text = await response.text()
@@ -251,7 +250,11 @@ class AliveSpider(BaseSpider):
                             # frame
                             frame = response.headers.get('X-Powered-By', '')
                             self.resList.append({'url': url, 'title': title, 'status': status, 'frame': frame})
+                            # 如果能走到这里的话，可能虽然不是200，但是该网站是可以进行访问的，springboot一般就是这样，首页为404状态码
+                            # 但是这种情况就不能跳过，还是需要进行保存
+                            self.aliveList.append(originUrl)
 
+                            # 下面则是动态脚本参数的爬取操作
                             links = soup.findAll('a')
                             for link in links:  # 判断是不是一个新的网站
                                 _url = link.get('href')

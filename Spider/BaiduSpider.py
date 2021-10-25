@@ -92,7 +92,7 @@ class BaiduSpider(BaseSpider):
                         title, service, respContent = await self.getTitleAndService(session, link)  # 该函数写在基类中
                         # print(title, service)
                         self.resList.extend(self.matchSubdomain(self.domain, respContent))
-                        self.resList.append(urlparse(link).netloc)
+                        self.resList.append(str(urlparse(link).netloc))
                         webInfo = {'spider': '百度', 'keyword': word, 'link': link, 'title': title}
                         self.webList.append(webInfo)
             except Exception as e:
