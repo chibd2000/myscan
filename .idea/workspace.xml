@@ -239,14 +239,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/wow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="529">
-              <caret line="31" column="21" selection-start-line="31" selection-start-column="21" selection-end-line="31" selection-end-column="21" />
+            <state relative-caret-position="375">
+              <caret line="28" column="6316" selection-start-line="28" selection-start-column="6312" selection-end-line="28" selection-end-column="6316" />
               <folding>
                 <element signature="e#76#90#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/spider/common/config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="638">
+              <caret line="29" column="17" selection-start-line="29" selection-start-column="17" selection-end-line="29" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -292,9 +301,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>81</find>
-      <find>161</find>
-      <find>489</find>
       <find>873</find>
       <find>1080</find>
       <find>1099</find>
@@ -322,6 +328,9 @@
       <find>吉利</find>
       <find>baiduspider</find>
       <find>BaiduSpider</find>
+      <find>sa</find>
+      <find>sa-</find>
+      <find>sa-s</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -394,14 +403,14 @@
         <option value="$PROJECT_DIR$/exploit/service/ssh.py" />
         <option value="$PROJECT_DIR$/batch.py" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/spider/common/config.py" />
         <option value="$PROJECT_DIR$/spider/AliveSpider.py" />
         <option value="$PROJECT_DIR$/spider/BaiduSpider.py" />
         <option value="$PROJECT_DIR$/test/wow.py" />
+        <option value="$PROJECT_DIR$/spider/common/config.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="260" />
     <option name="y" value="20" />
     <option name="width" value="1400" />
@@ -700,12 +709,12 @@
       <workItem from="1634901748852" duration="30256000" />
       <workItem from="1635069773213" duration="14712000" />
       <workItem from="1635136129843" duration="977000" />
-      <workItem from="1635150507892" duration="956000" />
+      <workItem from="1635150507892" duration="1804000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1150099000" />
+    <option name="totallyTimeSpent" value="1150947000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1129,13 +1138,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spider/common/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/spider/AliveSpider.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4202">
@@ -1182,11 +1184,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/wow.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
-          <caret line="31" column="21" selection-start-line="31" selection-start-column="21" selection-end-line="31" selection-end-column="21" />
+        <state relative-caret-position="375">
+          <caret line="28" column="6316" selection-start-line="28" selection-start-column="6312" selection-end-line="28" selection-end-column="6316" />
           <folding>
             <element signature="e#76#90#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spider/common/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="638">
+          <caret line="29" column="17" selection-start-line="29" selection-start-column="17" selection-end-line="29" selection-end-column="17" />
         </state>
       </provider>
     </entry>
