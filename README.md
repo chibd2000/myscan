@@ -39,7 +39,7 @@
 
 - 2-百度/Bing关键词查询子域名
 
-- 3-fofa/shodan/quake查询子域名
+- 3-fofa/shodan/quake/hunter整合查询子域名
 
 - 4-ctfr证书查询子域名
 
@@ -64,6 +64,11 @@
 ![friend](img/friend.png)
 
 - 11-爱企查查询(对外投资，控股公司，分支架构，备案)
+
+![company](img/company1.png)
+
+![company](img/company2.png)
+
 
 中间环节
 
@@ -106,16 +111,30 @@ gJavaScriptParamList = []
 
 1、CMS框架漏洞
 
+- 集成了大概100+个poc
+
+- 单域名探测单poc/多个poc
+
+- 配合fofa批量探测单个poc/多个poc
+
 2、端口服务漏洞
 
-一个C段端口扫描TOP100 + Service扫描 总共300秒，个人推荐就是扫描TOP100就足够了，因为是快速漏洞利用的脚本，如果真的想要准确的扫描端口，建议
+用于探测一些中间件的未授权和敏感端口的弱口令以及部分可能存在的反序列化端口，比如RMI log4j Dubbo之类的
+
+一个C段端口扫描默认TOP100 + 服务漏洞扫描 总共300秒，个人推荐就是扫描TOP100就足够了，脚本里面可以自定义，因为是快速漏洞利用的脚本，如果真的想要准确的扫描端口，建议
 还是挂着masscan+nmap来进行扫描
+
+- 支持单网段 + 服务漏洞扫描
+
+- 支持多网段 + 服务漏洞扫描
+
+- 支持单ip + 服务漏洞扫描
 
 ![C-servicescan](img/C-servicescan.png)
 
 3、SQL注入漏洞
 
-只写了参数爬取，用的方法是langzi的方法
+- 通过sqlmap来进行探测，根据sqlmap来判断是否存在注入，用的方法是langzi的方法，参考文章在下面
 
 #用法：
 
@@ -125,7 +144,7 @@ gJavaScriptParamList = []
 
 信息搜集测试域名：zjhu.edu.cn
 
-结果相关域名资产大概220，里面会包括部分隐藏资产IP之类的，该域名搜集时间加上数据清洗和整理，总共花费7分钟。
+结果相关域名资产大概255，里面会包括部分隐藏资产IP之类的，该域名搜集时间加上数据清洗和整理，总共花费7分钟。
 
 ![spider](img/spider.jpg)
 
@@ -155,9 +174,11 @@ gJavaScriptParamList = []
     
 #总结：
 
-1、学习python
+1、学习python编写代码
 
-2、前人栽树，后人乘凉，感谢ske大师兄和其他人的项目
+2、感谢ske大师兄和其他人的项目，前人栽树，后人乘凉
+
+3、虽然说是造轮子，但是对于自己来说还是有收获的
 
 #参考文章：
 
@@ -228,9 +249,9 @@ gJavaScriptParamList = []
 
 那么漏洞利用的时候就会分成两种情况
 
-1、一个系统对应的漏洞只有一个EXP
+1) 一个系统对应的漏洞只有一个EXP
 
-2、一个系统对应的漏洞有多个EXP
+2) 一个系统对应的漏洞有多个EXP
 
 因为自己写的一个Script类（利用模块类）它每次在进行漏洞利用之前都会先探测下目标是不是为指定的系统框架，是的话才会进行payload利用。
 
@@ -244,34 +265,21 @@ FOFA上搜索的1000条域名数据测试，没优化之前的总EXP扫描速度
 
 ~~第一个问题: writeFile 有时候会出现的异常~~
 ```
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/usr/local/python3/lib/python3.8/threading.py", line 932, in _bootstrap_inner
-    self.run()
-  File "/usr/local/python3/lib/python3.8/threading.py", line 870, in run
-    self._target(*self._args, **self._kwargs)
-  File "batch.py", line 180, in githubSpider
-    resList = loop.run_until_complete(t)
-  File "/usr/local/python3/lib/python3.8/asyncio/base_events.py", line 616, in run_until_complete
-    return future.result()
-  File "/root/myscan/spider/GithubSpider.py", line 155, in main
-    return await self.spider()
-  File "/root/myscan/spider/GithubSpider.py", line 127, in spider
-    await asyncio.gather(*taskList)  # [[{}],[{}]]
-  File "/root/myscan/spider/GithubSpider.py", line 73, in getSubdomains
-    async with session.get(url=url, headers=self.headers, timeout=self.reqTimeout, verify_ssl=False, proxy='http://127.0.0.1:7890') as response:
-  File "/usr/local/python3/lib/python3.8/site-packages/aiohttp/client.py", line 1117, in __aenter__
-    self._resp = await self._coro
-  File "/usr/local/python3/lib/python3.8/site-packages/aiohttp/client.py", line 520, in _request
-    conn = await self._connector.connect(
-  File "/usr/local/python3/lib/python3.8/site-packages/aiohttp/connector.py", line 535, in connect
-    proto = await self._create_connection(req, traces, timeout)
-  File "/usr/local/python3/lib/python3.8/site-packages/aiohttp/connector.py", line 890, in _create_connection
-    _, proto = await self._create_proxy_connection(req, traces, timeout)
-  File "/usr/local/python3/lib/python3.8/site-packages/aiohttp/connector.py", line 1139, in _create_proxy_connection
-    transport, proto = await self._wrap_create_connection(  File "/usr/local/python3/lib/python3.8/site-packages/aiohttp/connector.py", line 975, in _wrap_create_connection
-    raise client_error(req.connection_key, exc) from excaiohttp.client_exceptions.ClientConnectorError: Cannot connect to host raw.githubusercontent.com:443 ssl:False [Connection reset by peer]
+  File "/root/myscan/spider/BingSpider.py", line 24, in writeFile
+    workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
+  File "/usr/local/python3/lib/python3.8/site-packages/openpyxl/reader/excel.py", line 245, in load_workbook
+    ws_parser.parse()
+  File "/usr/local/python3/lib/python3.8/site-packages/openpyxl/reader/worksheet.py", line 124, in parse
+    for _, element in it:
+  File "/usr/local/python3/lib/python3.8/xml/etree/ElementTree.py", line 1229, in iterator
+    data = source.read(16 * 1024)
+  File "/usr/local/python3/lib/python3.8/zipfile.py", line 939, in read
+    data = self._read1(n)
+  File "/usr/local/python3/lib/python3.8/zipfile.py", line 1007, in _read1
+    data += self._read2(n - len(data))
+  File "/usr/local/python3/lib/python3.8/zipfile.py", line 1042, in _read2
+    raise EOFError
+EOFError
 ```
 
 ~~第二个异常: 需要代理接口的请求 需要捕获异常~~
@@ -284,18 +292,23 @@ Traceback (most recent call last):
 
 ~~15、指纹EXP如下补充~~（已完成）
 
-~~1、添加信呼OA指纹 参考文章：https://www.t00ls.cc/viewthread.php?tid=63279  
-2、添加Panabit指纹  
-3、添加小鱼易连视频会议系统  
-4、添加会捷通云视讯指纹
-5、添加SonarQube指纹~~
+~~- 添加信呼OA指纹~~ 参考文章：https://www.t00ls.cc/viewthread.php?tid=63279  
 
-~~13、github项目 Common 和 Exploit 和 Spider 都可以去掉~~
+~~- 添加Panabit指纹~~
+
+~~- 添加小鱼易连视频会议系统~~  
+
+~~- 添加会捷通云视讯指纹~~
+
+~~- 添加SonarQube指纹~~
+
+~~13、github项目 Common 和 Exploit 和 Spider 都可以去掉~~（已完成）
 
 16、SQL注入自动化探测
 
-sql相似度匹配 参考文章：http://mp.weixin.qq.com/s?__biz=Mzg4MzY3MTgyMw==&mid=2247483720&idx=1&sn=5449ed47b74cf892c01eb8833b59c952&chksm=cf429728f8351e3eee7387ca85c79a705ae68122509484d49bc278e24c9de4e22ef0080dc0c8&mpshare=1&scene=23&srcid=1114LGKgJqRAT9xqFA9s2BwC&sharer_sharetime=1636911890316&sharer_shareid=1b35adb1b046ef1a6379932d3eabbaf8#rd
-脚本链接通过sqlmap探测 参考文章：http://www.langzi.fun/Sqlmap%E9%80%9F%E6%9F%A5%E8%A1%A8%E4%B8%8EPython%E8%BF%9B%E8%A1%8C%E5%8A%9F%E8%83%BD%E7%A7%BB%E6%A4%8D.html
+- sql相似度匹配 参考文章：http://mp.weixin.qq.com/s?__biz=Mzg4MzY3MTgyMw==&mid=2247483720&idx=1&sn=5449ed47b74cf892c01eb8833b59c952&chksm=cf429728f8351e3eee7387ca85c79a705ae68122509484d49bc278e24c9de4e22ef0080dc0c8&mpshare=1&scene=23&srcid=1114LGKgJqRAT9xqFA9s2BwC&sharer_sharetime=1636911890316&sharer_shareid=1b35adb1b046ef1a6379932d3eabbaf8#rd
+
+- 脚本链接通过sqlmap探测 参考文章：http://www.langzi.fun/Sqlmap%E9%80%9F%E6%9F%A5%E8%A1%A8%E4%B8%8EPython%E8%BF%9B%E8%A1%8C%E5%8A%9F%E8%83%BD%E7%A7%BB%E6%A4%8D.html
 
 ~~17、aiossh爆破的提示关闭，优化命令行窗口~~（已完成）
 
@@ -309,12 +322,18 @@ sql相似度匹配 参考文章：http://mp.weixin.qq.com/s?__biz=Mzg4MzY3MTgyMw
 
 ~~22、将相关的爬取的脚本参数进行存储excel（之前都没进行存储）~~
 
-5、添加域名整理字符串相似匹配度，方便FUZZ
+~~23、添加域名整理字符串相似匹配度，方便FUZZ~~
 
-6、接口添加
+在资产挖掘中，有基于服务预测域名(landgrey作者有写过一个域名预测) 还有域名枚举的，我觉得通过域名匹配，然后再其中发现规律也是一种方法，然后
+这里就用difflib库来进行探测匹配，来匹配下相似度，然后之后就可以用相关脚本在有规律性的点中进行fuzz，而且挖src的时候这种方法也能探测出很多
+的资产来，所以自己觉得也是一种方法
 
-添加censys接口
+![fuzz](img/domain_fuzz.png)
 
-添加hunter奇安信接口
+24、接口添加
+
+- 添加censys接口
+
+- 添加hunter奇安信接口
 
 7、添加SSL证书爬取

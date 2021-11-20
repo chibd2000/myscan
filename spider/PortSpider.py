@@ -9,6 +9,7 @@ from spider.public import *
 from spider import BaseSpider
 from spider.common.banner import *
 import zlib
+import copy
 
 
 def compile_pattern(allprobes):
@@ -435,12 +436,18 @@ class PortScan(BaseSpider):
                 task = asyncio.create_task(self.scan(semaphore, ip, port))
                 taskList.append(task)
         await asyncio.gather(*taskList)
+
         # http 处理 会放到self.domainList，交给cmsExp来进行处理
-        for index, target in enumerate(self.ipPortServiceList):
-            service = target.get('service')
+        # [
+        #   {'service': 'ssh', 'ip': ['1.1.1.1:22','2.2.2.2:23']},
+        #   {'service': 'redis', 'ip': ['3.3.3.3:22']}
+        #  ]
+        for index in reversed(range(len(self.ipPortServiceList))):
+            service = self.ipPortServiceList[index].get('service')
             if ('ssl' in service or 'http' in service) and 'proxy' not in service:
+                self.httpProtocolList.extend(self.ipPortServiceList[index].get('ip'))
                 self.ipPortServiceList.__delitem__(index)
-                self.httpProtocolList.extend(target.get('ip'))
+
         self.writeFile(self.resList, 13)
 
     async def main(self):

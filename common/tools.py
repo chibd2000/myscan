@@ -174,7 +174,7 @@ def createXlsx(target):
     worksheet6 = workbook.add_worksheet('IP存活段')
     headings6 = ['IP段分布', '存在IP', '数量']
     worksheet6.set_column('A:A', 19)
-    worksheet6.set_column('B:B', 28)
+    worksheet6.set_column('B:B', 90)
     worksheet6.set_column('C:C', 10)
     worksheet6.write_row('A1', headings6)
 
@@ -272,6 +272,12 @@ def createXlsx(target):
     worksheet16.set_column('B:B', 28)
     worksheet16.set_column('C:C', 28)
     worksheet16.write_row('A1', headings16)
+
+    worksheet17 = workbook.add_worksheet('FUZZ')
+    headings17 = ['地址']
+    worksheet17.set_column('A:A', 100)
+    worksheet17.write_row('A1', headings17)
+
     workbook.close()
 
 

@@ -2,6 +2,7 @@
 
 from core.MyModuleLoader import ModuleLoader
 from core.MyConstant import ModulePath
+from core.utils.FuzzDifflib import MyDifflib
 from core.utils.PortWrapper import PortWrapper
 from core.MyGlobalVariableManager import GlobalVariableManager
 
@@ -25,18 +26,16 @@ from common import resolve
 # from exploit.IpUnauthExploit import *
 # from exploit.HttpUnauthExploit import *
 from exploit.CmsExploit import *
-from exploit.SQLExploit import *
+# from exploit.SQLExploit import *
 from exploit.ServiceExploit import *
 
 from threading import Thread, Lock
-from difflib import SequenceMatcher  # 相似度
 import os
 import argparse
 import time
 import sys
 import asyncio
 import importlib
-import copy
 from IPy import IP
 
 version = sys.version.split()[0]
@@ -301,6 +300,7 @@ class Spider(object):
                 index += 1
             workbook.save(abs_path + str(domain) + ".xlsx")
             workbook.close()
+
         logging.info("aliveSpider Start")
         global gDomainList, gWebParamsList, gDomainAliveList
         pbar = tqdm(total=len(gDomainList), desc='[{}]'.format('aliveSpider'), ncols=100)
@@ -416,24 +416,36 @@ class Spider(object):
             workbook.close()
 
         # 相似度匹配
-        def getSimilarityMatch(domainList):
+        def getSimilarityMatch(domain, domainList):
             # 比如azxc.com域名
             # admin.xxx.azxc.com oka.xxx.azxc.com test.a-xwow.azxc.com test.w-xwow.azxc.com
             # 其中 admin.ds.azxc.com oka.da.azxc.com 和  test.a-xwow.azxc.com test.w-xwow.azxc.com 这两对就是匹配的
             # 结果为如下:
             # generate admin.FUZZ.azxc.com
             # test.FUZZ-xwow.azxc.com
-            newDomainList = copy.deepcopy(domainList)
-            enableFuzzList = []
-            matchFunc = lambda a, b: SequenceMatcher(None, a, b).ratio()
-            for index1 in range(len(newDomainList)):
-                for index2 in range(index1+1, len(newDomainList)-1):
-                    matchPercent = matchFunc(newDomainList[index1], domainList[index2])
-                    if matchPercent > 0.8:
-                        enableFuzzList.append(index1)
-                        # 删除匹配到的内容
-                        newDomainList.__delitem__(index2)
-                        break
+            resList = []
+            newDomainList = [i for i in domainList if domain in i]
+            domainIndex = 0
+            while domainIndex < len(newDomainList):
+                current = newDomainList[domainIndex]
+                goodIndexList = MyDifflib.getCloseMatchIndex(current, newDomainList, n=10000, cutoff=0.8)
+                currentResultList = []
+                for index in reversed(sorted(goodIndexList)):
+                    currentResultList.append(newDomainList[index])
+                    # if current in domainList[index]:
+                    del newDomainList[index]
+                resList.append(currentResultList)
+                domainIndex += 1
+            workbook = openpyxl.load_workbook(abs_path + str(domain) + ".xlsx")
+            worksheet = workbook.worksheets[16]
+            index = 0
+            while index < len(resList):
+                web = list()
+                web.append(str(resList[index]))
+                worksheet.append(web)
+                index += 1
+            workbook.save(abs_path + str(domain) + ".xlsx")
+            workbook.close()
 
         global gDomainList, gDomainAliveList, gIpPortServiceList, gWebParamsList
         # -----------------------
@@ -490,13 +502,16 @@ class Spider(object):
         # filterCDN()
 
         # 13、port scan in self.ipPortList
-        # self.ipPortList portwrapper
-        portConfig = GlobalVariableManager.getValue('portConfig')
         # print('portConfig: ', portConfig)
+        portConfig = GlobalVariableManager.getValue('portConfig')
         PortWrapper.generatePorts(portConfig, self.ipPortList)
         self.ipPortSpider()
-        # 最后去重子域名
+
+        # 14、去重子域名
         gDomainList = list(set(gDomainList))
+
+        # 15、可探测FUZZ收集
+        getSimilarityMatch(self.domain, gDomainList)
 
         print('==========================')
         print('[+] [AsnList] [{}] {}'.format(len(self.asnList), self.asnList))
@@ -633,10 +648,11 @@ if __name__ == '__main__':
     starttime = time.time()
     args = parse_args()
     if args.domain:
-        if args.company and args.companyName:
-            companySpider = CompanyStructSpider(args.domain, args.companyName)
+        if args.company:
+            companySpider = CompanyStructSpider(args.domain, args.company)
             loop = asyncio.get_event_loop()
             loop.run_until_complete(companySpider.main())
+            print("[+] 总花费时间: " + str(time.time() - starttime))
             exit(0)
         if not os.path.exists(abs_path + args.domain + ".xlsx"):
             if args.port:
@@ -646,6 +662,7 @@ if __name__ == '__main__':
             spider.run()
             exploit = Exploit(args.domain)
             exploit.run()
+            print("[+] 总花费时间: " + str(time.time() - starttime))
             exit(0)
         else:
             exit('[-] 文件名{}已存在，如果要运行的话需要将该文件{}.xlsx改名或者删除.'.format(args.domain, args.domain))

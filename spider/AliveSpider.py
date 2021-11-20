@@ -25,6 +25,7 @@ def getCurrentUrlList(links, suffixCompile):
             currentUrlList.append(str(_))  # 是的话 那么添加到result列表中
     return currentUrlList
 
+
 class AliveSpider(BaseSpider):
 
     def __init__(self, domain, domainList, pbar):

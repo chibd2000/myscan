@@ -10,7 +10,7 @@ class Chinaz(BaseThird):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
-        self.addr = "https://api.sublist3r.com/search.php?domain={}"
+        self.addr = 'https://api.sublist3r.com/search.php?domain={}'
         self.source = 'chinaz'
         self.api = config.chinazApi
 

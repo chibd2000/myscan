@@ -2,11 +2,17 @@
 from spider.thirdLib.public import *
 from spider.thirdLib import BaseThird
 
-# Censys还没写上去
+
+
 class Censys(BaseThird):
+    """
+    censys third spider
+    """
+
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
+        self.source = "censys"
         self.addr = 'https://censys.io/'
         self.id = config.censysId
         self.secret = config.censysSecret
