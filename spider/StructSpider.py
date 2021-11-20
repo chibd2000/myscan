@@ -9,6 +9,7 @@ from core.utils.PorxyProvider import ProxyProvider
 class CompanyStructSpider(BaseSpider):
     def __init__(self, domain, companyName):
         super().__init__()
+        self.source = 'CompanyStructSpider'
         self.domain = domain
         self.companyName = companyName
         self.companyId = ''
@@ -28,22 +29,25 @@ class CompanyStructSpider(BaseSpider):
         # mail
         # phone
         # company's domain
-        workbook = openpyxl.load_workbook(os.getcwd() + os.path.sep + str(self.domain) + ".xlsx")
-        worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
-        for i in web_lists:
-            web = list()
-            web.append(i['type'])
-            web.append(i['entName'])
-            web.append(i['information'])
-            web.append(i['companyMail'])
-            web.append(i['companyPhone'])
-            web.append(i['companySite'])
-            web.append(i['icp'])
-            # web.append(i['app'])
-            # web.append(i['wx'])
-            worksheet.append(web)
-        workbook.save(os.getcwd() + os.path.sep + str(self.domain) + ".xlsx")
-        workbook.close()
+        try:
+            workbook = openpyxl.load_workbook(os.getcwd() + os.path.sep + str(self.domain) + ".xlsx")
+            worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
+            for i in web_lists:
+                web = list()
+                web.append(i['type'])
+                web.append(i['entName'])
+                web.append(i['information'])
+                web.append(i['companyMail'])
+                web.append(i['companyPhone'])
+                web.append(i['companySite'])
+                web.append(i['icp'])
+                # web.append(i['app'])
+                # web.append(i['wx'])
+                worksheet.append(web)
+            workbook.save(os.getcwd() + os.path.sep + str(self.domain) + ".xlsx")
+            workbook.close()
+        except Exception as e:
+            print('[-] [{}] writeFile error, error is {}'.format(self.source, e.__str__()))
 
     def getCompanyPage(self):
         # t = self.proxyObject.getRandomOneProxy()

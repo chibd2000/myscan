@@ -138,121 +138,140 @@ def createXlsx(target):
     worksheet1.set_column('B:B', 28)
     worksheet1.write_row('A1', headings1)
 
-    worksheet2323 = workbook.add_worksheet('企业架构')
-    headings2323 = ['类型', '公司名称', 'Information', '邮箱', '联系电话', '域名', '备案'] #  'APP', '微信公众号'
-    worksheet2323.set_column('A:A', 10)
-    worksheet2323.set_column('B:B', 35)
-    worksheet2323.set_column('C:C', 25)
-    worksheet2323.set_column('D:D', 15)
-    worksheet2323.set_column('E:E', 14)
-    worksheet2323.set_column('F:F', 24)
-    worksheet2323.set_column('G:G', 15)
-    worksheet2323.set_column('H:H', 30)
-    worksheet2323.set_column('I:I', 30)
-    worksheet2323.write_row('A1', headings2323)
-
-    worksheet2 = workbook.add_worksheet('爬虫')
-    headings2 = ['爬虫', '关键字', '链接', '标题']  # 设置表头
-    worksheet2.set_column('A:A', 7)
-    worksheet2.set_column('B:B', 20)
-    worksheet2.set_column('C:C', 66)
-    worksheet2.set_column('D:D', 60)
+    worksheet2 = workbook.add_worksheet('企业架构')
+    headings2 = ['类型', '公司名称', 'Information', '邮箱', '联系电话', '域名', '备案']  # 'APP', '微信公众号'
+    worksheet2.set_column('A:A', 10)
+    worksheet2.set_column('B:B', 35)
+    worksheet2.set_column('C:C', 25)
+    worksheet2.set_column('D:D', 15)
+    worksheet2.set_column('E:E', 14)
+    worksheet2.set_column('F:F', 24)
+    worksheet2.set_column('G:G', 15)
+    worksheet2.set_column('H:H', 30)
+    worksheet2.set_column('I:I', 30)
     worksheet2.write_row('A1', headings2)
 
-    worksheet3 = workbook.add_worksheet('证书SSL')
-    headings3 = ['证书信任域名', '域名']
-    worksheet3.set_column('A:A', 24)
-    worksheet3.set_column('B:B', 24)
+    worksheet3 = workbook.add_worksheet('爬虫')
+    headings3 = ['爬虫', '关键字', '链接', '标题']  # 设置表头
+    worksheet3.set_column('A:A', 7)
+    worksheet3.set_column('B:B', 20)
+    worksheet3.set_column('C:C', 66)
+    worksheet3.set_column('D:D', 60)
     worksheet3.write_row('A1', headings3)
 
-    worksheet4 = workbook.add_worksheet('子域名A记录')
-    headings4 = ['子域名', 'A记录IP']
-    worksheet4.set_column('A:A', 40)
-    worksheet4.set_column('B:B', 23)
+    worksheet4 = workbook.add_worksheet('证书SSL')
+    headings4 = ['证书信任域名', '域名']
+    worksheet4.set_column('A:A', 24)
+    worksheet4.set_column('B:B', 24)
     worksheet4.write_row('A1', headings4)
 
-    worksheet12 = workbook.add_worksheet('IP存活段')
-    headings12 = ['IP段分布', '存在IP', '数量']
-    worksheet12.set_column('A:A', 19)
-    worksheet12.set_column('B:B', 28)
-    worksheet12.set_column('C:C', 10)
-    worksheet12.write_row('A1', headings12)
-
-    worksheet13 = workbook.add_worksheet('ASN')
-    headings13 = ['ASN分布']
-    worksheet13.set_column('A:A', 8)
-    worksheet13.write_row('A1', headings13)
-
-    worksheet5 = workbook.add_worksheet('ip反查子域名')
-    headings5 = ['ip', '域名']
-    worksheet5.set_column('A:A', 12)
-    worksheet5.set_column('B:B', 28)
+    worksheet5 = workbook.add_worksheet('子域名A记录')
+    headings5 = ['子域名', 'A记录IP']
+    worksheet5.set_column('A:A', 40)
+    worksheet5.set_column('B:B', 23)
     worksheet5.write_row('A1', headings5)
 
-    worksheet6 = workbook.add_worksheet('Fofa')
-    headings6 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
-    worksheet6.set_column('A:A', 12)
+    worksheet6 = workbook.add_worksheet('IP存活段')
+    headings6 = ['IP段分布', '存在IP', '数量']
+    worksheet6.set_column('A:A', 19)
     worksheet6.set_column('B:B', 28)
-    worksheet6.set_column('C:C', 37)
-    worksheet6.set_column('D:D', 22)
-    worksheet6.set_column('E:E', 17)
-    worksheet6.set_column('F:F', 8)
-    worksheet6.set_column('G:G', 25)
-    worksheet6.set_column('H:H', 8)
-    worksheet6.set_column('I:I', 8)
-    worksheet6.set_column('J:J', 24)
+    worksheet6.set_column('C:C', 10)
     worksheet6.write_row('A1', headings6)
 
-    worksheet7 = workbook.add_worksheet('Quake')
-    headings7 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
-    worksheet7.set_column('A:A', 12)
-    worksheet7.set_column('B:B', 28)
-    worksheet7.set_column('C:C', 37)
-    worksheet7.set_column('D:D', 22)
-    worksheet7.set_column('E:E', 17)
-    worksheet7.set_column('F:F', 8)
-    worksheet7.set_column('G:G', 25)
-    worksheet7.set_column('H:H', 8)
-    worksheet7.set_column('I:I', 8)
-    worksheet7.set_column('J:J', 24)
+    worksheet7 = workbook.add_worksheet('ASN')
+    headings7 = ['ASN分布']
+    worksheet7.set_column('A:A', 8)
     worksheet7.write_row('A1', headings7)
 
-    worksheet8 = workbook.add_worksheet('Shodan')
-    headings8 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
+    worksheet8 = workbook.add_worksheet('ip反查子域名')
+    headings8 = ['ip', '域名']
     worksheet8.set_column('A:A', 12)
     worksheet8.set_column('B:B', 28)
-    worksheet8.set_column('C:C', 37)
-    worksheet8.set_column('D:D', 22)
-    worksheet8.set_column('E:E', 17)
-    worksheet8.set_column('F:F', 8)
-    worksheet8.set_column('G:G', 20)
-    worksheet8.set_column('H:H', 8)
-    worksheet8.set_column('I:I', 24)
     worksheet8.write_row('A1', headings8)
 
-    worksheet9 = workbook.add_worksheet('子域名端口扫描')
-    headings9 = ['ip', '端口', '服务', '标题', '服务版本信息']
-    worksheet9.set_column('A:A', 19)
-    worksheet9.set_column('B:B', 28)
-    worksheet9.set_column('C:C', 21)
-    worksheet9.set_column('D:D', 25)
-    worksheet9.set_column('E:E', 25)
+    worksheet9 = workbook.add_worksheet('动态参数地址')
+    headings9 = ['动态地址']
+    worksheet9.set_column('A:A', 30)
     worksheet9.write_row('A1', headings9)
 
-    worksheet10 = workbook.add_worksheet('存活网站标题')
-    headings10 = ['网址', '状态码', '标题', 'X-Powered-By']
-    worksheet10.set_column('A:A', 51)
-    worksheet10.set_column('B:B', 10)
-    worksheet10.set_column('C:C', 28)
-    worksheet10.set_column('D:D', 28)
+    worksheet10 = workbook.add_worksheet('Fofa')
+    headings10 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
+    worksheet10.set_column('A:A', 12)
+    worksheet10.set_column('B:B', 28)
+    worksheet10.set_column('C:C', 37)
+    worksheet10.set_column('D:D', 22)
+    worksheet10.set_column('E:E', 17)
+    worksheet10.set_column('F:F', 8)
+    worksheet10.set_column('G:G', 25)
+    worksheet10.set_column('H:H', 8)
+    worksheet10.set_column('I:I', 8)
+    worksheet10.set_column('J:J', 24)
     worksheet10.write_row('A1', headings10)
 
-    worksheet11 = workbook.add_worksheet('漏洞扫描')
-    headings11 = ['漏洞名', 'url', '状态']
+    worksheet11 = workbook.add_worksheet('Hunter')
+    headings11 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
     worksheet11.set_column('A:A', 12)
     worksheet11.set_column('B:B', 28)
-    worksheet11.set_column('C:C', 28)
+    worksheet11.set_column('C:C', 37)
+    worksheet11.set_column('D:D', 22)
+    worksheet11.set_column('E:E', 17)
+    worksheet11.set_column('F:F', 8)
+    worksheet11.set_column('G:G', 25)
+    worksheet11.set_column('H:H', 8)
+    worksheet11.set_column('I:I', 8)
+    worksheet11.set_column('J:J', 24)
     worksheet11.write_row('A1', headings11)
+
+    worksheet12 = workbook.add_worksheet('Quake')
+    headings12 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
+    worksheet12.set_column('A:A', 12)
+    worksheet12.set_column('B:B', 28)
+    worksheet12.set_column('C:C', 37)
+    worksheet12.set_column('D:D', 22)
+    worksheet12.set_column('E:E', 17)
+    worksheet12.set_column('F:F', 8)
+    worksheet12.set_column('G:G', 25)
+    worksheet12.set_column('H:H', 8)
+    worksheet12.set_column('I:I', 8)
+    worksheet12.set_column('J:J', 24)
+    worksheet12.write_row('A1', headings12)
+
+    worksheet13 = workbook.add_worksheet('Shodan')
+    headings13 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
+    worksheet13.set_column('A:A', 12)
+    worksheet13.set_column('B:B', 28)
+    worksheet13.set_column('C:C', 37)
+    worksheet13.set_column('D:D', 22)
+    worksheet13.set_column('E:E', 17)
+    worksheet13.set_column('F:F', 8)
+    worksheet13.set_column('G:G', 20)
+    worksheet13.set_column('H:H', 8)
+    worksheet13.set_column('I:I', 24)
+    worksheet13.write_row('A1', headings13)
+
+    worksheet14 = workbook.add_worksheet('子域名端口扫描')
+    headings14 = ['ip', '端口', '服务', '标题', '服务版本信息']
+    worksheet14.set_column('A:A', 19)
+    worksheet14.set_column('B:B', 28)
+    worksheet14.set_column('C:C', 21)
+    worksheet14.set_column('D:D', 25)
+    worksheet14.set_column('E:E', 25)
+    worksheet14.write_row('A1', headings14)
+
+    worksheet15 = workbook.add_worksheet('存活网站标题')
+    headings15 = ['网址', '状态码', '标题', 'X-Powered-By']
+    worksheet15.set_column('A:A', 51)
+    worksheet15.set_column('B:B', 10)
+    worksheet15.set_column('C:C', 28)
+    worksheet15.set_column('D:D', 28)
+    worksheet15.write_row('A1', headings15)
+
+    worksheet16 = workbook.add_worksheet('漏洞扫描')
+    headings16 = ['漏洞名', 'url', '状态']
+    worksheet16.set_column('A:A', 12)
+    worksheet16.set_column('B:B', 28)
+    worksheet16.set_column('C:C', 28)
+    worksheet16.write_row('A1', headings16)
     workbook.close()
 
 

@@ -6,6 +6,12 @@ from core.MyAsyncHttp import *
 from spider.common import config
 
 
+async def searchInterface(*args, **kwargs):
+    # if kwargs[0] == 'fofa':
+    #     fofaSearch()
+    pass
+
+
 async def fofaSearch(keyword):
     url = "https://fofa.so/api/v1/search/all?email={}&key={}&qbase64={}&size=1000&fields=host"
     async with aiohttp.ClientSession() as session:
@@ -17,7 +23,7 @@ async def fofaSearch(keyword):
 
 
 async def shodanSearch(keyword):
-    url = "https://fofa.so/api/v1/search/all?email={}&key={}&qbase64={}&size=1000&fields=host"
+    url = "https://shodan.io/api/v1/search/all?email={}&key={}&qbase64={}&size=1000&fields=host"
     async with aiohttp.ClientSession() as session:
         result = await AsyncFetcher.fetch(session=session, url=url.format(config.fofaEmail, config.fofaApi,
                                                                           base64.b64encode(keyword.encode()).decode()),
@@ -26,7 +32,16 @@ async def shodanSearch(keyword):
 
 
 async def quekaSearch(keyword):
-    url = "https://fofa.so/api/v1/search/all?email={}&key={}&qbase64={}&size=1000&fields=host"
+    url = "https://quake.360.com/api/v1/search/all?email={}&key={}&qbase64={}&size=1000&fields=host"
+    async with aiohttp.ClientSession() as session:
+        result = await AsyncFetcher.fetch(session=session, url=url.format(config.fofaEmail, config.fofaApi,
+                                                                          base64.b64encode(keyword.encode()).decode()),
+                                          json=True)
+        return result.get('results')
+
+
+async def hunterSearch(keyword):
+    url = "https://hunter.qianxin.com/api/v1/search/all?email={}&key={}&qbase64={}&size=1000&fields=host"
     async with aiohttp.ClientSession() as session:
         result = await AsyncFetcher.fetch(session=session, url=url.format(config.fofaEmail, config.fofaApi,
                                                                           base64.b64encode(keyword.encode()).decode()),

@@ -390,7 +390,7 @@ class PortScan(BaseSpider):
             workbook.save(abs_path + str(self.domain) + ".xlsx")
             workbook.close()
         except Exception as e:
-            print('[-] writeFile error, {}'.format(e.args))
+            print('[-] [{}] writeFile error, error is {}'.format(self.source, e.__str__()))
 
     async def scan(self, semaphore, ip, port):
         async with semaphore:
@@ -441,7 +441,7 @@ class PortScan(BaseSpider):
             if ('ssl' in service or 'http' in service) and 'proxy' not in service:
                 self.ipPortServiceList.__delitem__(index)
                 self.httpProtocolList.extend(target.get('ip'))
-        self.writeFile(self.resList, 11)
+        self.writeFile(self.resList, 13)
 
     async def main(self):
         await self.spider()

@@ -11,29 +11,32 @@ class BingSpider(BaseSpider):
 
     def __init__(self, domain):
         super().__init__()
-        self.source = 'BingSpider'  #
+        self.source = 'BingSpider'  # module name
         self.domain = domain
-        # self.words = ['admin', 'login', 'system', 'register', 'upload', '后台', '系统', '登录']
-        self.words = ['登录']
+        self.words = ['后台', '系统', '登录', 'admin', 'login', 'system', 'register', 'upload']
+        # self.words = ['登录']
         self.PAGES = 1  # 默认跑5页
         self.webList = []
         self.addr = 'https://www.bing.com/search?q={}&first={}'
         self.headers.update({'Cookie': 'SRCHHPGUSR=ADLT=DEMOTE&NRSLT=50'})
 
     def writeFile(self, web_lists, page):
-        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
-        worksheet = workbook.worksheets[page]
-        index = 0
-        while index < len(web_lists):
-            web = list()
-            web.append(web_lists[index]['spider'])
-            web.append(web_lists[index]['keyword'])
-            web.append(web_lists[index]['link'])
-            web.append(web_lists[index]['title'])
-            worksheet.append(web)
-            index += 1
-        workbook.save(abs_path + str(self.domain) + ".xlsx")
-        workbook.close()
+        try:
+            workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
+            worksheet = workbook.worksheets[page]
+            index = 0
+            while index < len(web_lists):
+                web = list()
+                web.append(web_lists[index]['spider'])
+                web.append(web_lists[index]['keyword'])
+                web.append(web_lists[index]['link'])
+                web.append(web_lists[index]['title'])
+                worksheet.append(web)
+                index += 1
+            workbook.save(abs_path + str(self.domain) + ".xlsx")
+            workbook.close()
+        except Exception as e:
+            print('[-] [{}] writeFile error, error is {}'.format(self.source, e.__str__()))
 
     async def fetch(self, word):  # host 既可以是域名也可以是IP
         for page in range(1, self.PAGES + 1):

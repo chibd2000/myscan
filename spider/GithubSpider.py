@@ -67,13 +67,16 @@ class GithubSpider(BaseSpider):
                 await asyncio.sleep(2)
                 return text
         except Exception as e:
-            print('[-] curl {} error, {}'.format(self.addr, e.__str__()))
+            print('[-] [{}] curl {} error, {}'.format(self.source, self.addr, e.__str__()))
 
     async def getSubdomains(self, session, url):
         async with session.get(url=url, headers=self.headers, timeout=self.reqTimeout, verify_ssl=False, proxy='http://127.0.0.1:7890') as response:
             text = await response.text('utf-8', 'ignore')
             subdomains = self.matchSubdomain(self.domain, text)
             self.resList.extend(subdomains)
+
+    async def getSensitiveInfor(self):
+        pass
 
     async def spider(self):
         # # 获取github请求会话
@@ -99,32 +102,39 @@ class GithubSpider(BaseSpider):
         taskList = []
         taskRawHtmlList = []
         # get first page
-        async with aiohttp.ClientSession() as session:
-            text1 = await self.githubSearch(session, 1)
-            if 'API rate limit exceeded' in text1:
-                print('[-] check your github api rate limit')
-                return []
-            total_count = text1['total_count']
-            # E.G. total = 50，max_page = 1; total = 51, max_page = 2
-            # 需要搜索的页数为max_page和task.page中最小的值
-            max_page = (total_count // self.per_page) if (not total_count % self.per_page) else (
-                    total_count // self.per_page + 1)
-            pages = min(max_page, 300)
-            print('[+] github get pages is {}.'.format(pages))
-            for page in range(1, pages):  # pages page 20 is test something
-                json_text = await self.githubSearch(session, page)
-                if json_text and 'items' in json_text.keys():
-                    items = json_text['items']
-                    for item in items:
-                        raw_url = item['html_url'].replace('https://github.com/', 'https://raw.githubusercontent.com/').replace('/blob/', '/')
-                        taskRawHtmlList.append(raw_url)
+        try:
+            async with aiohttp.ClientSession() as session:
+                text1 = await self.githubSearch(session, 1)
+                if 'API rate limit exceeded' in text1:
+                    print('[-] check your github api rate limit')
+                    return []
+                total_count = text1['total_count']
+                # E.G. total = 50，max_page = 1; total = 51, max_page = 2
+                # 需要搜索的页数为max_page和task.page中最小的值
+                max_page = (total_count // self.per_page) if (not total_count % self.per_page) else (
+                        total_count // self.per_page + 1)
+                pages = min(max_page, 300)
+                print('[+] github get pages is {}.'.format(pages))
+                for page in range(1, pages):  # pages page 20 is test something
+                    json_text = await self.githubSearch(session, page)
+                    if json_text and 'items' in json_text.keys():
+                        items = json_text['items']
+                        for item in items:
+                            raw_url = item['html_url'].replace('https://github.com/', 'https://raw.githubusercontent.com/').replace('/blob/', '/')
+                            taskRawHtmlList.append(raw_url)
 
-            taskRawHtmlList = list(set(taskRawHtmlList))
-            for _ in taskRawHtmlList:
-                taskList.append(asyncio.create_task(self.getSubdomains(session, _)))
+                taskRawHtmlList = list(set(taskRawHtmlList))
+                for _ in taskRawHtmlList:
+                    taskList.append(asyncio.create_task(self.getSubdomains(session, _)))
 
-            # 这里则进行异步操作对每个构造好的raw.githubusercontent.com中的内容进行匹配
-            await asyncio.gather(*taskList)  # [[{}],[{}]]
+                # 这里则进行异步操作对每个构造好的raw.githubusercontent.com中的内容进行匹配
+                await asyncio.gather(*taskList)  # [[{}],[{}]]
+        except aiohttp.ClientHttpProxyError:
+            print('[-] curl github.com need outer proxy.')
+        except KeyError as e:
+            print('[-] [{}] get total_count error, please check your API Limit'.format(self.source))
+        except Exception as e:
+            print('[-] [{}] curl error, the erorr is {}'.format(self.source, e.__str__()))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

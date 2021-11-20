@@ -13,6 +13,7 @@ class InformationProvider(object):
     # dictPath = 'dict/information'
     # dictPath = abs_path + '../dict/information' # 本地测试
     dictPath = abs_path + '/dict/information'  # 真实测试
+    wafPath = abs_path + '/dict/waf'
 
     # print(dictPath)
 
@@ -23,7 +24,7 @@ class InformationProvider(object):
                 with open(filename, InformationProvider.fileType) as f:
                     return f.readlines()
             except FileNotFoundError as e:
-                print('username.txt/password.txt not found, {}'.format(e.__str__()))
+                print('InformationProvider file not found, {}'.format(e.__str__()))
         return None
 
     @staticmethod

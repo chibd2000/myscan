@@ -18,7 +18,7 @@ requests.packages.urllib3.disable_warnings()
 class NetSpider(BaseSpider):
     def __init__(self, domain: str):
         super().__init__()
-        self.source = 'Fofa & Shodan & Quake'
+        self.source = 'Fofa & Shodan & Quake & Hunter'
         self.domain = domain
         self.thread_list = []
         # &fields=host,title,ip,domain,port,server,protocol,city,as_number
@@ -104,23 +104,26 @@ class NetSpider(BaseSpider):
         {'spider': 'fofa', 'subdomain': '123.123.123.123:22', 'title': '', 'ip': '123.123.123.123', 'domain': '', 'port': '22', 'web_service': '', 'port_service': 'SSH', 'search_keyword': 'ip="123.123.123.123/24" && port="22"'}
          ]
         """
-        workbook = openpyxl.load_workbook(os.getcwd() + os.path.sep + str(self.domain) + ".xlsx")
-        worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
-        for i in web_lists:
-            web = list()
-            web.append(i['spider'])
-            web.append(i['subdomain'])
-            web.append(i['title'])
-            web.append(i['ip'])
-            web.append(i['domain'])
-            web.append(i['port'])
-            web.append(i['web_service'])
-            web.append(i['port_service'])
-            web.append(i['asn'])
-            web.append(i['search_keyword'])
-            worksheet.append(web)
-        workbook.save(os.getcwd() + os.path.sep + str(self.domain) + ".xlsx")
-        workbook.close()
+        try:
+            workbook = openpyxl.load_workbook(os.getcwd() + os.path.sep + str(self.domain) + ".xlsx")
+            worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
+            for i in web_lists:
+                web = list()
+                web.append(i['spider'])
+                web.append(i['subdomain'])
+                web.append(i['title'])
+                web.append(i['ip'])
+                web.append(i['domain'])
+                web.append(i['port'])
+                web.append(i['web_service'])
+                web.append(i['port_service'])
+                web.append(i['asn'])
+                web.append(i['search_keyword'])
+                worksheet.append(web)
+            workbook.save(os.getcwd() + os.path.sep + str(self.domain) + ".xlsx")
+            workbook.close()
+        except Exception as e:
+            print('[-] [{}] writeFile error, error is {}'.format(self.source, e.__str__()))
 
     async def fofaDomainSpider(self):
         async with aiohttp.ClientSession(headers=self.headers) as session:
@@ -190,7 +193,7 @@ class NetSpider(BaseSpider):
                                 if p['ip'] == _ip:
                                     p['port'].append(int(_port))
 
-                    self.writeFile(getUniqueList(domainList), 8)
+                    self.writeFile(getUniqueList(domainList), 9)
                 except Exception as e:
                     print('curl fofa.so api error, error is {}'.format(e.__str__()))
 
@@ -272,7 +275,7 @@ class NetSpider(BaseSpider):
                                     if p['ip'] == _ip:
                                         p['port'].append(int(_port))
                     domainList = getUniqueList(domainList)
-                    self.writeFile(domainList, 9)
+                    self.writeFile(domainList, 11)
                 except Exception as e:
                     print('curl quake.360.cn api error, error is {}'.format(e.__str__()))
 
@@ -359,7 +362,7 @@ class NetSpider(BaseSpider):
                             for p in self.IpPortList:
                                 if p['ip'] == _ip:
                                     p['port'].append(int(_port))
-                self.writeFile(getUniqueList(domainList), 10)
+                self.writeFile(getUniqueList(domainList), 12)
             except Exception as e:
                 print('curl shodan api error, error is {}'.format(e.__str__()))
             # async with aiohttp.ClientSession(headers=headers) as session:

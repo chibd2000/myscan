@@ -13,17 +13,20 @@ class Ip2domainSpider(BaseSpider):
         self.addr = 'http://api.webscan.cc/?action=query&ip={}'
 
     def writeFile(self, web_lists, page):
-        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
-        worksheet = workbook.worksheets[page]
-        index = 0
-        while index < len(web_lists):
-            web = list()
-            web.append(web_lists[index]['ip'])
-            web.append(web_lists[index]['domain'])
-            worksheet.append(web)
-            index += 1
-        workbook.save(abs_path + str(self.domain) + ".xlsx")
-        workbook.close()
+        try:
+            workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
+            worksheet = workbook.worksheets[page]
+            index = 0
+            while index < len(web_lists):
+                web = list()
+                web.append(web_lists[index]['ip'])
+                web.append(web_lists[index]['domain'])
+                worksheet.append(web)
+                index += 1
+            workbook.save(abs_path + str(self.domain) + ".xlsx")
+            workbook.close()
+        except Exception as e:
+            print('[-] [{}] writeFile error, error is {}'.format(self.source, e.__str__()))
 
     async def getSubdomain(self, semaphore, ip, ip2domainList):
         try:

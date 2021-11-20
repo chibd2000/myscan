@@ -12,17 +12,20 @@ class CtfrSpider(BaseSpider):
         self.source = 'ctfr'
 
     def writeFile(self, web_lists, page):
-        workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
-        worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
-        index = 0
-        while index < len(web_lists):
-            web = list()
-            web.append(web_lists[index]['ssl'])
-            web.append(web_lists[index]['subdomain'])
-            worksheet.append(web)
-            index += 1
-        workbook.save(abs_path + str(self.domain) + ".xlsx")
-        workbook.close()
+        try:
+            workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
+            worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
+            index = 0
+            while index < len(web_lists):
+                web = list()
+                web.append(web_lists[index]['ssl'])
+                web.append(web_lists[index]['subdomain'])
+                worksheet.append(web)
+                index += 1
+            workbook.save(abs_path + str(self.domain) + ".xlsx")
+            workbook.close()
+        except Exception as e:
+            print('[-] [{}] writeFile error, error is {}'.format(self.source, e.__str__()))
 
     async def spider(self):
         sslInfo = []
@@ -41,8 +44,10 @@ class CtfrSpider(BaseSpider):
 
                         # 一起放到列表中进行存储
                         sslInfo.append(domainInfo)
+        except aiohttp.ClientHttpProxyError:
+            print('[-] curl ctfr.sh need outer proxy.')
         except Exception as e:
-            print('[-] curl crt.sh error. {}'.format(e.args))
+            print('[-] curl crt.sh error, the erorr is {}'.format(e.__str__()))
 
         # 列表中的字典去重
         self.writeFile(getUniqueList(sslInfo), 3)

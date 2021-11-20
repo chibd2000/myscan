@@ -8,8 +8,17 @@ from spider import BaseSpider
 
 # @keefe @hangniu @ske
 class SSLSpider(BaseSpider):
+    def __init__(self, domain):
+        super().__init__()
+        self.source = 'SSLSpider'  # module name
+        self.domain = domain
+        self.webList = []
+
     def writeFile(self, web_lists, page):
-        pass
+        try:
+            pass
+        except Exception as e:
+            print('[-] [{}] writeFile error, error is {}'.format(self.source, e.__str__()))
 
     def spider(self):
         pass

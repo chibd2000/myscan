@@ -54,12 +54,14 @@ class Bufferover(BaseThird):
                             text = await response.text()
                             if text:
                                 proxyList = [x for x in text.split('\r\n') if x != '']
-                                print('[+] api.proxyscrape.com grabbed proxy.')
+                                print('[+] curl api.proxyscrape.com grabbed proxy success.')
                                 return proxyList
                             else:
-                                print('[-] api.proxyscrape.com No proxy.')
+                                print('[-] curl api.proxyscrape.com grabbed proxy fail.')
+            except aiohttp.ClientHttpProxyError:
+                print('[-] curl api.proxyscrape.com need outer proxy.')
             except asyncio.TimeoutError:
-                print("[-] curl api.proxyscrape.com Timeout, check your proxy.")
+                print("[-] curl api.proxyscrape.com timeout, check your proxy.")
                 return []
 
         print('Load bufferover api ...')

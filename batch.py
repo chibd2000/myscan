@@ -29,13 +29,14 @@ from exploit.SQLExploit import *
 from exploit.ServiceExploit import *
 
 from threading import Thread, Lock
-
+from difflib import SequenceMatcher  # 相似度
 import os
 import argparse
 import time
 import sys
 import asyncio
 import importlib
+import copy
 from IPy import IP
 
 version = sys.version.split()[0]
@@ -289,6 +290,17 @@ class Spider(object):
 
     # 存活探测，限制并发数
     def aliveSpider(self):
+        def saveWebParamsList(domain, webParamsList):
+            workbook = openpyxl.load_workbook(abs_path + str(domain) + ".xlsx")
+            worksheet = workbook.worksheets[8]
+            index = 0
+            while index < len(webParamsList):
+                web = list()
+                web.append(webParamsList[index])
+                worksheet.append(web)
+                index += 1
+            workbook.save(abs_path + str(domain) + ".xlsx")
+            workbook.close()
         logging.info("aliveSpider Start")
         global gDomainList, gWebParamsList, gDomainAliveList
         pbar = tqdm(total=len(gDomainList), desc='[{}]'.format('aliveSpider'), ncols=100)
@@ -298,6 +310,7 @@ class Spider(object):
         self.lock.acquire()
         gWebParamsList.extend(linkList)
         self.lock.release()
+        saveWebParamsList(self.domain, gWebParamsList)
 
     # main start
     def run(self):
@@ -401,6 +414,26 @@ class Spider(object):
                 index += 1
             workbook.save(abs_path + str(domain) + ".xlsx")
             workbook.close()
+
+        # 相似度匹配
+        def getSimilarityMatch(domainList):
+            # 比如azxc.com域名
+            # admin.xxx.azxc.com oka.xxx.azxc.com test.a-xwow.azxc.com test.w-xwow.azxc.com
+            # 其中 admin.ds.azxc.com oka.da.azxc.com 和  test.a-xwow.azxc.com test.w-xwow.azxc.com 这两对就是匹配的
+            # 结果为如下:
+            # generate admin.FUZZ.azxc.com
+            # test.FUZZ-xwow.azxc.com
+            newDomainList = copy.deepcopy(domainList)
+            enableFuzzList = []
+            matchFunc = lambda a, b: SequenceMatcher(None, a, b).ratio()
+            for index1 in range(len(newDomainList)):
+                for index2 in range(index1+1, len(newDomainList)-1):
+                    matchPercent = matchFunc(newDomainList[index1], domainList[index2])
+                    if matchPercent > 0.8:
+                        enableFuzzList.append(index1)
+                        # 删除匹配到的内容
+                        newDomainList.__delitem__(index2)
+                        break
 
         global gDomainList, gDomainAliveList, gIpPortServiceList, gWebParamsList
         # -----------------------
@@ -579,8 +612,10 @@ def parse_args():
     parser.add_argument('-u', '--url', type=str, help='a url. for example: -u zjhu.edu.cn')
     parser.add_argument('-d', '--domain', type=str, help='Target domain. for example: -d zjhu.edu.cn')
     parser.add_argument('-cn', '--company', type=str, help='Target company. for example: -cn 横戈信息安全有限公司')
-    parser.add_argument('-i', '--ips', type=str, help='Target ip. for example: -i 192.168.1.1-192.168.1.127,192.168.3.1-192.168.3.255 | 192.168.1.0/24,192.168.3.0/24 | 192.168.1.1,192.168.1.2')
-    parser.add_argument('-p', '--port', type=str, default='top100', help='Every Ip port, default top100, for example: -p top100')
+    parser.add_argument('-i', '--ips', type=str,
+                        help='Target ip. for example: -i 192.168.1.1-192.168.1.127,192.168.3.1-192.168.3.255 | 192.168.1.0/24,192.168.3.0/24 | 192.168.1.1,192.168.1.2')
+    parser.add_argument('-p', '--port', type=str, default='top100',
+                        help='Every Ip port, default top100, for example: -p top100')
     parser.add_argument('-m', '--module', type=str,
                         help='Load/Show Payload Module(exploit/third/all)，example: -m exploit')
     parser.add_argument('-f', '--file', type=str, help='a file')
