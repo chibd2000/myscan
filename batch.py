@@ -619,7 +619,7 @@ class Exploit(object):
 
 
 def getVersion():
-    return 'Myscan Tool\'s version is 2.0'
+    return 'Myscan Tool\'s version is 2.0 - HengGe'
 
 
 def parse_args():
@@ -637,13 +637,14 @@ def parse_args():
     parser.add_argument('-fs', '--fofa', type=str, help='fofa scan title. for example: -fs "domain=\"zjhu.edu.cn\"')
     parser.add_argument('-ss', '--servicescan', action='store_true', help='for service scan.')
     parser.add_argument('-cs', '--cmsscan', action='store_true', help='for cms scan.')
+    parser.add_argument('-x', '--proxy', help='http proxy')
     parser.add_argument('-v', '--version', action='version', version=getVersion(), help='Display version')
-    # parser.add_argument('-file', '--file', type=str, help='file')
+    # parser.add_argument('-f', '--file', type=str, help='file')
     return parser.parse_args()
 
 
 if __name__ == '__main__':
-    print('[+] Come From HengGe\'s Team ^.^')
+    print('[+] Welcome From HengGe\'s Team ^.^')
     GlobalVariableManager.init()
     starttime = time.time()
     args = parse_args()
@@ -683,7 +684,7 @@ if __name__ == '__main__':
                     exit(0)
             loop = asyncio.get_event_loop()
             domainList = [args.url]
-            cmsScan = CmsScan('test.com', domainList, moduleList)
+            cmsScan = CmsScan('result.com', domainList, moduleList)
             loop.run_until_complete(cmsScan.main())
             print("[+] 总花费时间: " + str(time.time() - starttime))
             exit(0)
@@ -708,7 +709,7 @@ if __name__ == '__main__':
                 exit('[-] Import Error from core.api import MyNetApi error')
             loop = asyncio.get_event_loop()
             domainList = loop.run_until_complete(MyNetApi.fofaSearch(args.fofa))
-            cmsScan = CmsScan('test.com', domainList, moduleList)
+            cmsScan = CmsScan('result.com', domainList, moduleList)
             loop.run_until_complete(cmsScan.main())
             print("[+] 总花费时间: " + str(time.time() - starttime))
             exit(0)
@@ -717,14 +718,14 @@ if __name__ == '__main__':
         if args.ips:
             ipPortList = PortWrapper.generateFormat(args.ips)
             PortWrapper.generatePorts(args.port, ipPortList)
-            portscan = PortScan('test.com', ipPortList)
+            portscan = PortScan('result.com', ipPortList)
             loop = asyncio.get_event_loop()
             ipPortServiceList, httpList = loop.run_until_complete(portscan.main())
             total = 0
             for targetService in ipPortServiceList:
                 total += len(targetService['ip'])
             pbar = tqdm(total=total, desc="ServiceScan", ncols=100)  # total是总数
-            servicescan = PortServiceScan('test.com', ipPortServiceList, pbar)
+            servicescan = PortServiceScan('result.com', ipPortServiceList, pbar)
             loop = asyncio.get_event_loop()
             loop.run_until_complete(servicescan.main())
             print("[+] 总花费时间: " + str(time.time() - starttime))
@@ -737,7 +738,7 @@ if __name__ == '__main__':
         ipPortList = PortWrapper.generateFormat(args.ips)
         # 对ipPortList中的ip进行对应的端口填充
         PortWrapper.generatePorts(args.port, ipPortList)
-        portscan = PortScan('test.com', ipPortList)
+        portscan = PortScan('result.com', ipPortList)
         loop = asyncio.get_event_loop()
         ipPortServiceList, httpList = loop.run_until_complete(portscan.main())
         print("=========Service=========")
@@ -748,7 +749,7 @@ if __name__ == '__main__':
         exit(0)
     if args.module and args.domain is None:
         ModuleLoader.showModule(args.module)
-        # cmsScan = CmsScan('test.com', domainList, moduleList)
+        # cmsScan = CmsScan('result.com', domainList, moduleList)
         exit(0)
     # if domain and module is None:
     #     if not os.path.exists(abs_path + domain + ".xlsx"):

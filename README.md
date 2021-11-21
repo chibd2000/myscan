@@ -41,9 +41,18 @@
 
 - 3-fofa/shodan/quake/hunter整合查询子域名
 
+每个空间引擎搜集到的资产都会有点不一样，所以就是整合多个来进行合并，提高覆盖率，到时候好方便观察。
+
+默认都会存储空间引擎查询到的端口，然后和之后的端口扫描出来的结果一起整合，最后在服务扫描中一起进行探测利用。
+
+默认关键字 domain / host / ssl / icon 这四个.
+
 - 4-ctfr证书查询子域名
 
 - 5-第三方接口查询子域名
+
+这里面的一些error是正常的，我这里没有隐藏掉，然后一些接口有cloudflare验证，比如bufferover接口，自己的方法是通过获取一批代理IP然后批量
+访问它，从而实现绕过cloudflare的验证
 
 ![thirdLib](img/thirdLib.png)
 
@@ -51,24 +60,35 @@
 
 - 7-子域名查询IP
 
+方便用于后面的信息搜集，HOSTS碰撞之类的就需要用到相关的内网地址所对应的域名信息
+
 - 8-IP反查子域名
 
 ![ip-to-domain](img/ip2domain.png)
 
-- 9-nmap指纹库socket异步探测开放端口服务，top100高危端口，并发量50，一个C段扫描时间为3分钟
+- 9-nmap指纹库socket异步探测开放端口服务，top100高危端口，并发量200，一个C段扫描时间为3分钟
 
-![port-scan-test](img/portscan-test.png)
+![portscan](img/portscan.png)
 
 - 10-子域名友链查询子域名
 
 ![friend](img/friend.png)
 
-- 11-爱企查查询(对外投资，控股公司，分支架构，备案)
+- 11-添加域名整理字符串相似匹配度
+
+在资产挖掘中，有基于服务预测域名(landgrey作者写的域名预测工具) 还有域名枚举(seay作者写的layer工具)的，我觉得通过域名匹配，然后再其中发现
+规律也是一种方法，然后这里就用difflib库来进行探测匹配，来匹配下相似度，然后之后就可以用相关脚本在有规律性的点中进行fuzz，而且自己挖src的
+时候这种方法也能探测出很多的资产来，所以自己可能觉得也是一种方法
+
+![fuzz](img/domain_fuzz.png)
+
+- 12-爱企查查询(对外投资，控股公司，分支架构，备案)
+
+`python3 batch.py -d result.com -cn 横戈信息安全有限公司`
 
 ![company](img/company1.png)
 
 ![company](img/company2.png)
-
 
 中间环节
 
@@ -113,24 +133,50 @@ gJavaScriptParamList = []
 
 - 集成了大概100+个poc
 
+利用的时候，可以先通过列举相关的poc，然后指定poc来进行测试
+
+`python3 batch.py -m exploit`
+
+![poc](img/show-poc.png)
+
 - 单域名探测单poc/多个poc
 
+`python3 batch.py -u 172-18-0-44-8080.AAA.BBB.cn -m exploit.web.Apache.Shiro.550 -cs`
+
+![cmscan](img/url-single-cmscan.png)
+
 - 配合fofa批量探测单个poc/多个poc
+
+`python batch.py -fs app=\"XXXXX\" -p exploit.web.Meeting.v2Conference.sql_inject`
+
+![cmscan](img/fofa-cmscan-1.png)
+
+![cmscan](img/fofa-cmscan-2.png)
 
 2、端口服务漏洞
 
 用于探测一些中间件的未授权和敏感端口的弱口令以及部分可能存在的反序列化端口，比如RMI log4j Dubbo之类的
 
-一个C段端口扫描默认TOP100 + 服务漏洞扫描 总共300秒，个人推荐就是扫描TOP100就足够了，脚本里面可以自定义，因为是快速漏洞利用的脚本，如果真的想要准确的扫描端口，建议
-还是挂着masscan+nmap来进行扫描
+一个C段端口扫描默认TOP100 + 服务漏洞扫描 总共3分钟，因为是快速漏洞利用的脚本，个人推荐就是扫描TOP100就足够了
+脚本里面并发量可以自定义。如果真的想要准确的扫描端口，建议还是挂着masscan+nmap配合进行扫描
 
 - 支持单网段 + 服务漏洞扫描
 
-- 支持多网段 + 服务漏洞扫描
+`python3 batch.py -i 120.XX.XX.0/24 -p top100 -ss`
+
+![C-servicescan](img/c-single-portscan-servicescan.png)
 
 - 支持单ip + 服务漏洞扫描
 
-![C-servicescan](img/C-servicescan.png)
+`python3 batch.py -i 120.79.66.XX -p top100 -ss`
+
+![C-servicescan](img/ip-single-portscan-servicescan.png)
+
+- 支持多网段/多IP + 服务漏洞扫描
+
+`python3 batch.py -i 120.79.XX.0/24,120.79.XX.0/24 -p top100 -ss`
+
+`python3 batch.py -i 1.1.1.1, 2.2.2.2 -p top100 -ss`
 
 3、SQL注入漏洞
 
@@ -148,21 +194,7 @@ gJavaScriptParamList = []
 
 ![spider](img/spider.jpg)
 
-###POC展示：
-
-`python batch.py -m exploit`
-
-![show-poc](img/show-poc.png)
-
-###FOFA 指定POC检测：
-
-`python batch.py -fs app=\"XXXXX\" -p exploit.web.Apache.Solr.template_rce`
-
-![fofa-poc1](img/fofa-poc1.png)
-
-![fofa-poc2](img/fofa-poc2.png)
-
-#版本展示：
+###版本展示：
 
 `python batch.py -v`
 

@@ -8,11 +8,6 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 
-# js 爬取 @小洲师傅 @jsFinder
-def getJavascriptLinks():
-    pass
-
-
 def getCurrentUrlList(links, suffixCompile):
     currentUrlList = []
     for link in links:  # 判断是不是一个新的网站
@@ -22,135 +17,18 @@ def getCurrentUrlList(links, suffixCompile):
         # href="javascript:alert(1)"
         _ = suffixCompile.search(str(url))
         if _ is None and _ is None:
-            currentUrlList.append(str(_))  # 是的话 那么添加到result列表中
+            currentUrlList.append(str(url))  # 是的话 那么添加到result列表中
     return currentUrlList
 
 
-class AliveSpider(BaseSpider):
+class ParamSpider:
+    def __init__(self):
+        self.source = 'ParamSpider'
+        self.reqTimeout = 10
+        self.headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'}
 
-    def __init__(self, domain, domainList, pbar):
-        super().__init__()
-        self.source = 'AliveSpider'
-        self.domain = domain
-        self.domainList = domainList
-        self.linkList = []  # 存储参数
-        self.aliveList = []  # 最终存活域名
-        self.pbar = pbar
-        self.titleCompile = re.compile(r'<title>(.*?)</title>')
-        self.suffixCompile = re.compile(r'.(jpg|png|bmp|mp3|wma|wmv|gz|zip|rar|iso|pdf|txt)|javascript|:;|#|%')
-
-    def writeFile(self, web_lists, page):
-        try:
-            workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
-            worksheet = workbook.worksheets[page]
-            index = 0
-            while index < len(web_lists):
-                web = list()
-                web.append(web_lists[index]['url'])
-                web.append(web_lists[index]['status'])
-                web.append(web_lists[index]['title'])
-                web.append(web_lists[index]['frame'])
-                worksheet.append(web)
-                index += 1
-            workbook.save(abs_path + str(self.domain) + ".xlsx")
-            workbook.close()
-        except Exception as e:
-            print('[-] [{}] writeFile error, error is {}'.format(self.source, e.__str__()))
-
-    async def getAlive(self, semaphore, originUrl):
-        result = []
-        idid = []
-        htht = []
-        url = f'https://{originUrl}' if str(originUrl).startswith(('http:', 'https:')) is False else originUrl
-        domain = url.split('//')[1].strip('/').replace('www.', '')
-        try:
-            async with semaphore:
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(url, headers=self.headers, verify_ssl=False,
-                                           timeout=self.reqTimeout) as response:
-                        if response is not None:
-                            text = await response.text()
-                            try:
-                                title = self.titleCompile.search(text, re.S | re.I)[1].strip(' ').strip('\r\n').strip(
-                                    '\n').strip('\r')
-                            except Exception:
-                                title = ''
-                            status = response.status
-                            frame = response.headers.get('X-Powered-By', '')
-                            self.resList.append({'url': url, 'title': title, 'status': status, 'frame': frame})
-                            # 如果能走到这里的话，可能虽然不是200，但是该网站是可以进行访问的
-                            # SpringBoot一般就是这样，首页为404状态码 但是这种情况就不能跳过，还是需要进行保存
-                            self.aliveList.append(originUrl)
-                            # 参数解析处理
-                            soup = BeautifulSoup(text, 'html.parser')
-                            links = soup.findAll('a')
-                            result = getCurrentUrlList(links, self.suffixCompile)
-                            if result:
-                                result = list(set(result))
-                                await self.getDynamicScriptLinks(session, domain, result)
-
-                                # 整合数据
-                                dic_1 = []
-                                dic_2 = []
-                                dic_3 = []
-                                dic_4 = []
-                                for i in htht:
-                                    path = urlparse(i).path
-                                    if path.count('/') == 1:
-                                        dic_1.append(i)
-                                    if path.count('/') == 2:
-                                        dic_2.append(i)
-                                    if path.count('/') == 3:
-                                        dic_3.append(i)
-                                    if path.count('/') > 3:
-                                        dic_4.append(i)
-                                hthtx = []
-                                ididx = []
-                                if dic_1:
-                                    hthtx.append(random.choice(dic_1))
-                                if dic_2:
-                                    hthtx.append(random.choice(dic_2))
-                                if dic_3:
-                                    hthtx.append(random.choice(dic_3))
-                                if dic_4:
-                                    hthtx.append(random.choice(dic_4))
-                                dic_11 = []
-                                dic_21 = []
-                                dic_31 = []
-                                dic_41 = []
-                                for i in idid:
-                                    path = urlparse(i).path
-                                    if path.count('/') == 1:
-                                        dic_11.append(i)
-                                    if path.count('/') == 2:
-                                        dic_21.append(i)
-                                    if path.count('/') == 3:
-                                        dic_31.append(i)
-                                    if path.count('/') > 3:
-                                        dic_41.append(i)
-                                if dic_11:
-                                    ididx.append(random.choice(dic_11))
-                                if dic_21:
-                                    ididx.append(random.choice(dic_21))
-                                if dic_31:
-                                    ididx.append(random.choice(dic_31))
-                                if dic_41:
-                                    ididx.append(random.choice(dic_41))
-                            if ididx:
-                                for i in ididx:
-                                    self.linkList.append(i)
-                            if hthtx:
-                                for u in hthtx:
-                                    self.linkList.append(u.replace('.htm', '*.htm').replace('.shtm', '*.shtm'))
-        except aiohttp.ClientPayloadError as e:
-            print('[-] curl {} error, the error is timeout'.format(url))
-        except Exception as e:
-            self.resList.append({'url': url, 'title': '', 'status': '无法访问', 'frame': ''})
-            print('[-] curl {} error, the error is {}'.format(url, e.__str__()))
-        finally:
-            self.pbar.update(1)
-
-    # sql参数爬取@langzi
+    # learn from langzi
     async def getDynamicScriptLinks(self, session, domain, result):
         scriptLinks = []
         htmlLinks = []
@@ -208,7 +86,135 @@ class AliveSpider(BaseSpider):
                             scriptFinaLinks.append(x2)
             except Exception as e:
                 print('[-] curl {} error, the error is {}'.format(x2, e.__str__()))
-        return scriptFinaLinks, htmlFinaLinks
+        return self.flushLinks(scriptFinaLinks, htmlFinaLinks)
+
+    """清洗数据"""
+    def flushLinks(self, scriptFinaLinks, htmlFinaLinks):
+        dic_1 = []
+        dic_2 = []
+        dic_3 = []
+        dic_4 = []
+        for i in htmlFinaLinks:
+            path = urlparse(i).path
+            if path.count('/') == 1:
+                dic_1.append(i)
+            if path.count('/') == 2:
+                dic_2.append(i)
+            if path.count('/') == 3:
+                dic_3.append(i)
+            if path.count('/') > 3:
+                dic_4.append(i)
+        hthtx = []
+        ididx = []
+        if dic_1:
+            hthtx.append(random.choice(dic_1))
+        if dic_2:
+            hthtx.append(random.choice(dic_2))
+        if dic_3:
+            hthtx.append(random.choice(dic_3))
+        if dic_4:
+            hthtx.append(random.choice(dic_4))
+
+        dic_11 = []
+        dic_21 = []
+        dic_31 = []
+        dic_41 = []
+        for i in scriptFinaLinks:
+            path = urlparse(i).path
+            if path.count('/') == 1:
+                dic_11.append(i)
+            if path.count('/') == 2:
+                dic_21.append(i)
+            if path.count('/') == 3:
+                dic_31.append(i)
+            if path.count('/') > 3:
+                dic_41.append(i)
+        if dic_11:
+            ididx.append(random.choice(dic_11))
+        if dic_21:
+            ididx.append(random.choice(dic_21))
+        if dic_31:
+            ididx.append(random.choice(dic_31))
+        if dic_41:
+            ididx.append(random.choice(dic_41))
+        return ididx, hthtx
+
+    # learn from xiaozhou jsfinder
+    async def getJavascriptLinks(self, session, domain, result):
+        pass
+
+
+class AliveSpider(BaseSpider):
+
+    def __init__(self, domain, domainList, pbar):
+        super().__init__()
+        self.source = 'AliveSpider'
+        self.domain = domain
+        self.domainList = domainList
+        self.linkList = []  # 存储参数
+        self.aliveList = []  # 最终存活域名
+        self.paramSpider = ParamSpider()
+        self.pbar = pbar
+        self.titleCompile = re.compile(r'<title>(.*?)</title>')
+        self.suffixCompile = re.compile(r'\.(jpg|png|bmp|mp3|wma|wmv|gz|zip|rar|iso|pdf|txt)|javascript|:;|#|%')
+
+    def writeFile(self, web_lists, page):
+        try:
+            workbook = openpyxl.load_workbook(abs_path + str(self.domain) + ".xlsx")
+            worksheet = workbook.worksheets[page]
+            index = 0
+            while index < len(web_lists):
+                web = list()
+                web.append(web_lists[index]['url'])
+                web.append(web_lists[index]['status'])
+                web.append(web_lists[index]['title'])
+                web.append(web_lists[index]['frame'])
+                worksheet.append(web)
+                index += 1
+            workbook.save(abs_path + str(self.domain) + ".xlsx")
+            workbook.close()
+        except Exception as e:
+            print('[-] [{}] writeFile error, error is {}'.format(self.source, e.__str__()))
+
+    async def getAlive(self, semaphore, originUrl):
+        url = f'https://{originUrl}' if str(originUrl).startswith(('http:', 'https:')) is False else originUrl
+        domain = url.split('//')[1].strip('/').replace('www.', '')
+        try:
+            async with semaphore:
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(url, headers=self.headers, verify_ssl=False, timeout=self.reqTimeout) as response:
+                        if response is not None:
+                            text = await response.text()
+                            try:
+                                title = self.titleCompile.search(text, re.S | re.I)[1].strip(' ').strip('\r\n').strip('\n').strip('\r')
+                            except Exception:
+                                title = ''
+                            status = response.status
+                            frame = response.headers.get('X-Powered-By', '')
+                            self.resList.append({'url': url, 'title': title, 'status': status, 'frame': frame})
+                            # 如果能走到这里的话，可能虽然不是200，但是该网站是可以进行访问的
+                            # SpringBoot一般就是这样，首页为404状态码 但是这种情况就不能跳过，还是需要进行保存
+                            self.aliveList.append(originUrl)
+                            # 参数解析处理
+                            soup = BeautifulSoup(text, 'html.parser')
+                            links = soup.findAll('a')
+                            result = getCurrentUrlList(links, self.suffixCompile)
+                            if result:
+                                result = list(set(result))
+                                scriptFinaLinks, htmlFinaLinks = await self.paramSpider.getDynamicScriptLinks(session, domain, result)
+                                if scriptFinaLinks:
+                                    for scriptLink in scriptFinaLinks:
+                                        self.linkList.append(scriptLink)
+                                if htmlFinaLinks:
+                                    for htmlLink in htmlFinaLinks:
+                                        self.linkList.append(htmlLink.replace('.htm', '*.htm').replace('.shtm', '*.shtm'))
+        except aiohttp.ClientPayloadError as e:
+            print('[-] curl {} error, the error is timeout'.format(url))
+        except Exception as e:
+            self.resList.append({'url': url, 'title': '', 'status': '无法访问', 'frame': ''})
+            print('[-] curl {} error, the error is {}'.format(url, e.__str__()))
+        finally:
+            self.pbar.update(1)
 
     async def spider(self):
         concurrency = 500  # 这里的话稍微控制下并发量
@@ -220,14 +226,13 @@ class AliveSpider(BaseSpider):
 
     async def main(self):
         await self.spider()
-        print(self.aliveList)
         return self.linkList, self.aliveList
 
 
 if __name__ == '__main__':
     from tqdm import tqdm
 
-    pbar = tqdm(total=len(['172-18-0-44-8080.webvpn.nbcc.cn']), desc='[{}]'.format('aliveSpider'), ncols=100)
-    alive = AliveSpider('zjhu.edu.cn', ['172-18-0-44-8080.webvpn.nbcc.cn'], pbar)
+    pbar = tqdm(total=len(['xingzhigu.foodmate.net']), desc='[{}]'.format('AliveSpider'), ncols=100)
+    alive = AliveSpider('foodmate.net', ['http://xingzhigu.foodmate.net'], pbar)
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(alive.main())

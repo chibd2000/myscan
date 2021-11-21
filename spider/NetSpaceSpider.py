@@ -14,6 +14,19 @@ import codecs
 
 requests.packages.urllib3.disable_warnings()
 
+"""封装一个异常类处理空间引擎的异常, 学习代码"""
+
+
+class PrivilegeException(Exception):
+    def __init__(self):
+        pass
+
+    def __str__(self):
+        pass
+    # 无权限
+    # 无数据
+    # 无网络
+
 
 class NetSpider(BaseSpider):
     def __init__(self, domain: str):
@@ -21,14 +34,16 @@ class NetSpider(BaseSpider):
         self.source = 'Fofa & Shodan & Quake & Hunter'
         self.domain = domain
         self.thread_list = []
-        # &fields=host,title,ip,domain,port,server,protocol,city,as_number
-        self.fofaAddr = "https://fofa.so/api/v1/search/all?email={FOFA_EMAIL}&key={API_KEY}&qbase64={B64_DATA}&fields=host,title,ip,domain,port,server,protocol,as_number&size=10000"
+        self.fofaAddr = "https://fofa.so/api/v1/search/all?email={USER_NAME}&key={API_KEY}&qbase64={B64_DATA}&fields=host,title,ip,domain,port,server,protocol,as_number&size=10000"
         self.shodanAddr = "https://api.shodan.io/shodan/host/search?key={API_KEY}&query={QUERY}&minify=true&page=1"
         self.quakeAddr = "https://quake.360.cn/api/v3/search/quake_service"
+        self.hunterAddr = "https://hunter.qianxin.com/openApi/search?username={USER_NAME}&api-key={API_KEY}&search={B64_DATA}&page=1&page_size=10"
         self.fofaApi = config.fofaApi
-        self.fofaEmail = config.fofaEmail
-        self.shodanApi = config.shodanApi
+        self.fofaUser = config.fofaEmail
+        self.hunterApi = config.hunterApi
+        self.hunterUser = config.hunterUserName
         self.quakeApi = config.quakeApi
+        self.shodanApi = config.shodanApi
         self.asnList = []
         self.ipList = []
         self.IpPortList = []
@@ -39,11 +54,11 @@ class NetSpider(BaseSpider):
         self._getBeianCompany()
         self.fofaKeywordList = ['domain="{}"'.format(self.domain), 'cert="{}"'.format(self.beian),
                                 'host="{}"'.format(self.domain), 'icon_hash="{}"'.format(self.iconHash)]
-        # self.quakeKeywordList = ['cert:"{}"'.format(self.beian)]
         self.quakeKeywordList = ['domain:"{}"'.format(self.domain), 'cert:"{}"'.format(self.beian),
                                  'host:"{}"'.format(self.domain), 'favicon:"{}"'.format(self.iconMD5)]
         self.shodanKeywordList = ['hostname:"{}"'.format(self.domain), 'ssl:"{}"'.format(self.domain),
                                   'http.favicon.hash:{}'.format(self.iconHash)]
+        self.hunterKeywordList = ['domain="{}"'.format(self.domain), 'cert="{}"'.format(self.beian)]
 
     def _getFaviconAndMD5(self):
         try:
@@ -135,7 +150,7 @@ class NetSpider(BaseSpider):
                     domainList = []
                     res = await AsyncFetcher.fetch(session=session,
                                                    url=self.fofaAddr.format(
-                                                       FOFA_EMAIL=self.fofaEmail,
+                                                       USER_NAME=self.fofaUser,
                                                        API_KEY=self.fofaApi,
                                                        B64_DATA=base64.b64encode(keyword.encode()).decode()),
                                                    json=True)
@@ -202,92 +217,87 @@ class NetSpider(BaseSpider):
                     print('curl fofa.so api error, error is {}'.format(e.__str__()))
 
     async def hunterDomainSpider(self):
-        headers = {"X-QuakeToken": self.quakeApi, "Content-Type": "application/json"}
-        async with aiohttp.ClientSession(headers=headers) as session:
-            for keyword in self.quakeKeywordList:
-                try:
-                    domainList = []
-                    params = {'query': keyword, 'size': 500, 'ignore_cache': False}
-                    res = await AsyncFetcher.postFetch2(session=session, url=self.quakeAddr, data=json.dumps(params),
-                                                        json=True)
-                    for banner in res['data']:
-                        httpModule = banner['service'].get('name', '')  # http， http-simple-new
-                        if 'http' in httpModule:
-                            http = banner['service'].get('http')
-                            if http:
-                                subdomainInfo = {
-                                    'spider': 'QUAKE',
-                                    'subdomain': http['host'],
-                                    'title': http['title'],
-                                    'ip': banner['ip'],
-                                    'domain': '',
-                                    'port': banner['port'],
-                                    'web_service': http['server'],
-                                    'port_service': getPortService(banner['port']),
-                                    'asn': banner['asn'],
-                                    'search_keyword': keyword
-                                }
-                                # print(subdomainInfo)
-                                if banner['ip'] == http['host']:
-                                    self.ipList.append(banner['ip'])
-                                    self.asnList.append(int(banner['asn']))
-                                else:
-                                    self.ipList.append(banner['ip'])
-                                    self.asnList.append(int(banner['asn']))
-                                    self.resList.append(http['host'])
-                                domainList.append(subdomainInfo)
-                        else:
-                            subdomainInfo = {
-                                'spider': 'QUAKE',
-                                'subdomain': '',
-                                'title': '',
-                                'ip': banner['ip'],
-                                'domain': '',
-                                'port': banner['port'],
-                                'web_service': '',
-                                'port_service': getPortService(banner['port']),
-                                'asn': banner['asn'],
-                                'search_keyword': keyword
-                            }
-                            self.ipList.append(banner['ip'])
-                            self.asnList.append(int(banner['asn']))
-                            domainList.append(subdomainInfo)
-                        for i in domainList:
-                            _ip = i['ip']
-                            _port = i['port']
-                            flag = True
-                            for j in self.IpPortList:
-                                if j['ip'] == i['ip']:
-                                    flag = False
-                            if flag:
-                                self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
+        # url
+        # web_title
+        # ip
+        # domain
+        # port
+        # str(component)
+        # protocol
 
-                        # [{'ip':'1.1.1.1',}]
-                        for j in domainList:
-                            _ip = j['ip']
-                            _port = j['port']
-                            if int(_port) == 443 or int(_port) == 80:
-                                continue
-                            flag = True
-                            for k in self.IpPortList:
-                                if k['ip'] == _ip:
-                                    for m in k['port']:
-                                        if int(m) == int(_port):
-                                            flag = False
-                            if flag:
-                                for p in self.IpPortList:
-                                    if p['ip'] == _ip:
-                                        p['port'].append(int(_port))
-                    self.writeFile(getUniqueList(domainList), 11)
+        # host, title, ip, domain, port, server, protocol, as_number
+        async with aiohttp.ClientSession() as session:
+            for keyword in self.quakeKeywordList:
+                domainList = []
+                try:
+                    res = await AsyncFetcher.fetch(session=session, url=self.hunterAddr.format(USER_NAME=self.hunterUser, API_KEY=self.hunterApi, B64_DATA=base64.b64encode(keyword.encode()).decode()), json=True)
+                    for banner in res['data'].get('arr'):
+                        if 'http' in banner[0]:
+                            subdomain = banner[0].split('//')[1]  # https://www.baidu.com => www.baidu.com
+                        else:
+                            subdomain = banner[0]
+                        if banner[6] == '':
+                            portService = getPortService(banner[4])
+                        else:
+                            portService = banner[6]
+                        subdomainInfo = {
+                            'spider': 'FOFA',
+                            'subdomain': subdomain,
+                            'title': banner[1],
+                            'ip': banner[2],
+                            'domain': banner[3],
+                            'port': banner[4],
+                            'web_service': banner[5],
+                            'port_service': portService,
+                            'asn': banner[7],
+                            'search_keyword': keyword
+                        }
+                        # print(subdomainInfo)
+                        self.ipList.append(banner[2])
+                        self.asnList.append(int(banner[7]))
+                        self.resList.append(subdomain)
+                        domainList.append(subdomainInfo)
+                    # self.IpPortList
+                    # [
+                    #     {"ip": "1.1.1.1", "port": [7777, 8888]
+                    #     {"ip": "2.2.2.2", "port": []
+                    # ]
                 except Exception as e:
                     print('curl hunter.qianxin.com api error, error is {}'.format(e.__str__()))
+
+                for i in domainList:
+                    _ip = i['ip']
+                    _port = i['port']
+                    flag = True
+                    for j in self.IpPortList:
+                        if j['ip'] == i['ip']:
+                            flag = False
+                    if flag:
+                        self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
+                for j in domainList:
+                    _ip = j['ip']
+                    _port = j['port']
+                    if int(_port) == 443 or int(_port) == 80:
+                        continue
+                    flag = True
+                    for k in self.IpPortList:
+                        if k['ip'] == _ip:
+                            for m in k['port']:
+                                if int(m) == int(_port):
+                                    flag = False
+                    if flag:
+                        for p in self.IpPortList:
+                            if p['ip'] == _ip:
+                                p['port'].append(int(_port))
+
+                self.writeFile(getUniqueList(domainList), 10)
 
     async def quakeDomainSpider(self):
         headers = {"X-QuakeToken": self.quakeApi, "Content-Type": "application/json"}
         async with aiohttp.ClientSession(headers=headers) as session:
             for keyword in self.quakeKeywordList:
+                domainList = []
                 try:
-                    domainList = []
                     params = {'query': keyword, 'size': 500, 'ignore_cache': False}
                     res = await AsyncFetcher.postFetch2(session=session, url=self.quakeAddr, data=json.dumps(params),
                                                         json=True)
@@ -333,43 +343,44 @@ class NetSpider(BaseSpider):
                             self.ipList.append(banner['ip'])
                             self.asnList.append(int(banner['asn']))
                             domainList.append(subdomainInfo)
-                        for i in domainList:
-                            _ip = i['ip']
-                            _port = i['port']
-                            flag = True
-                            for j in self.IpPortList:
-                                if j['ip'] == i['ip']:
-                                    flag = False
-                            if flag:
-                                self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
-
-                        # [{'ip':'1.1.1.1',}]
-                        for j in domainList:
-                            _ip = j['ip']
-                            _port = j['port']
-                            if int(_port) == 443 or int(_port) == 80:
-                                continue
-                            flag = True
-                            for k in self.IpPortList:
-                                if k['ip'] == _ip:
-                                    for m in k['port']:
-                                        if int(m) == int(_port):
-                                            flag = False
-                            if flag:
-                                for p in self.IpPortList:
-                                    if p['ip'] == _ip:
-                                        p['port'].append(int(_port))
-                    self.writeFile(getUniqueList(domainList), 11)
                 except Exception as e:
                     print('curl quake.360.cn api error, error is {}'.format(e.__str__()))
+
+                for i in domainList:
+                    _ip = i['ip']
+                    _port = i['port']
+                    flag = True
+                    for j in self.IpPortList:
+                        if j['ip'] == i['ip']:
+                            flag = False
+                    if flag:
+                        self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
+
+                # [{'ip':'1.1.1.1',}]
+                for j in domainList:
+                    _ip = j['ip']
+                    _port = j['port']
+                    if int(_port) == 443 or int(_port) == 80:
+                        continue
+                    flag = True
+                    for k in self.IpPortList:
+                        if k['ip'] == _ip:
+                            for m in k['port']:
+                                if int(m) == int(_port):
+                                    flag = False
+                    if flag:
+                        for p in self.IpPortList:
+                            if p['ip'] == _ip:
+                                p['port'].append(int(_port))
+                self.writeFile(getUniqueList(domainList), 11)
 
     async def shodanDomainSpider(self):
         # 这里用shodan模块的原因是正常请求会存在cloudflare，具体原因没研究，直接用shodan模块会方便
         api = Shodan(self.shodanApi)
         # ipinfo = api.host('8.8.8.8')
         for keyword in self.shodanKeywordList:
+            domainList = []
             try:
-                domainList = []
                 if keyword == 'ssl:"{}"'.format(self.domain):
                     countInfo = api.count(keyword)
                     if countInfo['total'] > 1000:
@@ -430,25 +441,24 @@ class NetSpider(BaseSpider):
                                 flag = False
                         if flag:
                             self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
-
-                    for j in domainList:
-                        _ip = j['ip']
-                        _port = j['port']
-                        if int(_port) == 443 or int(_port) == 80:
-                            continue
-                        flag = True
-                        for k in self.IpPortList:
-                            if k['ip'] == _ip:
-                                for m in k['port']:
-                                    if int(m) == int(_port):
-                                        flag = False
-                        if flag:
-                            for p in self.IpPortList:
-                                if p['ip'] == _ip:
-                                    p['port'].append(int(_port))
-                self.writeFile(getUniqueList(domainList), 12)
             except Exception as e:
                 print('curl shodan api error, error is {}'.format(e.__str__()))
+            for j in domainList:
+                _ip = j['ip']
+                _port = j['port']
+                if int(_port) == 443 or int(_port) == 80:
+                    continue
+                flag = True
+                for k in self.IpPortList:
+                    if k['ip'] == _ip:
+                        for m in k['port']:
+                            if int(m) == int(_port):
+                                flag = False
+                if flag:
+                    for p in self.IpPortList:
+                        if p['ip'] == _ip:
+                            p['port'].append(int(_port))
+            self.writeFile(getUniqueList(domainList), 12)
             # async with aiohttp.ClientSession(headers=headers) as session:
             #     for keyword in self.shodanKeywordList:
             #         domainList = []

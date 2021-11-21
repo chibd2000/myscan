@@ -176,7 +176,7 @@ if __name__ == '__main__':
                 if flag == 0:
                     temp_ips.append(aaa)
                     # print("已经扫描过的ip有如下：", temp_ips)
-                    bbb = PortScan('test.com', aaa)
+                    bbb = PortScan('result.com', aaa)
                     pool.apply_async(func=bbb.main)  # 异步运行,非阻塞
     pool.close()
     pool.join()

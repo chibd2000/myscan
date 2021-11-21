@@ -21,7 +21,7 @@ try:
 
     from core.MyAsyncHttp import *
     from spider.common.config import *
-    from common.tools import *
+    # from common.tools import *
 
     if sys.platform == 'win32':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
