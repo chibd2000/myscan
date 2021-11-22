@@ -1,40 +1,40 @@
 # 这里存放配置文件、例如线程之类的 还有fofa shodan 的api存放
 
 # fofa.so
-fofaEmail = '496347658@qq.com'
-fofaApi = '627c0a4e86e7111baf74c731f8e77f14'
+fofaEmail = ''
+fofaApi = ''
 
 # hunter.qianxin.com
 hunterApi = 'test'
 hunterUserName = 'test'
 
 # shodan.io
-shodanApi = 'ngALmr6HNOQFlGWfj0cXga0ZcSpihSo1'
+shodanApi = ''
 
 # quake.360.com
-quakeApi = '3fa7fb25-37cc-4b0f-9764-17d0782e16a6'
+quakeApi = ''
 
 # https://search.censys.io/account/api
-censysId = '22c4776c-a4ff-4330-a05f-2705289ce918'
-censysSecret = 'fqtIaTq9BuZFxRbZ8NZZJ1j8E9Jab8FG'
+censysId = ''
+censysSecret = ''
 
 # virustotal.com
-virustotalApi = '34d473105d67a4b13252201801c60bee683661924c3d51c1f9d7394342f8a704'
+virustotalApi = ''
 
 # https://github.com/settings/tokens
-githubApi = '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'
+githubApi = ''
 
 # http://api.chinaz.com/ApiDetails/Alexa
-chinazApi = '885857687dbc47dfae60dde6480b6ae2'
+chinazApi = ''
 
 # https://securitytrails.com/corp/api
-securitytrailsApi = 'Zxq5GccNGfC4rWL6UxE8JIUO5czXmXZe'
+securitytrailsApi = ''
 
 # https://app.binaryedge.io/account/api
-binaryedgeApi = 'd4622310-d99e-4bff-93f4-7bac11c2c03b'
+binaryedgeApi = ''
 
 # https://x.threatbook.cn/v5/myApi
-threatbookApi = 'c9c4de91c4cc460e9b0745872d0310e9623ef3c208784bebb714eea6f5b3bc0c'
+threatbookApi = ''
 
 ip_scan_mode = 'small'
 
