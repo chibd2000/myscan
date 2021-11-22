@@ -64,7 +64,7 @@ class BingSpider(BaseSpider):
                             webInfo = {'spider': 'Bing', 'keyword': word, 'link': link, 'title': title}
                             self.webList.append(webInfo)
             except Exception as e:
-                print('[-] curl error, {}'.format(e.__str__()))
+                print('[-] curl www.bing.com error, the error is {}'.format(e.args))
                 # pass
 
                 # headers = {

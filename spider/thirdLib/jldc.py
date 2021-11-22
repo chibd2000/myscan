@@ -25,7 +25,7 @@ class Jldc(BaseThird):
                 else:
                     print('Jldc API No Subdomains.')
         except Exception as e:
-            print('[-] curl jldc.me api error. {}'.format(e.args))
+            print('[-] curl jldc.me api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

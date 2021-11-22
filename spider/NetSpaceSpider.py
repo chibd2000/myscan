@@ -1,6 +1,5 @@
 # coding=utf-8
 
-
 from spider.public import *
 from spider import BaseSpider
 from lxml import etree
@@ -108,10 +107,10 @@ class NetSpider(BaseSpider):
             self.beian = compangyName[0]
         except IndexError as e:
             self.beian = 'xxxxxxxxxxxxxxxxxxxxx'
-            print('[-] curl beian no company, {}'.format(e.__str__()))
+            print('[-] curl beian no company, the error is {}'.format(e.args))
         except Exception as e:
             self.beian = 'xxxxxxxxxxxxxxxxxxxxx'
-            print('[-] curl chinaz.com error, {}'.format(e.__str__()))
+            print('[-] curl chinaz.com error, the error is {}'.format(e.args))
 
     # 保存文件
     def writeFile(self, web_lists: list, page: int):
@@ -214,7 +213,7 @@ class NetSpider(BaseSpider):
 
                     self.writeFile(getUniqueList(domainList), 9)
                 except Exception as e:
-                    print('curl fofa.so api error, error is {}'.format(e.__str__()))
+                    print('[-] curl fofa.so error, the error is {}'.format(e.args))
 
     async def hunterDomainSpider(self):
         # url
@@ -263,7 +262,7 @@ class NetSpider(BaseSpider):
                     #     {"ip": "2.2.2.2", "port": []
                     # ]
                 except Exception as e:
-                    print('curl hunter.qianxin.com api error, error is {}'.format(e.__str__()))
+                    print('[-] curl hunter.qianxin.com error, the error is {}'.format(e.args))
 
                 for i in domainList:
                     _ip = i['ip']
@@ -344,7 +343,7 @@ class NetSpider(BaseSpider):
                             self.asnList.append(int(banner['asn']))
                             domainList.append(subdomainInfo)
                 except Exception as e:
-                    print('curl quake.360.cn api error, error is {}'.format(e.__str__()))
+                    print('[-] curl quake.360.cn error, the error is {}'.format(e.args))
 
                 for i in domainList:
                     _ip = i['ip']
@@ -442,7 +441,7 @@ class NetSpider(BaseSpider):
                         if flag:
                             self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
             except Exception as e:
-                print('curl shodan api error, error is {}'.format(e.__str__()))
+                print('[-] curl shodan.io error, the error is {}'.format(e.args))
             for j in domainList:
                 _ip = j['ip']
                 _port = j['port']
@@ -646,7 +645,7 @@ class NetSpider(BaseSpider):
                 self.web_ip_lists_shodan.extend(temp_list)
 
         except IOError as e:
-            print('[-] curl shodan.io error. {}'.format(e.__str__))
+            print('[-] curl shodan.io error, the error is {}'.format(e.args))
 
         except KeyError as e:
             # KeyError 为 API无效

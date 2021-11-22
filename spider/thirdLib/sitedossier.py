@@ -22,7 +22,7 @@ class Sitedossier(BaseThird):
                 else:
                     print('[-] sitedossier API No Subdomains.')
         except Exception as e:
-            print('[-] curl sitedossier api error. {}'.format(e.args))
+            print('[-] curl sitedossier api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

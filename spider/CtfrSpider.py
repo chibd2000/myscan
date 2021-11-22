@@ -9,7 +9,7 @@ class CtfrSpider(BaseSpider):
         super().__init__()
         self.domain = domain
         self.addr = 'https://crt.sh/?q=%.{}&output=json'
-        self.source = 'ctfr'
+        self.source = 'CtfrSpider'
 
     def writeFile(self, web_lists, page):
         try:
@@ -47,7 +47,7 @@ class CtfrSpider(BaseSpider):
         except aiohttp.ClientHttpProxyError:
             print('[-] curl ctfr.sh need outer proxy.')
         except Exception as e:
-            print('[-] curl crt.sh error, the erorr is {}'.format(e.__str__()))
+            print('[-] curl crt.sh error, the erorr is {}'.format(e.args))
 
         # 列表中的字典去重
         self.writeFile(getUniqueList(sslInfo), 3)

@@ -127,7 +127,7 @@ class CompanyStructSpider(BaseSpider):
             #         page = (p['total'] // 100 + 1) if (not p['total'] % 100) else (p['total'] // 100 + 2)
             #         self.getWxInformation(page)
         except Exception as e:
-            print('[-] curl {} error, {}'.format(url, e.__str__()))
+            print('[-] curl {} error, the error is {}'.format(url, e.args))
 
     def getInvestInformation(self, page):
         for _ in range(1, page):
@@ -180,7 +180,7 @@ class CompanyStructSpider(BaseSpider):
                     taskList1.append(self.getDetailInformation(url, index, session1, semaphore1))
                 await asyncio.gather(*taskList1)
         except Exception as e:
-            print('[-] curl error, {}'.format(e.__str__()))
+            print('[-] curl {} error, the error is {}'.format(self.detailAddr, e.args))
 
         try:
             async with aiohttp.ClientSession() as session2:
@@ -192,7 +192,7 @@ class CompanyStructSpider(BaseSpider):
                     taskList2.append(self.getICPInformation(url, index, session2, semaphore2))
                 await asyncio.gather(*taskList2)
         except Exception as e:
-            print('[-] curl error, {}'.format(e.__str__()))
+            print('[-] curl {} is error, the error is {}'.format(self.icpAddr, e.args))
 
         # try:
         #     async with aiohttp.ClientSession() as session3:
@@ -300,7 +300,7 @@ class CompanyStructSpider(BaseSpider):
                     'companySite': "".join(website)
                 }
         except Exception as e:
-            print('[-] curl {} error, error is {}'.format(url, e.__str__()))
+            print('[-] curl {} error, the error is {}'.format(url, e.args))
 
     # 一个调用接口，通过url来请求不同的接口来返回信息
     def getFirstInformation(self, url):
@@ -373,7 +373,7 @@ class CompanyStructSpider(BaseSpider):
                     print(branchInfo)
                     self.resList.append(branchInfo)
         except Exception as e:
-            print('[-] curl {} error, error is {}'.format(url, e.__str__()))
+            print('[-] curl {} error, the error is {}'.format(url, e.args))
 
     # 一个调用接口，通过url来请求不同的接口来返回信息
     async def getTwiceInformation(self, url, session):
@@ -419,7 +419,7 @@ class CompanyStructSpider(BaseSpider):
                     #     await asyncio.sleep(2)
                     #     return str([_['wechatName'] for _ in html['data']['list']])
         except Exception as e:
-            print('[-] curl {} error, error is {}'.format(url, e.__str__()))
+            print('[-] curl {} error, the error is {}'.format(url, e.args))
 
     async def spider(self):
         # await self.proxyObject.getProxy()

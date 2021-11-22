@@ -19,7 +19,7 @@ class BaseSpider(metaclass=abc.ABCMeta):
             'X-Forwarded-For': '127.0.0.1',
             # 'Connection': 'keep-alive'  # 实战中遇到过的BUG，有些站点需要保持KEEP
         }
-        self.reqTimeout = 10
+        self.reqTimeout = 20
         self.resList = []
 
     @abc.abstractmethod
@@ -57,24 +57,24 @@ class BaseSpider(metaclass=abc.ABCMeta):
             return title, '', ''
 
     # 获取 title service
-    def getTitleAndService2(self, link, port):
-        try:
-            resp = requests.get(url=link, verify=False)
-            text = resp.content.decode('utf-8')
-            title = re.findall(r'<title>(.*?)</title>', text, re.S)[0].strip(
-                ' ').strip('\r\n').strip('\n').strip('\r')
-            try:
-                service = resp.headers.get('Server')
-            except:
-                service = ''
-            try:
-                content = text
-            except:
-                content = ''
-            return title, service, content
-        except:
-            title = ''
-            return title, '', ''
+    # def getTitleAndService2(self, link, port):
+    #     try:
+    #         resp = requests.get(url=link, verify=False)
+    #         text = resp.content.decode('utf-8')
+    #         title = re.findall(r'<title>(.*?)</title>', text, re.S)[0].strip(
+    #             ' ').strip('\r\n').strip('\n').strip('\r')
+    #         try:
+    #             service = resp.headers.get('Server')
+    #         except:
+    #             service = ''
+    #         try:
+    #             content = text
+    #         except:
+    #             content = ''
+    #         return title, service, content
+    #     except:
+    #         title = ''
+    #         return title, '', ''
 
     # 匹配每个页面中的子域名
     def matchSubdomain(self, domain, text):

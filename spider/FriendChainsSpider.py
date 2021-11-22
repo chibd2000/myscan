@@ -11,7 +11,7 @@ class FriendChainsSpider(BaseSpider):
         super().__init__()
         self.domain = domain
         self.resList = domainList
-        self.source = 'friendChainsSpider'
+        self.source = 'FriendChainsSpider'
 
     def writeFile(self, web_lists, page):
         pass
@@ -75,7 +75,7 @@ class FriendChainsSpider(BaseSpider):
         except asyncio.CancelledError as e:
             print('[-] friendChainSpider Task was cancelled, error is {}'.format(e.__str__))
         except Exception as e:
-            print('[-] curl is error, error is {}'.format(e.__str__()))
+            print('[-] curl is error, error is {}'.format(e.args))
 
         # 返回结果
         self.resList = list(set(self.resList))

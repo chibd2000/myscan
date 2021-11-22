@@ -22,7 +22,7 @@ class Rapiddns(BaseThird):
                 else:
                     print('[-] rapiddns API No Subdomains.')
         except Exception as e:
-            print('[-] curl rapiddns api error. {}'.format(e.args))
+            print('[-] curl rapiddns api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

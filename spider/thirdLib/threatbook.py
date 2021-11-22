@@ -21,7 +21,7 @@ class Threatbook(BaseThird):
                 text = await AsyncFetcher.fetch(session=session,
                                                 url=self.addr.format(API_KEY=self.api, DOMAIN=self.domain))
         except Exception as e:
-            print('[-] curl threatbook.cn api error. {}'.format(e.args))
+            print('[-] curl threatbook.cn api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

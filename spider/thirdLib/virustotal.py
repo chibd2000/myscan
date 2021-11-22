@@ -28,7 +28,7 @@ class Virustotal(BaseThird):
                     else:
                         print('[-] VirusTotal API No Subdomains.')
         except Exception as e:
-            print('[-] curl virustotal.com api error.')
+            print('[-] curl virustotal.com api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

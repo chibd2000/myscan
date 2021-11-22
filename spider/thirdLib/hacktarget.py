@@ -25,7 +25,7 @@ class Hacketarget(BaseThird):
         except aiohttp.ClientHttpProxyError:
             print('[-] curl api.hackertarget.com need outer proxy.')
         except Exception as e:
-            print('[-] curl api.hackertarget.com api error. {}'.format(e.args))
+            print('[-] curl api.hackertarget.com api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

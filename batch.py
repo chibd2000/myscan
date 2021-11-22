@@ -4,6 +4,7 @@ from core.MyModuleLoader import ModuleLoader
 from core.MyConstant import ModulePath
 from core.utils.FuzzDifflib import MyDifflib
 from core.utils.PortWrapper import PortWrapper
+from core.MyLogger import Logger
 from core.MyGlobalVariableManager import GlobalVariableManager
 
 from spider.BeianSpider import BeianSpider
@@ -59,7 +60,7 @@ gDomainList = []  # 用来存储所有匹配到的子域名和一些隐形资产
 gDomainAliveList = []
 gIpPortServiceList = []
 gWebParamsList = []  # 存储可注入探测参数列表 ["http://www.baidu.com/?id=1111*"]
-
+gLogger = Logger('./log/logs.txt')
 
 # Spider
 class Spider(object):
@@ -78,7 +79,7 @@ class Spider(object):
 
     # beian spider
     def beianSpider(self):
-        logging.info("beianSpider Start")
+        gLogger.info("BeianSpider Start")
         beian = BeianSpider(self.domain)
         loop = asyncio.get_event_loop()
         asyncio.set_event_loop(loop)
@@ -86,7 +87,7 @@ class Spider(object):
 
     # github spider
     def ksubdomainSpider(self):
-        logging.info("ksubdomainSpider Start")
+        gLogger.info("KSubdomainSpider Start")
         global gDomainList
         ksubdomainList = []
         ksubdomain_folder = './ksubdomain'
@@ -106,7 +107,7 @@ class Spider(object):
 
     # baidu Spider
     def baiduSpider(self):
-        logging.info("baiduSpider Start")
+        gLogger.info("BaiduSpider Start")
         global gDomainList
         baidu = BaiduSpider(self.domain)
         loop = asyncio.new_event_loop()
@@ -118,7 +119,7 @@ class Spider(object):
 
     # bing Spider
     def bingSpider(self):
-        logging.info("bingSpider Start")
+        gLogger.info("BingSpider Start")
         global gDomainList
         bing = BingSpider(self.domain)
         loop = asyncio.new_event_loop()
@@ -130,7 +131,7 @@ class Spider(object):
 
     # third Spider
     def thirdSpider(self):
-        logging.info("thirdSpider Start")
+        gLogger.info("ThirdSpider Start")
         global gDomainList
         sys.path.append(abs_path + ModulePath.THIRDLIB)
         thirdModuleList = filter(lambda x: (True, False)[x[-3:] == 'pyc' or x[-5:] == '__.py' or x[:2] == '__'],
@@ -158,7 +159,7 @@ class Spider(object):
 
     # ssl Spider
     def ctfrSpider(self):
-        logging.info("ctfrSpider Start")
+        gLogger.info("CtfrSpider Start")
         global gDomainList
         cftr = CtfrSpider(self.domain)
         loop = asyncio.new_event_loop()
@@ -171,7 +172,7 @@ class Spider(object):
 
     # github spider
     def githubSpider(self):
-        logging.info("githubSpider Start")
+        gLogger.info("GithubSpider Start")
         global gDomainList
         github = GithubSpider(self.domain)
         loop = asyncio.new_event_loop()
@@ -184,7 +185,7 @@ class Spider(object):
 
     # FOFA/Shodan/Quake360
     def netSpider(self):
-        logging.info("netSpider Start")
+        gLogger.info("NetSpider Start")
         global gDomainList
         net = NetSpider(self.domain)
         loop = asyncio.new_event_loop()
@@ -197,7 +198,7 @@ class Spider(object):
 
     # 友链爬取
     def friendChainsSpider(self):
-        logging.info("friendChainsSpider Start")
+        gLogger.info("FriendChainsSpider Start")
         global gDomainList
         # queue = asyncio.Queue(-1)
         # for domain in self.domainList:
@@ -214,7 +215,7 @@ class Spider(object):
 
     # asyncio domain2ip
     def domain2ip(self):
-        logging.info("domain2ipSpider Start")
+        gLogger.info("Domain2ipSpider Start")
         global gDomainList
         ip2domainList = []
         for subdomain in gDomainList:
@@ -243,7 +244,7 @@ class Spider(object):
 
     # resolve ip2domain
     def ip2domain(self):
-        logging.info("ip2domainSpider Start")
+        gLogger.info("Ip2domainSpider Start")
         global gDomainList
         self.ipList = [i for i in self.ipList if i != '']  # 清洗一遍，这里面可能存在一个''，空字符串
         loop = asyncio.get_event_loop()
@@ -278,7 +279,7 @@ class Spider(object):
     #     pool.join()
 
     def ipPortSpider(self):
-        logging.info("portSpider Start")
+        gLogger.info("PortSpider Start")
         global gIpPortServiceList
         portscan = PortScan(self.domain, self.ipPortList)
         loop = asyncio.get_event_loop()
@@ -301,22 +302,19 @@ class Spider(object):
             workbook.save(abs_path + str(domain) + ".xlsx")
             workbook.close()
 
-        logging.info("aliveSpider Start")
+        gLogger.info("AliveSpider Start")
         global gDomainList, gWebParamsList, gDomainAliveList
-        pbar = tqdm(total=len(gDomainList), desc='[{}]'.format('aliveSpider'), ncols=100)
+        pbar = tqdm(total=len(gDomainList), desc='[{}]'.format('AliveSpider'), ncols=100)
         aliveSpider = AliveSpider(self.domain, gDomainList, pbar)
         loop = asyncio.get_event_loop()
-        linkList, gDomainAliveList = loop.run_until_complete(aliveSpider.main())
-        self.lock.acquire()
-        gWebParamsList.extend(linkList)
-        self.lock.release()
+        gWebParamsList, gDomainAliveList = loop.run_until_complete(aliveSpider.main())
         saveWebParamsList(self.domain, gWebParamsList)
 
     # main start
     def run(self):
         # 检查cdn @author ske(大师兄)
         def checkCdn(domain):
-            logging.info("checkCdn start")
+            gLogger.info("CheckCdn start")
             randomStr = "abcdefghijklmn"
 
         # 整理数据，相关格式之类的整理
@@ -423,6 +421,7 @@ class Spider(object):
             # 结果为如下:
             # generate admin.FUZZ.azxc.com
             # test.FUZZ-xwow.azxc.com
+            gLogger.info("DomainSimilarityMatch start")
             resList = []
             newDomainList = [i for i in domainList if domain in i]
             domainIndex = 0
@@ -448,9 +447,12 @@ class Spider(object):
             workbook.close()
 
         global gDomainList, gDomainAliveList, gIpPortServiceList, gWebParamsList
+
         # -----------------------
+
         # 0、备案查询
-        self.beianSpider()
+        # self.beianSpider()
+
         # 1、checkCdn
         # checkCdn(self.domain)
 
@@ -483,10 +485,10 @@ class Spider(object):
         self.friendChainsSpider()
 
         # 7、domain2ip
-        self.domain2ip()
+        # self.domain2ip()
 
         # 8、ip2domain
-        self.ip2domain()
+        # self.ip2domain()
 
         # 9、sslSpider @keefe @行牛 @ske 2021.09.01 SSL
         # self.sslSpider()
@@ -495,17 +497,17 @@ class Spider(object):
         self.aliveSpider()
 
         # 11、asn和ip段整理
-        flushIpSegment(self.domain, self.ipList, self.ipSegmentList)
-        flushAsn(self.domain, self.asnList)
+        # flushIpSegment(self.domain, self.ipList, self.ipSegmentList)
+        # flushAsn(self.domain, self.asnList)
 
         # 12、过滤属于CDN网段的IP
         # filterCDN()
 
         # 13、port scan in self.ipPortList
         # print('portConfig: ', portConfig)
-        portConfig = GlobalVariableManager.getValue('portConfig')
-        PortWrapper.generatePorts(portConfig, self.ipPortList)
-        self.ipPortSpider()
+        # portConfig = GlobalVariableManager.getValue('portConfig')
+        # PortWrapper.generatePorts(portConfig, self.ipPortList)
+        # self.ipPortSpider()
 
         # 14、去重子域名
         gDomainList = list(set(gDomainList))
@@ -514,24 +516,24 @@ class Spider(object):
         getSimilarityMatch(self.domain, gDomainList)
 
         print('==========================')
-        print('[+] [AsnList] [{}] {}'.format(len(self.asnList), self.asnList))
+        gLogger.info('[+] [AsnList] [{}] {}'.format(len(self.asnList), self.asnList))
         print('==========================')
-        print('[+] [IpList] [{}] {}'.format(len(self.ipList), self.ipList))
+        gLogger.info('[+] [IpList] [{}] {}'.format(len(self.ipList), self.ipList))
         print('==========================')
-        print('[+] [IpSegmentList] [{}] {}'.format(len(self.ipSegmentList), self.ipSegmentList))
+        gLogger.info('[+] [IpSegmentList] [{}] {}'.format(len(self.ipSegmentList), self.ipSegmentList))
         print('==========================')
-        print('[+] [IpPortList] [{}] {}'.format(len(self.ipPortList), self.ipPortList))
+        gLogger.info('[+] [IpPortList] [{}] {}'.format(len(self.ipPortList), self.ipPortList))
         print('==========================')
-        print('[+] [JavaScriptParamsList] [{}] {}'.format(len(self.javaScriptParamList), self.javaScriptParamList))
+        gLogger.info('[+] [JavaScriptParamsList] [{}] {}'.format(len(self.javaScriptParamList), self.javaScriptParamList))
         print('==========================')
-        print('[+] [gWebParamsList] [{}] {}'.format(len(gWebParamsList), gWebParamsList))
+        gLogger.info('[+] [gWebParamsList] [{}] {}'.format(len(gWebParamsList), gWebParamsList))
         print('==========================')
-        print('[+] [gIpPortServiceList] [{}] {}'.format(len(gIpPortServiceList), gIpPortServiceList))
+        gLogger.info('[+] [gIpPortServiceList] [{}] {}'.format(len(gIpPortServiceList), gIpPortServiceList))
         print('==========================')
-        print('[+] [gDomainList] [{}] {}'.format(len(gDomainList), gDomainList))
+        gLogger.info('[+] [gDomainList] [{}] {}'.format(len(gDomainList), gDomainList))
         print('==========================')
-        print('[+] [gDomainAliveList] [{}] {}'.format(len(gDomainAliveList), gDomainAliveList))
-
+        gLogger.info('[+] [gDomainAliveList] [{}] {}'.format(len(gDomainAliveList), gDomainAliveList))
+        exit(0)
 
 # Exploit
 class Exploit(object):
@@ -565,7 +567,7 @@ class Exploit(object):
 
     # 基于网站参数的漏扫
     def sqlExploit(self, webParamsList):
-        logging.info('SqlScan Start')
+        gLogger.info('SqlScan Start')
         # queue = asyncio.Queue(-1)
         # for aTask in webParamsList:
         #     pass
@@ -574,7 +576,7 @@ class Exploit(object):
 
     # 基于网站框架的漏扫
     def webExploit(self, domainList):
-        logging.info('CmsScan Start')
+        gLogger.info('CmsScan Start')
         moduleLoader = ModuleLoader('exploit')
         moduleList = moduleLoader.moduleLoad(moduleType='exploit')
         cmsScan = CmsScan(self.domain, domainList, moduleList)
@@ -590,7 +592,7 @@ class Exploit(object):
 
     # 基于端口服务的漏扫
     def serviceExploit(self, ipPortServiceList):
-        logging.info('ServiceScan Start')
+        gLogger.info('ServiceScan Start')
         total = 0
         for targetService in ipPortServiceList:
             total += len(targetService['ip'])
@@ -635,8 +637,8 @@ def parse_args():
                         help='Load/Show Payload Module(exploit/third/all)，example: -m exploit')
     parser.add_argument('-f', '--file', type=str, help='a file')
     parser.add_argument('-fs', '--fofa', type=str, help='fofa scan title. for example: -fs "domain=\"zjhu.edu.cn\"')
-    parser.add_argument('-ss', '--servicescan', action='store_true', help='for service scan.')
-    parser.add_argument('-cs', '--cmsscan', action='store_true', help='for cms scan.')
+    parser.add_argument('-ss', '--serviceScan', action='store_true', help='for service scan.')
+    parser.add_argument('-cs', '--cmsScan', action='store_true', help='for cms scan.')
     parser.add_argument('-x', '--proxy', help='http proxy')
     parser.add_argument('-v', '--version', action='version', version=getVersion(), help='Display version')
     # parser.add_argument('-f', '--file', type=str, help='file')
@@ -741,10 +743,10 @@ if __name__ == '__main__':
         portscan = PortScan('result.com', ipPortList)
         loop = asyncio.get_event_loop()
         ipPortServiceList, httpList = loop.run_until_complete(portscan.main())
-        print("=========Service=========")
-        print(ipPortServiceList)
-        print("=========HTTP============")
-        print(httpList)
+        print("==================Service========================")
+        gLogger.info(ipPortServiceList)
+        print("==================HTTP========================")
+        gLogger.info(httpList)
         print("[+] 总花费时间: " + str(time.time() - starttime))
         exit(0)
     if args.module and args.domain is None:

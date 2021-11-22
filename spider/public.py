@@ -21,7 +21,7 @@ try:
 
     from core.MyAsyncHttp import *
     from spider.common.config import *
-    # from common.tools import *
+    from common.tools import *
 
     if sys.platform == 'win32':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -31,8 +31,6 @@ try:
     #     asyncio.set_event_loop(loop)
 
     requests.packages.urllib3.disable_warnings()
-    logging.basicConfig(level=logging.INFO, filemode='a', format="[%(levelname)s]%(asctime)s %(message)s")
-    filename = './logs/log.txt'
 except ImportError as e:
     print('import public spider module error, {}'.format(e.__str__()))
     exit(0)

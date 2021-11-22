@@ -24,7 +24,7 @@ class Ximcx(BaseThird):
                 else:
                     print('ximcx API No Subdomains.')
         except Exception as e:
-            print('[-] curl ximcx api error. {}'.format(e.args))
+            print('[-] curl ximcx api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[{}] {}'.format(len(self.resList), self.resList))

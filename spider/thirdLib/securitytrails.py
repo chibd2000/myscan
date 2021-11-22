@@ -28,7 +28,7 @@ class Securitytrails(BaseThird):
                 else:
                     print('securitytrails API No Subdomains.')
         except Exception as e:
-            print('[-] curl securitytrails api error. {}'.format(e.args))
+            print('[-] curl securitytrails api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [securitytrails] [{}] {}'.format(len(self.resList), self.resList))
@@ -42,4 +42,4 @@ async def do(domain):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    res = loop.run_until_complete(do('nbcc.cn'))
+    res = loop.run_until_complete(do('huolala.cn'))

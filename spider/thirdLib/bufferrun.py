@@ -40,9 +40,13 @@ class Bufferover(BaseThird):
                             resList.append(subdomain)
                         return resList
                     else:
-                        print('[-] bufferover API No Subdomains.')
+                        print('[-] bufferover No data query.')
+        except TimeoutError:
+            print('[-] curl dns.bufferover.run error, the error is Timeout.')
+        except ConnectionRefusedError:
+            print('[-] curl dns.bufferover.run error, the error is ConnectionRefused.')
         except Exception as e:
-            print('[-] curl dns.bufferover.run api error. {}'.format(e.__str__()))
+            print('[-] curl dns.bufferover.run error, the error is {}'.format(e.args))
 
     async def spider(self):
         async def getProxy():

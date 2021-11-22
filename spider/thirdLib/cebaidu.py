@@ -23,9 +23,9 @@ class CeBaidu(BaseThird):
                         for _ in ret_json['data']:
                             self.resList.append(_['domain'])
                     else:
-                        print('[-] CeBaidu API No Subdomains.')
+                        print('[-] ceBaidu API No Subdomains.')
         except Exception as e:
-            print('[-] curl ce.baidu.com api error. {}'.format(e.args))
+            print('[-] curl ce.baidu.com api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

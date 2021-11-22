@@ -67,7 +67,7 @@ class GithubSpider(BaseSpider):
                 await asyncio.sleep(2)
                 return text
         except Exception as e:
-            print('[-] [{}] curl {} error, {}'.format(self.source, self.addr, e.__str__()))
+            print('[-] [{}] curl {} error, the error is {}'.format(self.source, self.addr, e.args))
 
     async def getSubdomains(self, session, url):
         async with session.get(url=url, headers=self.headers, timeout=self.reqTimeout, verify_ssl=False, proxy='http://127.0.0.1:7890') as response:
@@ -134,7 +134,7 @@ class GithubSpider(BaseSpider):
         except KeyError as e:
             print('[-] [{}] get total_count error, please check your API Limit'.format(self.source))
         except Exception as e:
-            print('[-] [{}] curl error, the erorr is {}'.format(self.source, e.__str__()))
+            print('[-] [{}] curl api.github.com error, the erorr is {}'.format(self.source, e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

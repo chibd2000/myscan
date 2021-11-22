@@ -32,7 +32,7 @@ class BeianSpider(BaseSpider):
             workbook.save(abs_path + str(self.domain) + ".xlsx")
             workbook.close()
         except Exception as e:
-            print('[-] [{}] writeFile error, error is {}'.format(self.source, e.__str__()))
+            print('[-] [{}] writeFile error, error is {}'.format(self.source, e.args))
 
     # 解析chinaz返回结果的json数据
     # @ske@ske
@@ -82,11 +82,11 @@ class BeianSpider(BaseSpider):
                                                         text3 = await response3.json()
                                                         self.parseJson(text3)
                             except Exception as e:
-                                print('[-] curl {} error, {}'.format(self.addr2, e.__str__()))
+                                print('[-] curl {} error, {}'.format(self.addr2, e.args))
                         else:
                             print('没有匹配到公司名')
         except Exception as e:
-            print('[-] curl BeianSpider error, {}'.format(self.addr1.format(self.domain), e.__str__()))
+            print('[-] curl BeianSpider error, {}'.format(self.addr1.format(self.domain), e.args))
 
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         # 列表中的字典去重/写入文件

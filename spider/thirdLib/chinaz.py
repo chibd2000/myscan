@@ -29,7 +29,7 @@ class Chinaz(BaseThird):
                         else:
                             print('chinaz API No Subdomains.')
         except Exception as e:
-            print('[-] curl chinaz.com api error. {}'.format(e.args))
+            print('[-] curl chinaz.com api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[{}] {}'.format(len(self.resList), self.resList))

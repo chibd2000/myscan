@@ -7,7 +7,7 @@ from spider import BaseSpider
 class Ip2domainSpider(BaseSpider):
     def __init__(self, domain, ipList):
         super().__init__()
-        self.source = 'ip2domain'
+        self.source = 'Ip2domainSpider'
         self.domain = domain
         self.ipList = ipList
         self.addr = 'http://api.webscan.cc/?action=query&ip={}'
@@ -46,7 +46,7 @@ class Ip2domainSpider(BaseSpider):
                                     self.resList.append(_)
 
         except Exception as e:
-            print('[error] ip2domain: {} {}'.format(ip, e.__str__()))
+            print('[-] curl api.webscan.cc error, the error is {}'.format(e.args))
 
     async def spider(self):
         concurrency = 50  # 这里的话稍微控制下并发量

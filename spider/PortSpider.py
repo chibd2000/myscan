@@ -368,6 +368,7 @@ class PortScan(BaseSpider):
     def __init__(self, domain, ipPortList):
         super().__init__()
         self.domain = domain
+        self.source = 'PortSpider'
         self.ipPortList = ipPortList
         self.loop = asyncio.get_event_loop()
         self.serviceScan = ServiceScan()
@@ -436,7 +437,6 @@ class PortScan(BaseSpider):
                 task = asyncio.create_task(self.scan(semaphore, ip, port))
                 taskList.append(task)
         await asyncio.gather(*taskList)
-
         # http 处理 会放到self.domainList，交给cmsExp来进行处理
         # [
         #   {'service': 'ssh', 'ip': ['1.1.1.1:22','2.2.2.2:23']},

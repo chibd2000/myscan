@@ -3,7 +3,6 @@ from spider.thirdLib.public import *
 from spider.thirdLib import BaseThird
 
 
-
 class Sublist3r(BaseThird):
     def __init__(self, domain):
         super().__init__()
@@ -24,7 +23,7 @@ class Sublist3r(BaseThird):
                     else:
                         print('[-] Sublist3r API No Subdomains.')
         except Exception as e:
-            print('[-] curl api.sublist3r.com api error. {}'.format(e.args))
+            print('[-] curl api.sublist3r.com api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
@@ -39,4 +38,4 @@ async def do(domain):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    res = loop.run_until_complete(do('baidu.com'))
+    res = loop.run_until_complete(do('huolala.cn'))

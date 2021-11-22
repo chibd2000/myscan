@@ -42,7 +42,7 @@ class Entrus(BaseThird):
                 for _ in result:
                     self.resList.append(_['subjectDN'].split(',')[0].replace('cn=', '').replace('*.', ''))
         except Exception as e:
-            print('[-] curl entrus.com api error. {}'.format(e.args))
+            print('[-] curl entrus.com api error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

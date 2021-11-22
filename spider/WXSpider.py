@@ -83,7 +83,7 @@ def getWxProgram():
         print("返回的程序名: " + ",".join(appNameList))
         print("返回的程序ID: " + ",".join(appIdList))
     except Exception as e:
-        print("[-] 小程序列表获取失败，error is {}".format(e.__str__()))
+        print("[-] 小程序列表获取失败，error is {}".format(e.args))
         exit(0)
 
     # 获取上面微信小程序中要指定获取的小程序id中的 "服务及数据由一下网站提供" 的内容
