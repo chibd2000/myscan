@@ -2,7 +2,7 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-09-07 20:54
 
-from spider.common.config import top_banner_port
+from core.MySetting import top_banner_port
 import IPy
 from socket import inet_ntoa
 from struct import pack

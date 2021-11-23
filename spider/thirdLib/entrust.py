@@ -8,6 +8,9 @@ from spider.thirdLib import BaseThird
 
 
 class Entrus(BaseThird):
+    """
+    entrust third spider
+    """
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
@@ -42,7 +45,7 @@ class Entrus(BaseThird):
                 for _ in result:
                     self.resList.append(_['subjectDN'].split(',')[0].replace('cn=', '').replace('*.', ''))
         except Exception as e:
-            print('[-] curl entrus.com api error, the error is {}'.format(e.args))
+            print('[-] curl ctsearch.entrus.com error, the error is {}'.format(e.args))
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

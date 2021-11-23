@@ -1,6 +1,8 @@
 # coding=utf-8
+
 import xlsxwriter
 import random
+from tldextract import extract
 
 url_rules = {'.com.cn', '.org.cn', '.net.cn', '.com', '.cn', '.cc', '.net', '.org', '.info', '.fun', '.one', '.xyz',
              '.name', '.io', '.top', '.me', '.club', '.tv', '.uk', '.hk'}
@@ -128,6 +130,11 @@ def getPortService(port):
     return 'Unknown'
 
 
+def getRootdomain(url):
+    val = extract(url)
+    return f'{val.domain}.{val.suffix}' if val.domain and val.suffix else ''
+
+
 # 创建图表
 def createXlsx(target):
     workbook = xlsxwriter.Workbook(target + ".xlsx")
@@ -195,7 +202,7 @@ def createXlsx(target):
     worksheet9.write_row('A1', headings9)
 
     worksheet10 = workbook.add_worksheet('Fofa')
-    headings10 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
+    headings10 = ['空间引擎名', 'HOST', '标题', 'ip', '根域名', '端口', '服务', '协议', 'asn', '查询语句']
     worksheet10.set_column('A:A', 12)
     worksheet10.set_column('B:B', 28)
     worksheet10.set_column('C:C', 37)
@@ -209,7 +216,7 @@ def createXlsx(target):
     worksheet10.write_row('A1', headings10)
 
     worksheet11 = workbook.add_worksheet('Hunter')
-    headings11 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
+    headings11 = ['空间引擎名', 'HOST', '标题', 'ip', '根域名', '端口', '服务', '协议', 'asn', '查询语句']
     worksheet11.set_column('A:A', 12)
     worksheet11.set_column('B:B', 28)
     worksheet11.set_column('C:C', 37)
@@ -223,7 +230,7 @@ def createXlsx(target):
     worksheet11.write_row('A1', headings11)
 
     worksheet12 = workbook.add_worksheet('Quake')
-    headings12 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
+    headings12 = ['空间引擎名', 'HOST', '标题', 'ip', '根域名', '端口', '服务', '协议', 'asn', '查询语句']
     worksheet12.set_column('A:A', 12)
     worksheet12.set_column('B:B', 28)
     worksheet12.set_column('C:C', 37)
@@ -237,7 +244,7 @@ def createXlsx(target):
     worksheet12.write_row('A1', headings12)
 
     worksheet13 = workbook.add_worksheet('Shodan')
-    headings13 = ['空间引擎名', 'HOST', '标题', 'ip', '子域名', '端口', '服务', '协议', 'asn', '查询语句']
+    headings13 = ['空间引擎名', 'HOST', '标题', 'ip', '根域名', '端口', '服务', '协议', 'asn', '查询语句']
     worksheet13.set_column('A:A', 12)
     worksheet13.set_column('B:B', 28)
     worksheet13.set_column('C:C', 37)

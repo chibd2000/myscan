@@ -5,6 +5,9 @@ from spider.thirdLib import BaseThird
 
 
 class CeBaidu(BaseThird):
+    """
+    ceBaidu third spider
+    """
     def __init__(self, domain):
         super().__init__()
         self.domain = domain

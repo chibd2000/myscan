@@ -4,6 +4,9 @@ from spider.thirdLib import BaseThird
 
 
 class Qianxun(BaseThird):
+    """
+    qianxun third spider
+    """
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
@@ -30,7 +33,7 @@ class Qianxun(BaseThird):
                             break
                     page += 1
         except Exception as e:
-            print('[-] curl dnsscan.cn api error, the error is {}'.format(e.args))
+            print('[-] curl dnsscan.cn error, the error is {}'.format(e.args))
 
         for value in enumerate(self.resList.copy()):
             if '*' in value:

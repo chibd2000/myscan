@@ -1,4 +1,7 @@
 # coding=utf-8
+# @Author   : zpchcbd HG team
+# @blog     : https://www.cnblogs.com/zpchcbd/
+# @Time     : 2020-11-23 20:45
 
 from core.MyModuleLoader import ModuleLoader
 from core.MyConstant import ModulePath
@@ -61,6 +64,7 @@ gDomainAliveList = []
 gIpPortServiceList = []
 gWebParamsList = []  # 存储可注入探测参数列表 ["http://www.baidu.com/?id=1111*"]
 gLogger = Logger('./log/logs.txt')
+
 
 # Spider
 class Spider(object):
@@ -465,14 +469,14 @@ class Spider(object):
         # self.ksubdomainSpider()
 
         # 3、第三方接口查询
-        self.thirdSpider()
+        # self.thirdSpider()
 
         # 4、SSL/engine/netSpace/github查询
-        self.threadList.append(Thread(target=self.baiduSpider, ))
-        self.threadList.append(Thread(target=self.bingSpider, ))
-        self.threadList.append(Thread(target=self.ctfrSpider, ))
+        # self.threadList.append(Thread(target=self.baiduSpider, ))
+        # self.threadList.append(Thread(target=self.bingSpider, ))
+        # self.threadList.append(Thread(target=self.ctfrSpider, ))
         self.threadList.append(Thread(target=self.netSpider, ))
-        self.threadList.append(Thread(target=self.githubSpider, ))
+        # self.threadList.append(Thread(target=self.githubSpider, ))
         for _ in self.threadList:
             _.start()
         for _ in self.threadList:
@@ -482,7 +486,7 @@ class Spider(object):
         # self.flushResult()
 
         # 6、友链爬取
-        self.friendChainsSpider()
+        # self.friendChainsSpider()
 
         # 7、domain2ip
         # self.domain2ip()
@@ -494,7 +498,7 @@ class Spider(object):
         # self.sslSpider()
 
         # 10、alive
-        self.aliveSpider()
+        # self.aliveSpider()
 
         # 11、asn和ip段整理
         # flushIpSegment(self.domain, self.ipList, self.ipSegmentList)
@@ -513,7 +517,7 @@ class Spider(object):
         gDomainList = list(set(gDomainList))
 
         # 15、可探测FUZZ收集
-        getSimilarityMatch(self.domain, gDomainList)
+        # getSimilarityMatch(self.domain, gDomainList)
 
         print('==========================')
         gLogger.info('[+] [AsnList] [{}] {}'.format(len(self.asnList), self.asnList))
@@ -534,6 +538,7 @@ class Spider(object):
         print('==========================')
         gLogger.info('[+] [gDomainAliveList] [{}] {}'.format(len(gDomainAliveList), gDomainAliveList))
         exit(0)
+
 
 # Exploit
 class Exploit(object):
@@ -629,14 +634,12 @@ def parse_args():
     parser.add_argument('-u', '--url', type=str, help='a url. for example: -u zjhu.edu.cn')
     parser.add_argument('-d', '--domain', type=str, help='Target domain. for example: -d zjhu.edu.cn')
     parser.add_argument('-cn', '--company', type=str, help='Target company. for example: -cn 横戈信息安全有限公司')
-    parser.add_argument('-i', '--ips', type=str,
-                        help='Target ip. for example: -i 192.168.1.1-192.168.1.127,192.168.3.1-192.168.3.255 | 192.168.1.0/24,192.168.3.0/24 | 192.168.1.1,192.168.1.2')
-    parser.add_argument('-p', '--port', type=str, default='top100',
-                        help='Every Ip port, default top100, for example: -p top100')
-    parser.add_argument('-m', '--module', type=str,
-                        help='Load/Show Payload Module(exploit/third/all)，example: -m exploit')
+    parser.add_argument('-i', '--ips', type=str, help='Target ip. for example: -i 192.168.1.1-192.168.1.127,192.168.3.1-192.168.3.255 | 192.168.1.0/24,192.168.3.0/24 | 192.168.1.1,192.168.1.2')
+    parser.add_argument('-p', '--port', type=str, default='top100', help='Every Ip port, default top100, for example: -p top100')
+    parser.add_argument('-m', '--module', type=str, help='Load/Show Payload Module(exploit/third/all)，example: -m exploit')
     parser.add_argument('-f', '--file', type=str, help='a file')
-    parser.add_argument('-fs', '--fofa', type=str, help='fofa scan title. for example: -fs "domain=\"zjhu.edu.cn\"')
+    parser.add_argument('-fs', '--fofa', type=str, help='fofa scan title. for example: -fs "domain=\"hengGe.cn\"')
+    parser.add_argument('-k', '--ksub', action='store_true', help='for example: -k')
     parser.add_argument('-ss', '--serviceScan', action='store_true', help='for service scan.')
     parser.add_argument('-cs', '--cmsScan', action='store_true', help='for cms scan.')
     parser.add_argument('-x', '--proxy', help='http proxy')

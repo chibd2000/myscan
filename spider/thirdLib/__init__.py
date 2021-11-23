@@ -1,4 +1,5 @@
 # coding=utf-8
+import re
 
 
 class BaseThird(object):
@@ -22,3 +23,12 @@ class BaseThird(object):
         self.reqTimeout = 10
         self.source = "BaseThird"
         self.domain = ''
+
+    # 匹配每个页面中的子域名
+    def matchSubdomain(self, domain, text):
+        regexp = r'(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.){0,}' + domain.replace('.', r'\.')
+        result = re.findall(regexp, text, flags=re.I | re.S)
+        if not result:
+            return list()
+        deal = map(lambda s: s.lower(), result)
+        return list(deal)

@@ -7,6 +7,9 @@ from spider.thirdLib import BaseThird
 
 
 class Alien(BaseThird):
+    """
+    alienvault third spider
+    """
     def __init__(self, domain):
         super().__init__()
         self.domain = domain

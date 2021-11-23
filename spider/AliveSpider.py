@@ -32,6 +32,7 @@ class ParamSpider:
 
     # learn from langzi
     async def getDynamicScriptLinks(self, session, domain, result):
+        """实现动态脚本参数的获取"""
         scriptLinks = []
         htmlLinks = []
         scriptFinaLinks = []
@@ -139,6 +140,7 @@ class ParamSpider:
 
     # learn from jsfinder
     async def getJavascriptLinks(self, session, domain, text):
+        """实现javascript参数的获取 特征"/static/js/app" "/static/js/main"  """
         jsUrlList = self.extractURL(text)
         for aJs in jsUrlList:
             pass
@@ -168,14 +170,86 @@ class ParamSpider:
               (?:"|')                               # End newline delimiter
             """
         pattern = re.compile(pattern_raw, re.VERBOSE)
-        result = re.finditer(pattern, str(content))
+        result = re.finditer(pattern, str(JS))
         if result == None:
             return None
         js_url = []
-        for match in result:
-            if match.group() not in js_url:
-                js_url.append(match.group().strip('"').strip("'"))
-        return js_url
+        return [match.group().strip('"').strip("'") for match in result
+                if match.group() not in js_url]
+
+    # Handling relative URLs
+    def process_url(self, URL, re_URL):
+        black_url = ["javascript:"]  # Add some keyword for filter url.
+        URL_raw = urlparse(URL)
+        ab_URL = URL_raw.netloc
+        host_URL = URL_raw.scheme
+        if re_URL[0:2] == "//":
+            result = host_URL + ":" + re_URL
+        elif re_URL[0:4] == "http":
+            result = re_URL
+        elif re_URL[0:2] != "//" and re_URL not in black_url:
+            if re_URL[0:1] == "/":
+                result = host_URL + "://" + ab_URL + re_URL
+            else:
+                if re_URL[0:1] == ".":
+                    if re_URL[0:2] == "..":
+                        result = host_URL + "://" + ab_URL + re_URL[2:]
+                    else:
+                        result = host_URL + "://" + ab_URL + re_URL[1:]
+                else:
+                    result = host_URL + "://" + ab_URL + "/" + re_URL
+        else:
+            result = URL
+        return result
+
+    def find_by_url(self, url, js=False):
+        if not js:
+            try:
+                print("url:" + url)
+            except:
+                print("Please specify a URL like https://www.baidu.com")
+            html_raw = self.Extract_html(url)
+
+            if html_raw is None:
+                print("Fail to access " + url)
+                return None
+
+            html = BeautifulSoup(html_raw, "html.parser")
+            html_scripts = html.findAll("script")
+            script_array = {}
+            script_temp = ""
+            for html_script in html_scripts:
+                script_src = html_script.get("src")
+                if script_src is None:
+                    script_temp += html_script.get_text() + "\n"
+                else:
+                    purl = self.process_url(url, script_src)
+                    script_array[purl] = self.Extract_html(purl)
+
+            script_array[url] = script_temp
+            allurls = []
+            for script in script_array:
+                # print(script)
+                temp_urls = self.extractURL(script_array[script])
+                if len(temp_urls) == 0: continue
+                for temp_url in temp_urls:
+                    allurls.append(self.process_url(script, temp_url))
+            result = []
+            for singerurl in allurls:
+                url_raw = urlparse(url)
+                domain = url_raw.netloc
+                positions = self.find_last(domain, ".")
+                miandomain = domain
+                if len(positions) > 1:miandomain = domain[positions[-2] + 1:]
+                #print(miandomain)
+                suburl = urlparse(singerurl)
+                subdomain = suburl.netloc
+                #print(singerurl)
+                if miandomain in subdomain or subdomain.strip() == "":
+                    if singerurl.strip() not in result:
+                        result.append(singerurl)
+            return result
+        return sorted(set(self.extractURL(self.Extract_html(url)))) or None
 
 
 class AliveSpider(BaseSpider):
@@ -184,14 +258,16 @@ class AliveSpider(BaseSpider):
         super().__init__()
         self.source = 'AliveSpider'
         self.detechHttpProtocalList = ['http', 'https']
+        self.backendKeywordList = ['/admin', '/login', '/manage', '/system']
         self.domain = domain
         self.domainList = domainList
+        self.pbar = pbar
         self.linkList = []  # 存储参数
         self.aliveList = []  # 最终存活域名
         self.paramSpider = ParamSpider()
-        self.pbar = pbar
         self.titleCompile = re.compile(r'<title>(?P<result>[^<]+)</title>')
         self.suffixCompile = re.compile('\.(gz|zip|rar|iso|pdf|txt|3ds|3g2|3gp|7z|DS_Store|a|aac|adp|ai|aif|aiff|apk|ar|asf|au|avi|bak|bin|bk|bmp|btif|bz2|cab|caf|cgm|cmx|cpio|cr2|dat|deb|djvu|dll|dmg|dmp|dng|doc|docx|dot|dotx|dra|dsk|dts|dtshd|dvb|dwg|dxf|ear|ecelp4800|ecelp7470|ecelp9600|egg|eol|eot|epub|exe|f4v|fbs|fh|fla|flac|fli|flv|fpx|fst|fvt|g3|gif|gz|h261|h263|h264|ico|ief|image|img|ipa|iso|jar|jpeg|jpgv|jpm|jxr|ktx|lvp|lz|lzma|lzo|m3u|m4a|m4v|mar|mdi|mid|mj2|mka|mkv|mmr|mng|mov|movie|mp3|mp4|mp4a|mpeg|mpg|mpga|mxu|nef|npx|o|oga|ogg|ogv|otf|pbm|pcx|pdf|pea|pgm|pic|png|pnm|ppm|pps|ppt|pptx|ps|psd|pya|pyc|pyo|pyv|qt|rar|ras|raw|rgb|rip|rlc|rz|s3m|s7z|scm|scpt|sgi|shar|sil|smv|so|sub|swf|tar|tbz2|tga|tgz|tif|tiff|tlz|ts|ttf|uvh|uvi|uvm|uvp|uvs|uvu|viv|vob|war|wav|wax|wbmp|wdp|weba|webm|webp|whl|wm|wma|wmv|wmx|woff|woff2|wvx|xbm|xif|xls|xlsx|xlt|xm|xpi|xpm|xwd|xz|z|zip|zipx)|javascript|:;|#|%')
+        self.beckendCompile = re.compile('登录|后台|管理|系统|admin|Manage.?')
 
     def writeFile(self, web_lists, page):
         try:
@@ -242,6 +318,8 @@ class AliveSpider(BaseSpider):
                                 if htmlFinaLinks:
                                     for htmlLink in htmlFinaLinks:
                                         self.linkList.append(htmlLink.replace('.htm', '*.htm').replace('.shtm', '*.shtm'))
+                            # 探测后台目录
+                            # self._getBackend(session, url)
         except TimeoutError:
             print('[-] curl {} error, the error is Timeout.'.format(url))
         except ConnectionRefusedError:
@@ -256,12 +334,17 @@ class AliveSpider(BaseSpider):
         finally:
             self.pbar.update(1)
 
-    async def _getBackend(self, semaphore, origin):
+    async def _getBackend(self, session, url):
         """
         这个想法是看到大师兄代码里面的，然后自己觉得也有必要添加，原因是后台管理
         也算是敏感的资产后面通过WebCrack可以快速的实现相关基于后台的弱口令探测
         """
-        pass
+        for backend in self.backendKeywordList:
+            try:
+                pass
+            except Exception as e:
+                pass
+
 
     def _getTitle(self, soup):
         """

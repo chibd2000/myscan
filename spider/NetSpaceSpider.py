@@ -1,5 +1,6 @@
 # coding=utf-8
 
+from core.exception.net import *
 from spider.public import *
 from spider import BaseSpider
 from lxml import etree
@@ -13,36 +14,151 @@ import codecs
 
 requests.packages.urllib3.disable_warnings()
 
-"""封装一个异常类处理空间引擎的异常, 学习代码"""
+
+class NetProperty:
+    """
+    封装空间引擎最终需要写入的字段
+    """
+    SPIDER_FIELD = 'spider'
+    SUBDOMAIN_FIELD = 'subdomain'
+    TITLE_FIELD = 'title'
+    IP_FIELD = 'ip'
+    DOMAIN_FIELD = 'domain'
+    PORT_FIELD = 'port'
+    WEBSERVICE_FIELD = 'web_service'
+    PORTSERVICE_FIELD = 'port_service'
+    ASN_FIELD = 'asn'
+    SEARCHKEYWORD = 'search_keyword'
 
 
-class PrivilegeException(Exception):
+class FofaProperty:
+    NAME_FIELD = 'FOFA'
+    SUBDOMAIN_FIELD = 'domain'
+    TITLE_FIELD = 'web_title'
+    IP_FIELD = 'ip'
+    DOMAIN_FIELD = 'url'
+    PORT_FIELD = 'port'
+    WEBSERVICE_FIELD = 'component'
+    PORTSERVICE_FIELD = 'port_service'
+    ASN_FIELD = 'asn'
+
+    def __init__(self, _, keyword):
+        self.name = FofaProperty.NAME_FIELD
+        self.subdomain = _.get(FofaProperty.SUBDOMAIN_FIELD, '')
+        self.portService = getPortService(_.get(FofaProperty.PORT_FIELD, ''))
+        self.rootdomain = getRootdomain(_.get(FofaProperty.DOMAIN_FIELD, ''))
+        self.port = _.get(FofaProperty.PORT_FIELD, '')
+        self.ip = _.get(FofaProperty.IP_FIELD, '')
+        self.title = _.get(FofaProperty.TITLE_FIELD, '')
+        self.webService = _.get(FofaProperty.WEBSERVICE_FIELD, '')
+        self.asn = _.get(FofaProperty.ASN_FIELD, '')
+        self.keyword = keyword
+
+    @property
+    def info(self):
+        return {NetProperty.SPIDER_FIELD: self.name, NetProperty.SUBDOMAIN_FIELD: self.subdomain,
+                NetProperty.TITLE_FIELD: self.title, NetProperty.IP_FIELD: self.ip,
+                NetProperty.DOMAIN_FIELD: self.rootdomain, NetProperty.PORT_FIELD: self.port,
+                NetProperty.WEBSERVICE_FIELD: self.webService, NetProperty.PORTSERVICE_FIELD: self.portService,
+                NetProperty.ASN_FIELD: self.asn, NetProperty.SEARCHKEYWORD: self.keyword}
+
+
+class HunterProperty:
+    """
+    封装每个对应的空间引擎所采集的字段
+    """
+    NAME_FIELD = 'HUNTER'
+    SUBDOMAIN_FIELD = 'domain'
+    TITLE_FIELD = 'web_title'
+    IP_FIELD = 'ip'
+    DOMAIN_FIELD = 'url'
+    PORT_FIELD = 'port'
+    WEBSERVICE_FIELD = 'component'
+    PORTSERVICE_FIELD = 'port_service'
+    ASN_FIELD = ''
+
+    def __init__(self, _, keyword):
+        self.name = HunterProperty.NAME_FIELD
+        self.subdomain = _.get(HunterProperty.SUBDOMAIN_FIELD, '')
+        self.portService = getPortService(_.get(HunterProperty.PORT_FIELD, ''))
+        self.rootdomain = getRootdomain(_.get(HunterProperty.DOMAIN_FIELD, ''))
+        self.port = _.get(HunterProperty.PORT_FIELD, '')
+        self.ip = _.get(HunterProperty.IP_FIELD, '')
+        self.title = _.get(HunterProperty.TITLE_FIELD, '')
+        self.webService = _.get(HunterProperty.WEBSERVICE_FIELD, '')
+        self.asn = _.get(HunterProperty.ASN_FIELD, '')
+        self.keyword = keyword
+
+    @property
+    def info(self):
+        return {NetProperty.SPIDER_FIELD: self.name, NetProperty.SUBDOMAIN_FIELD: self.subdomain,
+                NetProperty.TITLE_FIELD: self.title, NetProperty.IP_FIELD: self.ip,
+                NetProperty.DOMAIN_FIELD: self.rootdomain, NetProperty.PORT_FIELD: self.port,
+                NetProperty.WEBSERVICE_FIELD: str(self.webService), NetProperty.PORTSERVICE_FIELD: self.portService,
+                NetProperty.ASN_FIELD: self.asn, NetProperty.SEARCHKEYWORD: self.keyword}
+
+
+class QuakeProperty:
+    """
+    封装每个对应的空间引擎所采集的字段
+    """
+    NAME = 'QUAKE'
+    SUBDOMAIN = 'subdomain'
+    TITLE = 'title'
+    IP = 'ip'
+    DOMAIN = 'domain'
+    PORT = 'PORT'
+    WEBSERVICE = 'web_service'
+    PORTSERVICE = 'port_service'
+    ASN = 'asn'
+
     def __init__(self):
         pass
 
-    def __str__(self):
+    @property
+    def info(self):
+        return
+
+
+class ShodanProperty:
+    """
+    封装每个对应的空间引擎所采集的字段
+    """
+    NAME = 'SHODAN'
+    SUBDOMAIN = 'subdomain'
+    TITLE = 'title'
+    IP = 'ip'
+    DOMAIN = 'domain'
+    PORT = 'PORT'
+    WEBSERVICE = 'web_service'
+    PORTSERVICE = 'port_service'
+    ASN = 'asn'
+
+    def __init__(self):
         pass
-    # 无权限
-    # 无数据
-    # 无网络
+
+    def getInfo(self):
+        return
 
 
 class NetSpider(BaseSpider):
     def __init__(self, domain: str):
         super().__init__()
-        self.source = 'Fofa & Shodan & Quake & Hunter'
+        self.source = 'Fofa & Shodan & Quake & Hunter & Censys'
         self.domain = domain
         self.thread_list = []
         self.fofaAddr = "https://fofa.so/api/v1/search/all?email={USER_NAME}&key={API_KEY}&qbase64={B64_DATA}&fields=host,title,ip,domain,port,server,protocol,as_number&size=10000"
         self.shodanAddr = "https://api.shodan.io/shodan/host/search?key={API_KEY}&query={QUERY}&minify=true&page=1"
         self.quakeAddr = "https://quake.360.cn/api/v3/search/quake_service"
-        self.hunterAddr = "https://hunter.qianxin.com/openApi/search?username={USER_NAME}&api-key={API_KEY}&search={B64_DATA}&page=1&page_size=10"
+        self.hunterAddr = "https://hunter.qianxin.com/openApi/search?username={USER_NAME}&api-key={API_KEY}&search={B64_DATA}&page={PAGE}&page_size=100"
         self.fofaApi = config.fofaApi
         self.fofaUser = config.fofaEmail
         self.hunterApi = config.hunterApi
         self.hunterUser = config.hunterUserName
         self.quakeApi = config.quakeApi
         self.shodanApi = config.shodanApi
+        self.censysUser = config.censysId
+        self.censysApi = config.censysSecret
         self.asnList = []
         self.ipList = []
         self.IpPortList = []
@@ -78,8 +194,7 @@ class NetSpider(BaseSpider):
             print('[-] _getFaviconAndMD5 first failed, error is {}'.format(e.args))
             print('[-] _getFaviconAndMD5 second ...')
             try:
-                resp_ = requests.get(getUrl('www.' + self.domain) + '/favicon.ico', headers=self.headers,
-                                     allow_redirects=True, verify=False)
+                resp_ = requests.get(getUrl('www.' + self.domain) + '/favicon.ico', headers=self.headers, allow_redirects=True, verify=False)
                 if resp_.status_code == 200:
                     m1_ = hashlib.md5()
                     m1_.update(resp_.content)
@@ -126,16 +241,16 @@ class NetSpider(BaseSpider):
             worksheet = workbook.worksheets[page]  # 打开的是证书的sheet
             for i in web_lists:
                 web = list()
-                web.append(i['spider'])
-                web.append(i['subdomain'])
-                web.append(i['title'])
-                web.append(i['ip'])
-                web.append(i['domain'])
-                web.append(i['port'])
-                web.append(i['web_service'])
-                web.append(i['port_service'])
-                web.append(i['asn'])
-                web.append(i['search_keyword'])
+                web.append(i[NetProperty.SPIDER_FIELD])
+                web.append(i[NetProperty.SUBDOMAIN_FIELD])
+                web.append(i[NetProperty.TITLE_FIELD])
+                web.append(i[NetProperty.IP_FIELD])
+                web.append(i[NetProperty.DOMAIN_FIELD])
+                web.append(i[NetProperty.PORT_FIELD])
+                web.append(i[NetProperty.WEBSERVICE_FIELD])
+                web.append(i[NetProperty.PORTSERVICE_FIELD])
+                web.append(i[NetProperty.ASN_FIELD])
+                web.append(i[NetProperty.SEARCHKEYWORD])
                 worksheet.append(web)
             workbook.save(os.getcwd() + os.path.sep + str(self.domain) + ".xlsx")
             workbook.close()
@@ -145,150 +260,77 @@ class NetSpider(BaseSpider):
     async def fofaDomainSpider(self):
         async with aiohttp.ClientSession(headers=self.headers) as session:
             for keyword in self.fofaKeywordList:
-                try:
-                    domainList = []
-                    res = await AsyncFetcher.fetch(session=session,
-                                                   url=self.fofaAddr.format(
-                                                       USER_NAME=self.fofaUser,
-                                                       API_KEY=self.fofaApi,
-                                                       B64_DATA=base64.b64encode(keyword.encode()).decode()),
-                                                   json=True)
-
-                    for banner in res['results']:
-                        if 'http' in banner[0]:
-                            subdomain = banner[0].split('//')[1]  # https://www.baidu.com => www.baidu.com
-                        else:
-                            subdomain = banner[0]
-                        if banner[6] == '':
-                            portService = getPortService(banner[4])
-                        else:
-                            portService = banner[6]
-                        subdomainInfo = {
-                            'spider': 'FOFA',
-                            'subdomain': subdomain,
-                            'title': banner[1],
-                            'ip': banner[2],
-                            'domain': banner[3],
-                            'port': banner[4],
-                            'web_service': banner[5],
-                            'port_service': portService,
-                            'asn': banner[7],
-                            'search_keyword': keyword
-                        }
-                        # print(subdomainInfo)
-                        self.ipList.append(banner[2])
-                        self.asnList.append(int(banner[7]))
-                        self.resList.append(subdomain)
-                        domainList.append(subdomainInfo)
-                    # self.IpPortList
-                    # [
-                    #     {"ip": "1.1.1.1", "port": [7777, 8888]
-                    #     {"ip": "2.2.2.2", "port": []
-                    # ]
-                    for i in domainList:
-                        _ip = i['ip']
-                        _port = i['port']
-                        flag = True
-                        for j in self.IpPortList:
-                            if j['ip'] == i['ip']:
-                                flag = False
-                        if flag:
-                            self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
-
-                    for j in domainList:
-                        _ip = j['ip']
-                        _port = j['port']
-                        if int(_port) == 443 or int(_port) == 80:
-                            continue
-                        flag = True
-                        for k in self.IpPortList:
-                            if k['ip'] == _ip:
-                                for m in k['port']:
-                                    if int(m) == int(_port):
-                                        flag = False
-                        if flag:
-                            for p in self.IpPortList:
-                                if p['ip'] == _ip:
-                                    p['port'].append(int(_port))
-
-                    self.writeFile(getUniqueList(domainList), 9)
-                except Exception as e:
-                    print('[-] curl fofa.so error, the error is {}'.format(e.args))
-
-    async def hunterDomainSpider(self):
-        # url
-        # web_title
-        # ip
-        # domain
-        # port
-        # str(component)
-        # protocol
-
-        # host, title, ip, domain, port, server, protocol, as_number
-        async with aiohttp.ClientSession() as session:
-            for keyword in self.quakeKeywordList:
                 domainList = []
                 try:
-                    res = await AsyncFetcher.fetch(session=session, url=self.hunterAddr.format(USER_NAME=self.hunterUser, API_KEY=self.hunterApi, B64_DATA=base64.b64encode(keyword.encode()).decode()), json=True)
-                    for banner in res['data'].get('arr'):
-                        if 'http' in banner[0]:
-                            subdomain = banner[0].split('//')[1]  # https://www.baidu.com => www.baidu.com
+                    res = await AsyncFetcher.fetch(session=session, url=self.fofaAddr.format(USER_NAME=self.fofaUser, API_KEY=self.fofaApi, B64_DATA=base64.b64encode(keyword.encode()).decode()),
+                                                   json=True)
+                    for _ in res['results']:
+                        if 'http' in _[0]:
+                            subdomain = _[0].split('//')[1]  # https://www.baidu.com => www.baidu.com
                         else:
-                            subdomain = banner[0]
-                        if banner[6] == '':
-                            portService = getPortService(banner[4])
+                            subdomain = _[0]
+                        if _[6] == '':
+                            portService = getPortService(_[4])
                         else:
-                            portService = banner[6]
+                            portService = _[6]
                         subdomainInfo = {
                             'spider': 'FOFA',
                             'subdomain': subdomain,
-                            'title': banner[1],
-                            'ip': banner[2],
-                            'domain': banner[3],
-                            'port': banner[4],
-                            'web_service': banner[5],
+                            'title': _[1],
+                            'ip': _[2],
+                            'domain': _[3],
+                            'port': _[4],
+                            'web_service': _[5],
                             'port_service': portService,
-                            'asn': banner[7],
+                            'asn': _[7],
                             'search_keyword': keyword
                         }
-                        # print(subdomainInfo)
-                        self.ipList.append(banner[2])
-                        self.asnList.append(int(banner[7]))
+                        self.ipList.append(_[2])
+                        self.asnList.append(int(_[7]))
                         self.resList.append(subdomain)
                         domainList.append(subdomainInfo)
-                    # self.IpPortList
-                    # [
-                    #     {"ip": "1.1.1.1", "port": [7777, 8888]
-                    #     {"ip": "2.2.2.2", "port": []
-                    # ]
                 except Exception as e:
-                    print('[-] curl hunter.qianxin.com error, the error is {}'.format(e.args))
+                    print('[-] curl fofa.so error, the error is {}'.format(e.args))
+                self._flushResult(domainList)
+                self.writeFile(getUniqueList(domainList), 9)
 
-                for i in domainList:
-                    _ip = i['ip']
-                    _port = i['port']
-                    flag = True
-                    for j in self.IpPortList:
-                        if j['ip'] == i['ip']:
-                            flag = False
-                    if flag:
-                        self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
-                for j in domainList:
-                    _ip = j['ip']
-                    _port = j['port']
-                    if int(_port) == 443 or int(_port) == 80:
-                        continue
-                    flag = True
-                    for k in self.IpPortList:
-                        if k['ip'] == _ip:
-                            for m in k['port']:
-                                if int(m) == int(_port):
-                                    flag = False
-                    if flag:
-                        for p in self.IpPortList:
-                            if p['ip'] == _ip:
-                                p['port'].append(int(_port))
-
+    async def hunterDomainSpider(self):
+        """write time: 2021.11.24 0.12 - zpchcbd"""
+        # host, title, ip, domain, port, server, protocol, as_number
+        async with aiohttp.ClientSession() as session:
+            for keyword in self.hunterKeywordList:
+                domainList = []
+                page = 1
+                retJson = await AsyncFetcher.fetch(session=session, url=self.hunterAddr.format(USER_NAME=self.hunterUser, API_KEY=self.hunterApi, B64_DATA=base64.urlsafe_b64encode(keyword.encode()).decode(), PAGE=page), json=True)
+                if retJson['code'] == 401:
+                    raise NetPrivilegeError from None
+                if retJson['code'] == 400:
+                    raise NetPageLimitError from None
+                pages = retJson['data'].get('total', 0) // 100 + 1
+                while page <= pages:
+                    try:
+                        retJson = await AsyncFetcher.fetch(session=session, url=self.hunterAddr.format(USER_NAME=self.hunterUser, API_KEY=self.hunterApi, B64_DATA=base64.urlsafe_b64encode(keyword.encode()).decode(), PAGE=page), json=True)
+                        if retJson['code'] == 401:
+                            raise NetPrivilegeError from None
+                        if retJson['code'] == 400:
+                            raise NetPageLimitError from None
+                        result = retJson['data'].get('arr', '')
+                        if result:
+                            for _ in result:
+                                hunter = HunterProperty(_, keyword)
+                                self.ipList.append(hunter.ip)
+                                self.resList.append(hunter.subdomain)
+                                domainList.append(hunter.info)
+                        page += 1
+                    except NetPageLimitError:
+                        print('[-] check your page limit.')
+                        return
+                    except NetPrivilegeError:
+                        print('[-] check your hunter privilege.')
+                        return
+                    except Exception as e:
+                        print('[-] curl hunter.qianxin.com error, the error is {}'.format(e.args))
+                self._flushResult(domainList)
                 self.writeFile(getUniqueList(domainList), 10)
 
     async def quakeDomainSpider(self):
@@ -297,33 +339,33 @@ class NetSpider(BaseSpider):
             for keyword in self.quakeKeywordList:
                 domainList = []
                 try:
-                    params = {'query': keyword, 'size': 500, 'ignore_cache': False}
-                    res = await AsyncFetcher.postFetch2(session=session, url=self.quakeAddr, data=json.dumps(params),
-                                                        json=True)
-                    for banner in res['data']:
-                        httpModule = banner['service'].get('name', '')  # http， http-simple-new
+                    params = {'query': keyword, 'size': 2000, 'ignore_cache': True}
+                    res = await AsyncFetcher.postFetch2(session=session, url=self.quakeAddr, data=json.dumps(params), json=True)
+                    for _ in res['data']:
+                        httpModule = _['service'].get('name', '')  # http， http-simple-new
+                        portService = getPortService(_['port'])
                         if 'http' in httpModule:
-                            http = banner['service'].get('http')
+                            http = _['service'].get('http')
                             if http:
                                 subdomainInfo = {
                                     'spider': 'QUAKE',
                                     'subdomain': http['host'],
                                     'title': http['title'],
-                                    'ip': banner['ip'],
+                                    'ip': _['ip'],
                                     'domain': '',
-                                    'port': banner['port'],
+                                    'port': _['port'],
                                     'web_service': http['server'],
-                                    'port_service': getPortService(banner['port']),
-                                    'asn': banner['asn'],
+                                    'port_service': portService,
+                                    'asn': _['asn'],
                                     'search_keyword': keyword
                                 }
                                 # print(subdomainInfo)
-                                if banner['ip'] == http['host']:
-                                    self.ipList.append(banner['ip'])
-                                    self.asnList.append(int(banner['asn']))
+                                if _['ip'] == http['host']:
+                                    self.ipList.append(_['ip'])
+                                    self.asnList.append(int(_['asn']))
                                 else:
-                                    self.ipList.append(banner['ip'])
-                                    self.asnList.append(int(banner['asn']))
+                                    self.ipList.append(_['ip'])
+                                    self.asnList.append(int(_['asn']))
                                     self.resList.append(http['host'])
                                 domainList.append(subdomainInfo)
                         else:
@@ -331,46 +373,21 @@ class NetSpider(BaseSpider):
                                 'spider': 'QUAKE',
                                 'subdomain': '',
                                 'title': '',
-                                'ip': banner['ip'],
+                                'ip': _['ip'],
                                 'domain': '',
-                                'port': banner['port'],
+                                'port': _['port'],
                                 'web_service': '',
-                                'port_service': getPortService(banner['port']),
-                                'asn': banner['asn'],
+                                'port_service': portService,
+                                'asn': _['asn'],
                                 'search_keyword': keyword
                             }
-                            self.ipList.append(banner['ip'])
-                            self.asnList.append(int(banner['asn']))
+                            self.ipList.append(_['ip'])
+                            self.asnList.append(int(_['asn']))
                             domainList.append(subdomainInfo)
                 except Exception as e:
                     print('[-] curl quake.360.cn error, the error is {}'.format(e.args))
-
-                for i in domainList:
-                    _ip = i['ip']
-                    _port = i['port']
-                    flag = True
-                    for j in self.IpPortList:
-                        if j['ip'] == i['ip']:
-                            flag = False
-                    if flag:
-                        self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
-
-                # [{'ip':'1.1.1.1',}]
-                for j in domainList:
-                    _ip = j['ip']
-                    _port = j['port']
-                    if int(_port) == 443 or int(_port) == 80:
-                        continue
-                    flag = True
-                    for k in self.IpPortList:
-                        if k['ip'] == _ip:
-                            for m in k['port']:
-                                if int(m) == int(_port):
-                                    flag = False
-                    if flag:
-                        for p in self.IpPortList:
-                            if p['ip'] == _ip:
-                                p['port'].append(int(_port))
+                    return
+                self._flushResult(domainList)
                 self.writeFile(getUniqueList(domainList), 11)
 
     async def shodanDomainSpider(self):
@@ -387,48 +404,48 @@ class NetSpider(BaseSpider):
                         continue
                 # ssl:"zjhu.edu.cn" == ssl:"zjhu.edu.cn"
                 # print(api.search_cursor(keyword))
-                for banner in api.search_cursor(keyword):
+                for _ in api.search_cursor(keyword):
                     # http exist
-                    httpModule = banner['_shodan'].get('module', '')  # http， http-simple-new
+                    httpModule = _['_shodan'].get('module', '')  # http， http-simple-new
                     if 'http' in httpModule:
-                        http = banner.get('http', '')
+                        http = _.get('http', '')
                         if http:
                             subdomainInfo = {
                                 'spider': 'SHODAN',
-                                'subdomain': str(banner['hostnames']),
+                                'subdomain': str(_['hostnames']),
                                 'title': http['title'],
-                                'ip': banner['ip_str'],  # 不用host的原因是其中有时候存在域名的情况，自己这里需要把域名和IP分开收集
+                                'ip': _['ip_str'],  # 不用host的原因是其中有时候存在域名的情况，自己这里需要把域名和IP分开收集
                                 'domain': '',
-                                'port': banner['port'],
+                                'port': _['port'],
                                 'web_service': http['server'],
-                                'port_service': getPortService(banner['port']),
-                                'asn': banner['asn'][2:],
+                                'port_service': getPortService(_['port']),
+                                'asn': _['asn'][2:],
                                 'search_keyword': keyword
                             }
                             # print(subdomainInfo)
-                            self.ipList.append(banner['ip_str'])
-                            self.asnList.append(int(banner['asn'][2:]))
-                            for _ in banner['hostnames']:
+                            self.ipList.append(_['ip_str'])
+                            self.asnList.append(int(_['asn'][2:]))
+                            for _ in _['hostnames']:
                                 self.resList.append(_)
                             domainList.append(subdomainInfo)
                     else:
                         subdomainInfo = {
                             'spider': 'SHODAN',
-                            'subdomain': str(banner['hostnames']),
+                            'subdomain': str(_['hostnames']),
                             'title': '',
-                            'ip': banner['ip_str'],  # 不用host的原因是其中有时候存在域名的情况，自己这里需要把域名和IP分开收集
+                            'ip': _['ip_str'],  # 不用host的原因是其中有时候存在域名的情况，自己这里需要把域名和IP分开收集
                             'domain': '',
-                            'port': banner['port'],
+                            'port': _['port'],
                             'web_service': '',
-                            'port_service': getPortService(banner['port']),
-                            'asn': banner['asn'][2:],
+                            'port_service': getPortService(_['port']),
+                            'asn': _['asn'][2:],
                             'search_keyword': keyword
                         }
                         # print(subdomainInfo)
-                        self.ipList.append(banner['ip_str'])
-                        self.asnList.append(int(banner['asn'][2:]))
-                        if banner['hostnames']:
-                            for _ in banner['hostnames']:
+                        self.ipList.append(_['ip_str'])
+                        self.asnList.append(int(_['asn'][2:]))
+                        if _['hostnames']:
+                            for _ in _['hostnames']:
                                 self.resList.append(_)
                         domainList.append(subdomainInfo)
                     for i in domainList:
@@ -442,21 +459,8 @@ class NetSpider(BaseSpider):
                             self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
             except Exception as e:
                 print('[-] curl shodan.io error, the error is {}'.format(e.args))
-            for j in domainList:
-                _ip = j['ip']
-                _port = j['port']
-                if int(_port) == 443 or int(_port) == 80:
-                    continue
-                flag = True
-                for k in self.IpPortList:
-                    if k['ip'] == _ip:
-                        for m in k['port']:
-                            if int(m) == int(_port):
-                                flag = False
-                if flag:
-                    for p in self.IpPortList:
-                        if p['ip'] == _ip:
-                            p['port'].append(int(_port))
+                return
+            self._flushResult(domainList)
             self.writeFile(getUniqueList(domainList), 12)
             # async with aiohttp.ClientSession(headers=headers) as session:
             #     for keyword in self.shodanKeywordList:
@@ -490,6 +494,33 @@ class NetSpider(BaseSpider):
             #                     domainList.append(subdomainInfo)
             #                 domainList = getUniqueList(domainList)
             #                 self.writeFile(domainList, 5)
+
+    def _flushResult(self, domainList):
+        for i in domainList:
+            _ip = i['ip']
+            _port = i['port']
+            flag = True
+            for j in self.IpPortList:
+                if j['ip'] == i['ip']:
+                    flag = False
+            if flag:
+                self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
+
+        for j in domainList:
+            _ip = j['ip']
+            _port = j['port']
+            if int(_port) == 443 or int(_port) == 80:
+                continue
+            flag = True
+            for k in self.IpPortList:
+                if k['ip'] == _ip:
+                    for m in k['port']:
+                        if int(m) == int(_port):
+                            flag = False
+            if flag:
+                for p in self.IpPortList:
+                    if p['ip'] == _ip:
+                        p['port'].append(int(_port))
 
     # C段查询函数
     def fofaSegmentSpider(self, networksegment, page):
@@ -695,9 +726,10 @@ class NetSpider(BaseSpider):
     async def spider(self):
         loop = asyncio.get_event_loop()
         taskList = [
-            loop.create_task(self.shodanDomainSpider()),
-            loop.create_task(self.quakeDomainSpider()),
-            loop.create_task(self.fofaDomainSpider())
+            # loop.create_task(self.fofaDomainSpider()),
+            loop.create_task(self.hunterDomainSpider()),
+            # loop.create_task(self.quakeDomainSpider()),
+            # loop.create_task(self.shodanDomainSpider())
         ]
         await asyncio.gather(*taskList)
 

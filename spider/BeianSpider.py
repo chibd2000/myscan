@@ -6,6 +6,7 @@ from spider import BaseSpider
 import math
 from urllib.parse import quote
 
+
 class BeianSpider(BaseSpider):
     def __init__(self, domain):
         super().__init__()
@@ -63,7 +64,9 @@ class BeianSpider(BaseSpider):
                             headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
                             data = 'pageNo=1&pageSize=20&Kw={}'.format(companyNameUrlEncode)
                             try:
-                                async with session.post(url=self.addr2.format(self.domain), headers=headers, data=data, timeout=self.reqTimeout, verify_ssl=False, allow_redirects=False) as response2:
+                                async with session.post(url=self.addr2.format(self.domain), headers=headers, data=data,
+                                                        timeout=self.reqTimeout, verify_ssl=False,
+                                                        allow_redirects=False) as response2:
                                     if response2 is not None:
                                         text2 = await response2.json()
                                         if 'amount' in text2.keys():
@@ -74,7 +77,8 @@ class BeianSpider(BaseSpider):
                                             for page in range(2, pages + 1):
                                                 print('请求第{}页'.format(page))
                                                 data = 'pageNo={}&pageSize=20&Kw={}'.format(page, companyNameUrlEncode)
-                                                async with session.post(url=self.addr2.format(self.domain), headers=headers,
+                                                async with session.post(url=self.addr2.format(self.domain),
+                                                                        headers=headers,
                                                                         data=data, timeout=self.reqTimeout,
                                                                         verify_ssl=False,
                                                                         allow_redirects=False) as response3:
@@ -100,4 +104,3 @@ if __name__ == '__main__':
     beian = BeianSpider('zjhu.edu.cn')
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(beian.main())
-

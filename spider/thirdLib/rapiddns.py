@@ -4,6 +4,9 @@ from spider.thirdLib import BaseThird
 
 
 class Rapiddns(BaseThird):
+    """
+    rapiddns third spider
+    """
     def __init__(self, domain):
         super().__init__()
         self.domain = domain

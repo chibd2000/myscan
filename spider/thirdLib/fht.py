@@ -3,8 +3,10 @@ from spider.thirdLib.public import *
 from spider.thirdLib import BaseThird
 
 
-
 class Fht(BaseThird):
+    """
+    fht third spider
+    """
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
@@ -38,5 +40,5 @@ async def do(domain):
 
 
 if __name__ == '__main__':
-    res = do('zjhzu.edu.cn') # not ok
+    res = do('zjhzu.edu.cn')  # not ok
     print(res)

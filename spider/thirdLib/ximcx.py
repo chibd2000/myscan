@@ -5,9 +5,13 @@ from spider.thirdLib import BaseThird
 
 
 class Ximcx(BaseThird):
+    """
+     ximcx third spider
+     """
     def __init__(self, domain):
         super().__init__()
         self.addr = 'http://sbd.ximcx.cn/DomainServlet'
+        self.source = 'ximcx'
         self.domain = domain
 
     async def spider(self):

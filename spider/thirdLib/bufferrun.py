@@ -6,6 +6,9 @@ from spider.thirdLib import BaseThird
 
 
 class Bufferover(BaseThird):
+    """
+    bufferover third spider
+    """
     def __init__(self, domain):
         super().__init__()
         self.domain = domain

@@ -4,6 +4,9 @@ from spider.thirdLib import BaseThird
 
 
 class Sublist3r(BaseThird):
+    """
+    sublist3r third spider
+    """
     def __init__(self, domain):
         super().__init__()
         self.domain = domain

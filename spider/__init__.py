@@ -1,4 +1,6 @@
 # coding=utf-8
+import tldextract
+
 from spider.public import *
 
 
