@@ -73,7 +73,7 @@ class FriendChainsSpider(BaseSpider):
                 print('[+] [new friendChains] [{}] {}'.format(len(tempDomainList), tempDomainList))
                 self.resList.extend(tempDomainList)
         except asyncio.CancelledError as e:
-            print('[-] friendChainSpider Task was cancelled, error is {}'.format(e.__str__))
+            print('[-] friendChainSpider Task was cancelled, error is {}'.format(e.args))
         except Exception as e:
             print('[-] curl is error, error is {}'.format(e.args))
 

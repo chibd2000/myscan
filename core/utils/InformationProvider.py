@@ -28,6 +28,16 @@ class InformationProvider(object):
         return None
 
     @staticmethod
+    def readDictFile(filename):
+        if os.path.isfile(filename):
+            try:
+                with open(filename, InformationProvider.fileType) as f:
+                    return f.read()
+            except FileNotFoundError as e:
+                print('InformationProvider file not found, {}'.format(e.__str__()))
+        return None
+
+    @staticmethod
     def generate(usernameList, passwordList):
         usernameList = list(set(usernameList))
         passwordList = list(set(passwordList))

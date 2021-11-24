@@ -6,7 +6,7 @@ try:
     import json
     import time
     import re
-    from core.MyAsyncHttp import *
+    from core.request.asynchttp import *
     from spider.common import config
     import sys
     if sys.platform == 'win32':

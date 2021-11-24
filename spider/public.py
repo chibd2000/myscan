@@ -16,10 +16,11 @@ try:
     import os
     import socket
     import sys
+    import copy
 
     abs_path = os.getcwd() + os.path.sep  # 路径
 
-    from core.MyAsyncHttp import *
+    from core.request.asynchttp import *
     from spider.common.config import *
     from common.tools import *
 

@@ -2,7 +2,7 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-09-10 21:02
 import base64
-from core.MyAsyncHttp import *
+from core.request.asynchttp import *
 from spider.common import config
 
 

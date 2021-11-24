@@ -92,6 +92,8 @@
 
 - 12-爱企查查询(对外投资，控股公司，分支架构，备案)
 
+这个默认没有在 -d 参数中进行跑，需要手动运行如下命令:
+
 `python3 batch.py -d result.com -cn 横戈信息安全有限公司`
 
 ![company](img/company1.png)
@@ -222,9 +224,9 @@
 
 2、感谢ske大师兄和其他人的项目，前人栽树，后人乘凉
 
-3、虽然说是造轮子，但是对于自己来说还是有收获的
+3、虽然说是造轮子，对于自己来说还是有收获的
 
-#参考文章：
+#参考：
 
 1、https://xz.aliyun.com/t/9508
 
@@ -247,6 +249,8 @@
 10、http://mp.weixin.qq.com/s?__biz=Mzg4MzY3MTgyMw==&mid=2247483720&idx=1&sn=5449ed47b74cf892c01eb8833b59c952&chksm=cf429728f8351e3eee7387ca85c79a705ae68122509484d49bc278e24c9de4e22ef0080dc0c8&mpshare=1&scene=23&srcid=1114LGKgJqRAT9xqFA9s2BwC&sharer_sharetime=1636911890316&sharer_shareid=1b35adb1b046ef1a6379932d3eabbaf8#rd
 
 11、https://github.com/LandGrey/domainNamePredictor
+
+12、https://github.com/sqlmapproject/sqlmap
 
 #需要增加的
 
@@ -348,7 +352,7 @@ EOFError
 
 ~~13、github项目 Common 和 Exploit 和 Spider 都可以去掉~~（已完成）
 
-16、SQL注入自动化探测
+16、SQL注入自动化探测（正在写）
 
 - sql相似度匹配 参考文章：http://mp.weixin.qq.com/s?__biz=Mzg4MzY3MTgyMw==&mid=2247483720&idx=1&sn=5449ed47b74cf892c01eb8833b59c952&chksm=cf429728f8351e3eee7387ca85c79a705ae68122509484d49bc278e24c9de4e22ef0080dc0c8&mpshare=1&scene=23&srcid=1114LGKgJqRAT9xqFA9s2BwC&sharer_sharetime=1636911890316&sharer_shareid=1b35adb1b046ef1a6379932d3eabbaf8#rd
 
@@ -379,3 +383,9 @@ EOFError
 ~~- 添加censys接口~~
 
 ~~- 添加hunter奇安信接口~~
+
+2021.11.25 - 2021.12.9 这两个星期都不更新了，有个证书的考试需要准备下，后面继续改
+
+25、filterCDN方法添加(为后面的portscan节省时间，如果的cdn网段的ip进行端口扫描的话是无意义的)
+
+26、flushIpSegment方法修改（原本清洗数据时间太长，这个方法改了可以缩短清洗数据的时间）

@@ -101,6 +101,6 @@ class BeianSpider(BaseSpider):
 
 
 if __name__ == '__main__':
-    beian = BeianSpider('zjhu.edu.cn')
+    beian = BeianSpider('geely.com')
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(beian.main())

@@ -135,6 +135,11 @@ def getRootdomain(url):
     return f'{val.domain}.{val.suffix}' if val.domain and val.suffix else ''
 
 
+def getSubdomain(url):
+    val = extract(url)
+    return f'{val.subdomain}.{val.domain}.{val.suffix}' if val.subdomain and val.domain and val.suffix else ''
+
+
 # 创建图表
 def createXlsx(target):
     workbook = xlsxwriter.Workbook(target + ".xlsx")

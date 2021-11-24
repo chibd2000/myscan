@@ -3,11 +3,11 @@
 # @blog     : https://www.cnblogs.com/zpchcbd/
 # @Time     : 2020-11-23 20:45
 
-from core.MyModuleLoader import ModuleLoader
+from core.module.moduleloader import ModuleLoader
 from core.MyConstant import ModulePath
-from core.utils.FuzzDifflib import MyDifflib
+from core.utils.differ import DifferentChecker
 from core.utils.PortWrapper import PortWrapper
-from core.MyLogger import Logger
+from core.log.logger import Logger
 from core.MyGlobalVariableManager import GlobalVariableManager
 
 from spider.BeianSpider import BeianSpider
@@ -431,7 +431,7 @@ class Spider(object):
             domainIndex = 0
             while domainIndex < len(newDomainList):
                 current = newDomainList[domainIndex]
-                goodIndexList = MyDifflib.getCloseMatchIndex(current, newDomainList, n=10000, cutoff=0.8)
+                goodIndexList = DifferentChecker.getCloseMatchIndex(current, newDomainList, n=10000, cutoff=0.8)
                 currentResultList = []
                 for index in reversed(sorted(goodIndexList)):
                     currentResultList.append(newDomainList[index])
@@ -455,7 +455,7 @@ class Spider(object):
         # -----------------------
 
         # 0、备案查询
-        # self.beianSpider()
+        self.beianSpider()
 
         # 1、checkCdn
         # checkCdn(self.domain)
@@ -469,14 +469,14 @@ class Spider(object):
         # self.ksubdomainSpider()
 
         # 3、第三方接口查询
-        # self.thirdSpider()
+        self.thirdSpider()
 
         # 4、SSL/engine/netSpace/github查询
-        # self.threadList.append(Thread(target=self.baiduSpider, ))
-        # self.threadList.append(Thread(target=self.bingSpider, ))
-        # self.threadList.append(Thread(target=self.ctfrSpider, ))
+        self.threadList.append(Thread(target=self.baiduSpider, ))
+        self.threadList.append(Thread(target=self.bingSpider, ))
+        self.threadList.append(Thread(target=self.ctfrSpider, ))
         self.threadList.append(Thread(target=self.netSpider, ))
-        # self.threadList.append(Thread(target=self.githubSpider, ))
+        self.threadList.append(Thread(target=self.githubSpider, ))
         for _ in self.threadList:
             _.start()
         for _ in self.threadList:
@@ -486,38 +486,38 @@ class Spider(object):
         # self.flushResult()
 
         # 6、友链爬取
-        # self.friendChainsSpider()
+        self.friendChainsSpider()
 
         # 7、domain2ip
-        # self.domain2ip()
+        self.domain2ip()
 
         # 8、ip2domain
-        # self.ip2domain()
+        self.ip2domain()
 
         # 9、sslSpider @keefe @行牛 @ske 2021.09.01 SSL
         # self.sslSpider()
 
         # 10、alive
-        # self.aliveSpider()
+        self.aliveSpider()
 
         # 11、asn和ip段整理
-        # flushIpSegment(self.domain, self.ipList, self.ipSegmentList)
-        # flushAsn(self.domain, self.asnList)
+        flushIpSegment(self.domain, self.ipList, self.ipSegmentList)
+        flushAsn(self.domain, self.asnList)
 
         # 12、过滤属于CDN网段的IP
         # filterCDN()
 
         # 13、port scan in self.ipPortList
         # print('portConfig: ', portConfig)
-        # portConfig = GlobalVariableManager.getValue('portConfig')
-        # PortWrapper.generatePorts(portConfig, self.ipPortList)
-        # self.ipPortSpider()
+        portConfig = GlobalVariableManager.getValue('portConfig')
+        PortWrapper.generatePorts(portConfig, self.ipPortList)
+        self.ipPortSpider()
 
         # 14、去重子域名
         gDomainList = list(set(gDomainList))
 
         # 15、可探测FUZZ收集
-        # getSimilarityMatch(self.domain, gDomainList)
+        getSimilarityMatch(self.domain, gDomainList)
 
         print('==========================')
         gLogger.info('[+] [AsnList] [{}] {}'.format(len(self.asnList), self.asnList))
@@ -537,7 +537,6 @@ class Spider(object):
         gLogger.info('[+] [gDomainList] [{}] {}'.format(len(gDomainList), gDomainList))
         print('==========================')
         gLogger.info('[+] [gDomainAliveList] [{}] {}'.format(len(gDomainAliveList), gDomainAliveList))
-        exit(0)
 
 
 # Exploit
@@ -673,6 +672,8 @@ if __name__ == '__main__':
         else:
             exit('[-] 文件名{}已存在，如果要运行的话需要将该文件{}.xlsx改名或者删除.'.format(args.domain, args.domain))
     if args.cmsscan:
+        fileName = str(int(time.time()))
+        createXlsx(fileName)
         if args.url:
             moduleLoader = ModuleLoader('exploit')
             if args.module is None:
@@ -689,7 +690,7 @@ if __name__ == '__main__':
                     exit(0)
             loop = asyncio.get_event_loop()
             domainList = [args.url]
-            cmsScan = CmsScan('result.com', domainList, moduleList)
+            cmsScan = CmsScan(fileName, domainList, moduleList)
             loop.run_until_complete(cmsScan.main())
             print("[+] 总花费时间: " + str(time.time() - starttime))
             exit(0)
@@ -714,23 +715,25 @@ if __name__ == '__main__':
                 exit('[-] Import Error from core.api import MyNetApi error')
             loop = asyncio.get_event_loop()
             domainList = loop.run_until_complete(MyNetApi.fofaSearch(args.fofa))
-            cmsScan = CmsScan('result.com', domainList, moduleList)
+            cmsScan = CmsScan(fileName, domainList, moduleList)
             loop.run_until_complete(cmsScan.main())
             print("[+] 总花费时间: " + str(time.time() - starttime))
             exit(0)
     # servicescan + portscan
     if args.servicescan:
+        fileName = str(int(time.time()))
+        createXlsx(fileName)
         if args.ips:
             ipPortList = PortWrapper.generateFormat(args.ips)
             PortWrapper.generatePorts(args.port, ipPortList)
-            portscan = PortScan('result.com', ipPortList)
+            portscan = PortScan(fileName, ipPortList)
             loop = asyncio.get_event_loop()
             ipPortServiceList, httpList = loop.run_until_complete(portscan.main())
             total = 0
             for targetService in ipPortServiceList:
                 total += len(targetService['ip'])
             pbar = tqdm(total=total, desc="ServiceScan", ncols=100)  # total是总数
-            servicescan = PortServiceScan('result.com', ipPortServiceList, pbar)
+            servicescan = PortServiceScan(fileName, ipPortServiceList, pbar)
             loop = asyncio.get_event_loop()
             loop.run_until_complete(servicescan.main())
             print("[+] 总花费时间: " + str(time.time() - starttime))
@@ -739,16 +742,18 @@ if __name__ == '__main__':
             exit('[-] 输入要进行服务扫描的IP')
     # 单独端口扫描选择
     if args.ips:
+        fileName = str(int(time.time()))
+        createXlsx(fileName)
         # 生成ipPortList格式
         ipPortList = PortWrapper.generateFormat(args.ips)
         # 对ipPortList中的ip进行对应的端口填充
         PortWrapper.generatePorts(args.port, ipPortList)
-        portscan = PortScan('result.com', ipPortList)
+        portscan = PortScan(fileName, ipPortList)
         loop = asyncio.get_event_loop()
         ipPortServiceList, httpList = loop.run_until_complete(portscan.main())
-        print("==================Service========================")
+        print("==================Service==================")
         gLogger.info(ipPortServiceList)
-        print("==================HTTP========================")
+        print("===================HTTP===================")
         gLogger.info(httpList)
         print("[+] 总花费时间: " + str(time.time() - starttime))
         exit(0)

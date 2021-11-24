@@ -344,7 +344,7 @@ class ServiceScan(object):
     def get_http_title(self, response):
         title = '获取失败'
         try:
-            title_pattern = b'<title>(.*?)</title>'
+            title_pattern = r'<title>(?P<result>[^<]+)</title>'
             title = re.search(title_pattern, response, re.S | re.I).group(1)
             try:
                 title = title.decode().replace('\n', '').strip()
@@ -430,7 +430,7 @@ class PortScan(BaseSpider):
     async def spider(self):
         semaphore = asyncio.Semaphore(200)
         taskList = []
-        print(self.ipPortList)
+        # print(self.ipPortList)
         for target in self.ipPortList:
             for port in target['port']:
                 ip = target['ip']

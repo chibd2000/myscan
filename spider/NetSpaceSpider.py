@@ -1,12 +1,13 @@
 # coding=utf-8
 
-from core.exception.net import *
+from core.exception.net import NetPageLimitError
+from core.exception.net import NetPrivilegeError
+from core.request.request import HackRequest
+from spider.common import config
 from spider.public import *
+from common.tools import *
 from spider import BaseSpider
 from lxml import etree
-from core.MyRequest import *
-from common.tools import *
-from spider.common import config
 from shodan import Shodan
 import mmh3
 import base64
@@ -262,33 +263,34 @@ class NetSpider(BaseSpider):
             for keyword in self.fofaKeywordList:
                 domainList = []
                 try:
-                    res = await AsyncFetcher.fetch(session=session, url=self.fofaAddr.format(USER_NAME=self.fofaUser, API_KEY=self.fofaApi, B64_DATA=base64.b64encode(keyword.encode()).decode()),
-                                                   json=True)
-                    for _ in res['results']:
-                        if 'http' in _[0]:
-                            subdomain = _[0].split('//')[1]  # https://www.baidu.com => www.baidu.com
-                        else:
-                            subdomain = _[0]
-                        if _[6] == '':
-                            portService = getPortService(_[4])
-                        else:
-                            portService = _[6]
-                        subdomainInfo = {
-                            'spider': 'FOFA',
-                            'subdomain': subdomain,
-                            'title': _[1],
-                            'ip': _[2],
-                            'domain': _[3],
-                            'port': _[4],
-                            'web_service': _[5],
-                            'port_service': portService,
-                            'asn': _[7],
-                            'search_keyword': keyword
-                        }
-                        self.ipList.append(_[2])
-                        self.asnList.append(int(_[7]))
-                        self.resList.append(subdomain)
-                        domainList.append(subdomainInfo)
+                    retJson = await AsyncFetcher.fetch(session=session, url=self.fofaAddr.format(USER_NAME=self.fofaUser, API_KEY=self.fofaApi, B64_DATA=base64.b64encode(keyword.encode()).decode()), json=True)
+                    result = retJson['results']
+                    if result:
+                        for _ in result:
+                            if 'http' in _[0]:
+                                subdomain = _[0].split('//')[1]  # https://www.baidu.com => www.baidu.com
+                            else:
+                                subdomain = _[0]
+                            if _[6] == '':
+                                portService = getPortService(_[4])
+                            else:
+                                portService = _[6]
+                            subdomainInfo = {
+                                'spider': 'FOFA',
+                                'subdomain': subdomain,
+                                'title': _[1],
+                                'ip': _[2],
+                                'domain': _[3],
+                                'port': _[4],
+                                'web_service': _[5],
+                                'port_service': portService,
+                                'asn': _[7],
+                                'search_keyword': keyword
+                            }
+                            self.ipList.append(_[2])
+                            self.asnList.append(int(_[7]))
+                            self.resList.append(subdomain)
+                            domainList.append(subdomainInfo)
                 except Exception as e:
                     print('[-] curl fofa.so error, the error is {}'.format(e.args))
                 self._flushResult(domainList)
@@ -301,14 +303,14 @@ class NetSpider(BaseSpider):
             for keyword in self.hunterKeywordList:
                 domainList = []
                 page = 1
-                retJson = await AsyncFetcher.fetch(session=session, url=self.hunterAddr.format(USER_NAME=self.hunterUser, API_KEY=self.hunterApi, B64_DATA=base64.urlsafe_b64encode(keyword.encode()).decode(), PAGE=page), json=True)
-                if retJson['code'] == 401:
-                    raise NetPrivilegeError from None
-                if retJson['code'] == 400:
-                    raise NetPageLimitError from None
-                pages = retJson['data'].get('total', 0) // 100 + 1
-                while page <= pages:
-                    try:
+                try:
+                    retJson = await AsyncFetcher.fetch(session=session, url=self.hunterAddr.format(USER_NAME=self.hunterUser, API_KEY=self.hunterApi, B64_DATA=base64.urlsafe_b64encode(keyword.encode()).decode(), PAGE=page), json=True)
+                    if retJson['code'] == 401:
+                        raise NetPrivilegeError from None
+                    if retJson['code'] == 400:
+                        raise NetPageLimitError from None
+                    pages = retJson['data'].get('total', 0) // 100 + 1
+                    while page <= pages:
                         retJson = await AsyncFetcher.fetch(session=session, url=self.hunterAddr.format(USER_NAME=self.hunterUser, API_KEY=self.hunterApi, B64_DATA=base64.urlsafe_b64encode(keyword.encode()).decode(), PAGE=page), json=True)
                         if retJson['code'] == 401:
                             raise NetPrivilegeError from None
@@ -322,14 +324,14 @@ class NetSpider(BaseSpider):
                                 self.resList.append(hunter.subdomain)
                                 domainList.append(hunter.info)
                         page += 1
-                    except NetPageLimitError:
-                        print('[-] check your page limit.')
-                        return
-                    except NetPrivilegeError:
-                        print('[-] check your hunter privilege.')
-                        return
-                    except Exception as e:
-                        print('[-] curl hunter.qianxin.com error, the error is {}'.format(e.args))
+                except NetPageLimitError:
+                    print('[-] check your page limit.')
+                    return
+                except NetPrivilegeError:
+                    print('[-] check your hunter privilege.')
+                    return
+                except Exception as e:
+                    print('[-] curl hunter.qianxin.com error, the error is {}'.format(e.args))
                 self._flushResult(domainList)
                 self.writeFile(getUniqueList(domainList), 10)
 
@@ -448,15 +450,6 @@ class NetSpider(BaseSpider):
                             for _ in _['hostnames']:
                                 self.resList.append(_)
                         domainList.append(subdomainInfo)
-                    for i in domainList:
-                        _ip = i['ip']
-                        _port = i['port']
-                        flag = True
-                        for j in self.IpPortList:
-                            if j['ip'] == i['ip']:
-                                flag = False
-                        if flag:
-                            self.IpPortList.append({'ip': _ip, 'port': [int(_port)]})
             except Exception as e:
                 print('[-] curl shodan.io error, the error is {}'.format(e.args))
                 return
@@ -724,13 +717,12 @@ class NetSpider(BaseSpider):
 
     # 域名爬取处理函数
     async def spider(self):
-        loop = asyncio.get_event_loop()
         taskList = [
-            # loop.create_task(self.fofaDomainSpider()),
-            loop.create_task(self.hunterDomainSpider()),
-            # loop.create_task(self.quakeDomainSpider()),
-            # loop.create_task(self.shodanDomainSpider())
-        ]
+            asyncio.create_task(self.shodanDomainSpider()),
+            asyncio.create_task(self.fofaDomainSpider()),
+            asyncio.create_task(self.hunterDomainSpider()),
+            asyncio.create_task(self.quakeDomainSpider())
+            ]
         await asyncio.gather(*taskList)
 
         # loop.create_task(self.quakeDomainSpider()),
@@ -779,8 +771,7 @@ class NetSpider(BaseSpider):
     # main start
     async def main(self):
         await self.spider()
-        self.resList, self.asnList, self.ipList = list(set(self.resList)), list(set(self.asnList)), list(
-            set(self.ipList))
+        self.resList, self.asnList, self.ipList = list(set(self.resList)), list(set(self.asnList)), list(set(self.ipList))
         return self.resList, self.asnList, self.ipList, self.IpPortList
 
 

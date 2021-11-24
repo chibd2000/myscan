@@ -1,255 +1,169 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
 # @Time     : 2021-09-01 11:08
-
-from spider.public import *
+from core.parser.urlparser import urlParser
+from core.utils.differ import DifferentChecker
 from spider import BaseSpider
-from urllib.parse import urlparse
+from spider.public import *
 from bs4 import BeautifulSoup
 
 
 def getCurrentUrlList(links, suffixCompile):
     currentUrlList = []
-    for link in links:  # 判断是不是一个新的网站
-        url = link.get('href')
-        # 根据特征值来进行判断，是否下面都不符合，那么就是一个完整的域名
-        # href="/1.jpg"
-        # href="javascript:alert(1)"
-        _ = suffixCompile.search(str(url))
-        if _ is None and _ is None:
-            currentUrlList.append(str(url))  # 是的话 那么添加到result列表中
+    for link in links:
+        aLink = link.get('href')
+        if aLink is not None:
+            _ = suffixCompile.search(str(aLink))
+            if _ is None:
+                currentUrlList.append(str(aLink))  # 是的话 那么添加到result列表中
     return currentUrlList
 
 
 class ParamSpider:
     """
     对于相关的动态脚本和js参数资产自己封装到这个类中进行使用
+    write in 2021.11.21 12.03 @zpchcbd
     """
     def __init__(self):
         self.source = 'ParamSpider'
         self.reqTimeout = 15
         self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'}
 
-    # learn from langzi
-    async def getDynamicScriptLinks(self, session, domain, result):
+    # learn from jsFinder / langzi.fun
+    async def getDynamicScriptLinks(self, session, url, linkList):
         """实现动态脚本参数的获取"""
         scriptLinks = []
         htmlLinks = []
-        scriptFinaLinks = []
-        htmlFinaLinks = []
+        urlparser = urlParser(url)
+        """分别识别伪静态和动态链接"""
+        for link in linkList:  # 再进行二次判断是不是子域名 这次的判断有三种情况
+            if link.startswith('http') and '://' in link and urlparser.subdomain in link and '.js?' not in link and '.min.js' not in link:
+                # http://www.baidu.com
+                if '?' in link and '=' in link:
+                    # result_links.append(rurl)
+                    scriptLinks.append(link.strip())
+                if '.html' in link or '.shtml' in link or '.htm' in link or '.shtm' in link:
+                    if '?' not in link:
+                        # result_links.append(rurl)
+                        htmlLinks.append(link.strip())
 
-        # http://www.bhxz.net/?list_7/
-        # http://www.bhxz.net/?list_7
+            if 'http' not in link and urlparser.subdomain in link and '.js?' not in link and '.min.js' not in link:
+                if 'www' in url:
+                    if 'www' in link:
+                        if '?' in link and '=' in link:
+                            scriptLinks.append(urlparser.scheme + link.lstrip('/').lstrip('.').rstrip('/').rstrip('.').replace('//','').replace(':', ''))
+                        if '.html' in link or '.shtml' in link or '.htm' in link or '.shtm' in link:
+                            if '?' not in link:
+                                # result_links.append(rurl)
+                                htmlLinks.append(urlparser.scheme + link.lstrip('/').lstrip('.').rstrip('/').rstrip('.').replace('//','').replace(':', ''))
+                    else:
+                        if '?' in link and '=' in link:
+                            scriptLinks.append(urlparser.scheme + 'www.' + link.lstrip('/').lstrip('.').rstrip('/').rstrip('.').replace('//','').replace(':', ''))
+                        if '.html' in link or '.shtml' in link or '.htm' in link or '.shtm' in link:
+                            if '?' not in link:
+                                htmlLinks.append(urlparser.scheme + 'www.' + link.lstrip('/').lstrip('.').rstrip('/').rstrip('.').replace('//', '').replace(':', ''))
+                else:
+                    if '?' in link and '=' in link:
+                        scriptLinks.append(urlparser.scheme + link.lstrip('/').lstrip('.').rstrip('/').rstrip('.').replace('//', '').replace(':', ''))
+                    if '.html' in link or '.shtml' in link or '.htm' in link or '.shtm' in link:
+                        if '?' not in link:
+                            htmlLinks.append(urlparser.scheme + link.lstrip('/').lstrip('.').rstrip('/').rstrip('.').replace('//','').replace(':', ''))
 
-        for rurl in result:  # 再进行二次判断是不是子域名 这次的判断有三种情况
-            if '//' in rurl and 'http' in rurl and domain in rurl:
-                if '?' in rurl and '=' in rurl:
-                    scriptLinks.append(rurl.strip())
-                if '.html' in rurl or '.shtml' in rurl or '.htm' in rurl or '.shtm' in rurl:
-                    if '?' not in rurl:
-                        htmlLinks.append(rurl.strip())
-            if 'http' not in rurl and domain in rurl:
-                # http 不在 domain 在
-                if '?' in rurl and '=' in rurl:
-                    scriptLinks.append('http://' + rurl.lstrip('/').strip())
-                if '.html' in rurl or '.shtml' in rurl or '.htm' in rurl or '.shtm' in rurl:
-                    if '?' not in rurl:
-                        htmlLinks.append(
-                            'http://' + rurl.lstrip('/').strip())
-            if 'http' not in rurl and domain not in rurl:
-                # http 不在 domain 不在
-                if '?' in rurl and '=' in rurl:
-                    scriptLinks.append(
-                        'http://' + domain.strip() + '/' + rurl.strip().lstrip('/'))
-                if '.html' in rurl or '.shtml' in rurl or '.htm' in rurl or '.shtm' in rurl:
-                    if '?' not in rurl:
-                        htmlLinks.append(
-                            'http://' + domain.strip() + '/' + rurl.strip().lstrip('/'))
-        print(htmlLinks, scriptLinks)
-        # 判断爬取的参数是否存活
-        # for x1 in htmlLinks:  # 对于爬取到的后缀是html等等参数链接进行二次处理 是否能够访问
+            if 'http' not in link and urlparser.subdomain not in link and ':' not in link and '//' not in link and '.js?' not in link and '.min.js' not in link:
+                # /sttd/xhm/
+                if '?' in link and '=' in link:
+                    scriptLinks.append(urlparser.scheme + urlparser.subdomain + '/' + link.lstrip('/').lstrip('.').rstrip('/').rstrip('.').replace('//', '').replace(':', ''))
+                if '.html' in link or '.shtml' in link or '.htm' in link or '.shtm' in link:
+                    if '?' not in link:
+                        htmlLinks.append(urlparser.scheme + urlparser.subdomain + '/' + link.lstrip('/').lstrip('.').rstrip('/').rstrip('.').replace('//', '').replace(':', ''))
+
+            if link.startswith('://') and 'http' not in link and urlparser.subdomain in link and '.js?' not in link and '.min.js' not in link:
+                if '?' in link and '=' in link:
+                    scriptLinks.append(urlparser.scheme + link.replace('://', ''))
+                if '.html' in link or '.shtml' in link or '.htm' in link or '.shtm' in link:
+                    if '?' not in link:
+                        htmlLinks.append(urlparser.scheme + link.replace('://', ''))
+
+            if link.startswith('//') and urlparser.subdomain in link and '.js?' not in link and '.min.js' not in link:
+                # //order.jd.com/center/list.action
+                if '?' in link and '=' in link:
+                    scriptLinks.append(urlparser.scheme + link.replace('//', ''))
+                if '.html' in link or '.shtml' in link or '.htm' in link or '.shtm' in link:
+                    if '?' not in link:
+                        htmlLinks.append(urlparser.scheme + link.replace('//', ''))
+
+            if '//' in link and link.startswith('http') and urlparser.subdomain in link and '.js?' not in link and '.min.js' not in link:
+                # http // domain 都在
+                # https://www.yamibuy.com/cn/search.php?tags=163
+                # http://news.hnu.edu.cn/zhyw/2017-11-11/19605.html
+                if '?' in link and '=' in link:
+                    scriptLinks.append(link.strip())
+                if '.html' in link or '.shtml' in link or '.htm' in link or '.shtm' in link:
+                    if '?' not in link:
+                        htmlLinks.append(link.strip())
+            # //wmw.dbw.cn/system/2018/09/25/001298805.shtml
+            if 'http' not in link and urlparser.subdomain in link and '.js?' not in link and '.min.js' not in link:
+                # http 不在    domain 在
+                if '?' in link and '=' in link:
+                    scriptLinks.append(urlparser.scheme + link.lstrip('/').lstrip('.').strip().lstrip('/'))
+                if '.html' in link or '.shtml' in link or '.htm' in link or '.shtm' in link:
+                    if '?' not in link:
+                        htmlLinks.append(urlparser.scheme + link.lstrip('/').lstrip('.').strip().lstrip('/'))
+
+            # /chanpin/2018-07-12/3.html"
+            if 'http' not in link and urlparser.subdomain not in link and '.js?' not in link and '.min.js' not in link:
+                # http 不在  domain 不在
+                if '?' in link and '=' in link:
+                    scriptLinks.append(urlparser.scheme + urlparser.subdomain.strip() + '/' + link.strip().lstrip('/').lstrip('.').lstrip('/'))
+                if '.html' in link or '.shtml' in link or '.htm' in link or '.shtm' in link:
+                    if '?' not in link:
+                        htmlLinks.append(urlparser.scheme + urlparser.subdomain.strip() + '/' + link.strip().lstrip('/').lstrip('.').lstrip('/'))
+
+        scriptFinaList = self._flushLinks(scriptLinks)
+        htmlFinaList = self._flushLinks(htmlLinks)
+
+        """判断爬取的参数是否存活"""
+        # htmlFinaLinks = []
+        # scriptFinaLinks = []
+        # for x1 in htmlLinks:  # 伪静态是否能够访问
         #     try:
-        #         async with session.get(url=x1, timeout=self.reqTimeout, headers=self.headers,
-        #                                verify_ssl=False) as resp1:
-        #             if resp1 is not None and resp1.status == 200:
+        #         async with session.get(url=x1, timeout=self.reqTimeout, headers=self.headers, verify_ssl=False) as response:
+        #             if response is not None and response.status == 200:
         #                 htmlFinaLinks.append(x1)
         #     except Exception as e:
         #         print('[-] curl {} error, the error is {}'.format(x1, e.args))
         #
-        # for x2 in scriptLinks:  # 平常的id?=1 这种参数进行二次处理 是否能够访问
+        # for x2 in scriptLinks:  # 动态脚本参数是否能够访问
         #     try:
-        #         async with session.get(url=x2, timeout=self.reqTimeout, headers=self.headers,
-        #                                verify_ssl=False) as resp2:
-        #             if resp2 is not None and resp2.status == 200:
-        #                 if str(resp2.url).find('=') > 0:
+        #         async with session.get(url=x2, timeout=self.reqTimeout, headers=self.headers, verify_ssl=False) as response:
+        #             if response is not None and response.status == 200:
+        #                 if str(response.url).find('=') > 0:
         #                     scriptFinaLinks.append(x2)
         #     except Exception as e:
         #         print('[-] curl {} error, the error is {}'.format(x2, e.args))
-        return self._flushLinks(scriptFinaLinks, htmlFinaLinks)
+        return scriptFinaList, htmlFinaList
 
-    """清洗数据"""
-    def _flushLinks(self, scriptFinaLinks, htmlFinaLinks):
-        dic_1 = []
-        dic_2 = []
-        dic_3 = []
-        dic_4 = []
-        for i in htmlFinaLinks:
-            path = urlparse(i).path
-            if path.count('/') == 1:
-                dic_1.append(i)
-            if path.count('/') == 2:
-                dic_2.append(i)
-            if path.count('/') == 3:
-                dic_3.append(i)
-            if path.count('/') > 3:
-                dic_4.append(i)
-        hthtx = []
-        ididx = []
-        if dic_1:
-            hthtx.append(random.choice(dic_1))
-        if dic_2:
-            hthtx.append(random.choice(dic_2))
-        if dic_3:
-            hthtx.append(random.choice(dic_3))
-        if dic_4:
-            hthtx.append(random.choice(dic_4))
-
-        dic_11 = []
-        dic_21 = []
-        dic_31 = []
-        dic_41 = []
-        for i in scriptFinaLinks:
-            path = urlparse(i).path
-            if path.count('/') == 1:
-                dic_11.append(i)
-            if path.count('/') == 2:
-                dic_21.append(i)
-            if path.count('/') == 3:
-                dic_31.append(i)
-            if path.count('/') > 3:
-                dic_41.append(i)
-        if dic_11:
-            ididx.append(random.choice(dic_11))
-        if dic_21:
-            ididx.append(random.choice(dic_21))
-        if dic_31:
-            ididx.append(random.choice(dic_31))
-        if dic_41:
-            ididx.append(random.choice(dic_41))
-        return ididx, hthtx
+    def _flushLinks(self, links):
+        """匹配相似度清洗数据 write in 2021.11.24 15.48"""
+        resList = []
+        linkIndex = 0
+        while linkIndex < len(links):
+            current = links[linkIndex]
+            goodIndexList = DifferentChecker.getCloseMatchIndex(current, links, n=10000, cutoff=0.9)
+            currentResultList = []
+            for index in reversed(sorted(goodIndexList)):
+                currentResultList.append(links[index])
+                del links[index]
+            resList.append(currentResultList[0])
+            linkIndex += 1
+        return resList
 
     # learn from jsfinder
     async def getJavascriptLinks(self, session, domain, text):
         """实现javascript参数的获取 特征"/static/js/app" "/static/js/main"  """
-        jsUrlList = self.extractURL(text)
+        jsUrlList = self.extract_URL(text)
         for aJs in jsUrlList:
             pass
-
-    def extractURL(self, content):
-        pattern_raw = r"""
-              (?:"|')                               # Start newline delimiter
-              (
-                ((?:[a-zA-Z]{1,10}://|//)           # Match a scheme [a-Z]*1-10 or //
-                [^"'/]{1,}\.                        # Match a domainname (any character + dot)
-                [a-zA-Z]{2,}[^"']{0,})              # The domainextension and/or path
-                |
-                ((?:/|\.\./|\./)                    # Start with /,../,./
-                [^"'><,;| *()(%%$^/\\\[\]]          # Next character can't be...
-                [^"'><,;|()]{1,})                   # Rest of the characters can't be
-                |
-                ([a-zA-Z0-9_\-/]{1,}/               # Relative endpoint with /
-                [a-zA-Z0-9_\-/]{1,}                 # Resource name
-                \.(?:[a-zA-Z]{1,4}|action)          # Rest + extension (length 1-4 or action)
-                (?:[\?|/][^"|']{0,}|))              # ? mark with parameters
-                |
-                ([a-zA-Z0-9_\-]{1,}                 # filename
-                \.(?:php|asp|aspx|jsp|json|
-                     action|html|js|txt|xml)             # . + extension
-                (?:\?[^"|']{0,}|))                  # ? mark with parameters
-              )
-              (?:"|')                               # End newline delimiter
-            """
-        pattern = re.compile(pattern_raw, re.VERBOSE)
-        result = re.finditer(pattern, str(JS))
-        if result == None:
-            return None
-        js_url = []
-        return [match.group().strip('"').strip("'") for match in result
-                if match.group() not in js_url]
-
-    # Handling relative URLs
-    def process_url(self, URL, re_URL):
-        black_url = ["javascript:"]  # Add some keyword for filter url.
-        URL_raw = urlparse(URL)
-        ab_URL = URL_raw.netloc
-        host_URL = URL_raw.scheme
-        if re_URL[0:2] == "//":
-            result = host_URL + ":" + re_URL
-        elif re_URL[0:4] == "http":
-            result = re_URL
-        elif re_URL[0:2] != "//" and re_URL not in black_url:
-            if re_URL[0:1] == "/":
-                result = host_URL + "://" + ab_URL + re_URL
-            else:
-                if re_URL[0:1] == ".":
-                    if re_URL[0:2] == "..":
-                        result = host_URL + "://" + ab_URL + re_URL[2:]
-                    else:
-                        result = host_URL + "://" + ab_URL + re_URL[1:]
-                else:
-                    result = host_URL + "://" + ab_URL + "/" + re_URL
-        else:
-            result = URL
-        return result
-
-    def find_by_url(self, url, js=False):
-        if not js:
-            try:
-                print("url:" + url)
-            except:
-                print("Please specify a URL like https://www.baidu.com")
-            html_raw = self.Extract_html(url)
-
-            if html_raw is None:
-                print("Fail to access " + url)
-                return None
-
-            html = BeautifulSoup(html_raw, "html.parser")
-            html_scripts = html.findAll("script")
-            script_array = {}
-            script_temp = ""
-            for html_script in html_scripts:
-                script_src = html_script.get("src")
-                if script_src is None:
-                    script_temp += html_script.get_text() + "\n"
-                else:
-                    purl = self.process_url(url, script_src)
-                    script_array[purl] = self.Extract_html(purl)
-
-            script_array[url] = script_temp
-            allurls = []
-            for script in script_array:
-                # print(script)
-                temp_urls = self.extractURL(script_array[script])
-                if len(temp_urls) == 0: continue
-                for temp_url in temp_urls:
-                    allurls.append(self.process_url(script, temp_url))
-            result = []
-            for singerurl in allurls:
-                url_raw = urlparse(url)
-                domain = url_raw.netloc
-                positions = self.find_last(domain, ".")
-                miandomain = domain
-                if len(positions) > 1:miandomain = domain[positions[-2] + 1:]
-                #print(miandomain)
-                suburl = urlparse(singerurl)
-                subdomain = suburl.netloc
-                #print(singerurl)
-                if miandomain in subdomain or subdomain.strip() == "":
-                    if singerurl.strip() not in result:
-                        result.append(singerurl)
-            return result
-        return sorted(set(self.extractURL(self.Extract_html(url)))) or None
 
 
 class AliveSpider(BaseSpider):
@@ -257,7 +171,7 @@ class AliveSpider(BaseSpider):
     def __init__(self, domain, domainList, pbar):
         super().__init__()
         self.source = 'AliveSpider'
-        self.detechHttpProtocalList = ['http', 'https']
+        # self.detechHttpProtocalList = ['http', 'https']
         self.backendKeywordList = ['/admin', '/login', '/manage', '/system']
         self.domain = domain
         self.domainList = domainList
@@ -266,8 +180,8 @@ class AliveSpider(BaseSpider):
         self.aliveList = []  # 最终存活域名
         self.paramSpider = ParamSpider()
         self.titleCompile = re.compile(r'<title>(?P<result>[^<]+)</title>')
-        self.suffixCompile = re.compile('\.(gz|zip|rar|iso|pdf|txt|3ds|3g2|3gp|7z|DS_Store|a|aac|adp|ai|aif|aiff|apk|ar|asf|au|avi|bak|bin|bk|bmp|btif|bz2|cab|caf|cgm|cmx|cpio|cr2|dat|deb|djvu|dll|dmg|dmp|dng|doc|docx|dot|dotx|dra|dsk|dts|dtshd|dvb|dwg|dxf|ear|ecelp4800|ecelp7470|ecelp9600|egg|eol|eot|epub|exe|f4v|fbs|fh|fla|flac|fli|flv|fpx|fst|fvt|g3|gif|gz|h261|h263|h264|ico|ief|image|img|ipa|iso|jar|jpeg|jpgv|jpm|jxr|ktx|lvp|lz|lzma|lzo|m3u|m4a|m4v|mar|mdi|mid|mj2|mka|mkv|mmr|mng|mov|movie|mp3|mp4|mp4a|mpeg|mpg|mpga|mxu|nef|npx|o|oga|ogg|ogv|otf|pbm|pcx|pdf|pea|pgm|pic|png|pnm|ppm|pps|ppt|pptx|ps|psd|pya|pyc|pyo|pyv|qt|rar|ras|raw|rgb|rip|rlc|rz|s3m|s7z|scm|scpt|sgi|shar|sil|smv|so|sub|swf|tar|tbz2|tga|tgz|tif|tiff|tlz|ts|ttf|uvh|uvi|uvm|uvp|uvs|uvu|viv|vob|war|wav|wax|wbmp|wdp|weba|webm|webp|whl|wm|wma|wmv|wmx|woff|woff2|wvx|xbm|xif|xls|xlsx|xlt|xm|xpi|xpm|xwd|xz|z|zip|zipx)|javascript|:;|#|%')
-        self.beckendCompile = re.compile('登录|后台|管理|系统|admin|Manage.?')
+        self.suffixCompile = re.compile(r'\.(gz|zip|rar|iso|pdf|txt|3ds|3g2|3gp|7z|DS_Store|a|aac|adp|ai|aif|aiff|apk|ar|asf|au|avi|bak|bin|bk|bmp|btif|bz2|cab|caf|cgm|cmx|cpio|cr2|dat|deb|djvu|dll|dmg|dmp|dng|doc|docx|dot|dotx|dra|dsk|dts|dtshd|dvb|dwg|dxf|ear|ecelp4800|ecelp7470|ecelp9600|egg|eol|eot|epub|exe|f4v|fbs|fh|fla|flac|fli|flv|fpx|css|fst|fvt|g3|gif|gz|h261|h263|h264|ico|ief|image|img|ipa|iso|jar|jpg|jpeg|jpgv|jpm|jxr|ktx|lvp|lz|lzma|lzo|m3u|m4a|m4v|mar|mdi|mid|mj2|mka|mkv|mmr|mng|mov|movie|mp3|mp4|mp4a|mpeg|mpg|mpga|mxu|nef|npx|o|oga|ogg|ogv|otf|pbm|pcx|pdf|pea|pgm|pic|png|pnm|ppm|pps|ppt|pptx|ps|psd|pya|pyc|pyo|pyv|qt|rar|ras|raw|rgb|rip|rlc|rz|s3m|s7z|scm|scpt|sgi|shar|sil|smv|so|sub|swf|tar|tbz2|tga|tgz|tif|tiff|tlz|ts|ttf|uvh|uvi|uvm|uvp|uvs|uvu|viv|vob|war|wav|wax|wbmp|wdp|weba|webm|webp|whl|wm|wma|wmv|wmx|woff|woff2|wvx|xbm|xif|xls|xlsx|xlt|xm|xpi|xpm|xwd|xz|z|zip|zipx)|javascript|:;|#|%')
+        self.beckendCompile = re.compile('(登录|后台|管理|系统|admin|Manage.?)')
 
     def writeFile(self, web_lists, page):
         try:
@@ -287,37 +201,38 @@ class AliveSpider(BaseSpider):
         except Exception as e:
             print('[-] [{}] writeFile error, error is {}'.format(self.source, e.__str__()))
 
-    async def _getAlive(self, semaphore, origin):
-        # url = f'{detechHttpProtocal}://{origin}' if str(origin).startswith(('http:', 'https:')) is False else origin
-        url = f'http://{origin}' if str(origin).startswith(('http:', 'https:')) is False else origin
-        domain = url.split('//')[1].strip('/').replace('www.', '')
+    async def _getAlive(self, semaphore, domain):
+        url = f'http://{domain}' if domain.startswith(('http://', 'https://')) is False else domain
         try:
             async with semaphore:
                 async with aiohttp.ClientSession() as session:
                     async with session.get(url, headers=self.headers, verify_ssl=False, timeout=60) as response:
                         if response is not None:
                             text = await response.text()
-                            # print(text)
-                            # 参数解析处理
                             soup = BeautifulSoup(text, 'lxml')
                             title = self._getTitle(soup)
-                            links = soup.findAll('a')
                             status = response.status
                             frame = response.headers.get('X-Powered-By', '')
                             self.resList.append({'url': url, 'title': title, 'status': status, 'frame': frame})
-                            # 如果能走到这里的话，可能虽然不是200，但是该网站是可以进行访问的
-                            # SpringBoot一般就是这样，首页为404状态码 但是这种情况就不能跳过，还是需要进行保存
-                            self.aliveList.append(origin)
+                            """
+                            如果能走到这里的话，可能虽然不是200，但是该网站是可以进行访问的
+                            SpringBoot一般就是这样，首页为404状态码但是这种情况就不能跳过,还是需要进行保存
+                            """
+                            self.aliveList.append(domain)
+                            links = soup.findAll('a')
                             result = getCurrentUrlList(links, self.suffixCompile)
                             if result:
                                 result = list(set(result))
-                                scriptFinaLinks, htmlFinaLinks = await self.paramSpider.getDynamicScriptLinks(session, domain, result)
+                                scriptFinaLinks, htmlFinaLinks = await self.paramSpider.getDynamicScriptLinks(session, url, result)
                                 if scriptFinaLinks:
                                     for scriptLink in scriptFinaLinks:
-                                        self.linkList.append(scriptLink)
+                                        if self.domain in scriptLink:
+                                            self.linkList.append(scriptLink)
                                 if htmlFinaLinks:
                                     for htmlLink in htmlFinaLinks:
-                                        self.linkList.append(htmlLink.replace('.htm', '*.htm').replace('.shtm', '*.shtm'))
+                                        if self.domain in htmlLink:
+                                            self.linkList.append(htmlLink)
+                                print(scriptFinaLinks, htmlFinaLinks)
                             # 探测后台目录
                             # self._getBackend(session, url)
         except TimeoutError:
@@ -330,6 +245,7 @@ class AliveSpider(BaseSpider):
             print('[-] curl {} error, the error is payloadError, check HTTP 1.1.'.format(url))
         except Exception as e:
             # self.resList.append({'url': url, 'title': '', 'status': '无法访问', 'frame': ''})
+            print(e.args)
             print('[-] curl {} error.'.format(url))
         finally:
             self.pbar.update(1)
@@ -344,7 +260,6 @@ class AliveSpider(BaseSpider):
                 pass
             except Exception as e:
                 pass
-
 
     def _getTitle(self, soup):
         """
@@ -399,7 +314,7 @@ class AliveSpider(BaseSpider):
 if __name__ == '__main__':
     from tqdm import tqdm
 
-    pbar = tqdm(total=len(['geely.com']), desc='[{}]'.format('geely.com'), ncols=100)
-    alive = AliveSpider('geely.com', ['http://guofeng1024.58food.com/'], pbar)
+    pbar = tqdm(total=len(['test.com']), desc='[{}]'.format('Test'), ncols=100)
+    alive = AliveSpider('bhlqjt.com', ['http://test.shack2.org'], pbar)
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(alive.main())

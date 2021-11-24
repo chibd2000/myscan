@@ -30,13 +30,15 @@ class Binaryedge(BaseThird):
             page = 1
             async with aiohttp.ClientSession(headers=self.headers) as session:
                 while 1:
-                    result = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain, page), json=True)
-                    if result['events']:
-                        for _ in result['events']:
-                            self.resList.append(_)
-                    else:
+                    try:
+                        result = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain, page), json=True)
+                        if result['events']:
+                            for _ in result['events']:
+                                self.resList.append(_)
+                        else:
+                            break
+                    except Exception:
                         print('[-] binaryedge API No Subdomains.')
-                        break
                     page += 1
         except Exception as e:
             print('[-] curl binaryedge.io api error, the error is {}'.format(e.args))

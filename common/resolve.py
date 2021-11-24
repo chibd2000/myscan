@@ -16,7 +16,7 @@ resolver_nameservers = ['114.114.114.114', '114.114.115.115']
 
 resolver_timeout = 5.0  # 解析超时时间
 resolver_lifetime = 30.0  # 解析存活时间
-limit_resolve_conn = 50
+limit_resolve_conn = 100
 
 
 def dns_resolver():
