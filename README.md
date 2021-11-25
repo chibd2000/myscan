@@ -4,7 +4,7 @@
 横戈安全团队  
 横戈安全团队  
 
-#用法
+# 用法
 
 配置API：spider/common/config.py
 
@@ -29,11 +29,11 @@
 
 说明：这个脚本纯属自用，只是开源到github上，要用的话一般的用法下面都有讲到
 
-#构建信息搜集/漏洞扫描
+# 构建信息搜集/漏洞扫描
 
 已经实现的功能：
 
-信息搜集（多线程+异步IO）：
+### 信息搜集（多线程+异步IO）：
 
 - 1-DNS枚举查询(ksubdomain)子域名 (默认没开起来，要开的话自己在代码里面改下，batch.py 418行)
 
@@ -103,7 +103,9 @@
 中间环节
 
 - 12、探测存活，整理数据，如下格式所示  
+
 ```
+
 # 资产IP+端口格式
 
 [+] [ipPortList] [280] [{'ip': '202.103.147.144', 'port': [8080, 8090]}, {'ip': '125.19.57.134', 'port': []}, {'ip': '58.60.230.103', 'port': [8000, 2000]}, {'ip': '202.103.147.169', 'port': [25]}]
@@ -137,7 +139,7 @@
 [+] [domainList] [522] ['b2bprodhk.xxx.com.cn', 'out2.xxx.com.cn', 'topicscn.xxx.com.cn', '18.184.132.222:443', 'ilearning.xxx.com.cn', '47.75.103.207:443', 'sslsfshct.xxx.com.cn', 'pantheon-akamaigs1.wpc.edgecastcdn.net.xxx.com.cn', 'support.xxx.com.cn', 'mx10.xxx.com.cn', 'ca.xxx.com.cn', '47.92.49.128', 'guide.xxx.com', 'mx5.xxx.com.cn', '39.98.88.177:443', 'xxxtcm.xxx.com.cn', '47.111.170.47', 'apimes.sc.xxx.com.cn']
 ```
 
-漏洞扫描（多进程、多线程、异步IO）：
+### 漏洞扫描（多进程、多线程、异步IO）：
 
 1、CMS框架漏洞
 
@@ -208,17 +210,19 @@
 
 ![spider](img/spider.jpg)
 
-###版本展示：
+#版本展示：
 
 `python batch.py -v`
 
 ![version](img/version.png)
 
-#设计的思维导图
+# 设计的思维导图
 
 个人感觉整体架构写的其实不是很好，可能是在写的过程中，想法同样也会发生变化，当后面觉得前面不完善的时候，又需要强行插入一些东西，看起来就十分的僵硬，还是有很多需要学习的地方。
+
+![Myscan](img/Myscan.png)
     
-#总结：
+# 总结：
 
 1、学习python编写代码
 
@@ -226,7 +230,7 @@
 
 3、虽然说是造轮子，对于自己来说还是有收获的
 
-#参考：
+# 参考：
 
 1、https://xz.aliyun.com/t/9508
 
@@ -252,7 +256,7 @@
 
 12、https://github.com/sqlmapproject/sqlmap
 
-#需要增加的
+# 需要增加的
 
 ~~1、基于请求数据的时候实现进度可视化，比如进度条~~（已实现）
 
