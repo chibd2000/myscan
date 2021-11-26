@@ -1,8 +1,6 @@
 # coding=utf-8
-import tldextract
 
-from spider.public import *
-
+from core.public import *
 
 class BaseSpider(metaclass=abc.ABCMeta):
     __slots__ = ('source', 'headers', 'reqTimeout', 'domain', 'resList')

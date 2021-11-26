@@ -3,13 +3,19 @@
 # @blog     : https://www.cnblogs.com/zpchcbd/
 # @Time     : 2020-11-23 20:45
 
+# core
+from core.public import *
+from core.module.modulemanager import ModuleManager
 from core.module.moduleloader import ModuleLoader
-from core.MyConstant import ModulePath
+from core.parser.ipsunet import ipInSubnet
 from core.utils.differ import DifferentChecker
 from core.utils.PortWrapper import PortWrapper
 from core.log.logger import Logger
-from core.MyGlobalVariableManager import GlobalVariableManager
-
+from core.variablemanager import GlobalVariableManager
+# common
+from core.constant import ModulePath, FILTER_CDN_ASN_LIST, FILTER_CDN_IPSEGMENT_LIST
+from common import resolve
+# spider
 from spider.BeianSpider import BeianSpider
 from spider.BaiduSpider import BaiduSpider
 from spider.BingSpider import BingSpider
@@ -23,24 +29,17 @@ from spider.GithubSpider import GithubSpider
 from spider.ip2domainSpider import Ip2domainSpider
 from spider.FriendChainsSpider import FriendChainsSpider
 from spider.AliveSpider import AliveSpider
-
-from common import resolve
-
+# exploit
+from exploit.CmsExploit import CmsScan
+# from exploit.SQLExploit import *
+from exploit.ServiceExploit import PortServiceScan
 # from exploit.AliveScan import *
 # from exploit.IpUnauthExploit import *
 # from exploit.HttpUnauthExploit import *
-from exploit.CmsExploit import *
-# from exploit.SQLExploit import *
-from exploit.ServiceExploit import *
 
 from threading import Thread, Lock
-import os
 import argparse
-import time
-import sys
-import asyncio
 import importlib
-from IPy import IP
 
 version = sys.version.split()[0]
 if version < "3":
@@ -316,11 +315,6 @@ class Spider(object):
 
     # main start
     def run(self):
-        # 检查cdn @author ske(大师兄)
-        def checkCdn(domain):
-            gLogger.info("CheckCdn start")
-            randomStr = "abcdefghijklmn"
-
         # 整理数据，相关格式之类的整理
         def flushResult(domain):
             # 第一次 清理 去域名协议
@@ -378,20 +372,38 @@ class Spider(object):
                         info['target'] = 'ip'
                         self.clearTaskList.append(info)
 
-        # 整理数据，去除cdn段的asn 去除cdn段的节点段 @ske大师兄
+        # 整理数据，去除cdn段的asn 去除cdn段的节点段
         def flushIpSegment(domain, ipList, ipSegmentList):
-            tempIpSegmentList = getIpSegment(ipList)
+            """
+            dest:
+            1、去除ip端为cdn节点的可能，为后面的portscan模块节省时间
+            2、如果的cdn网段的ip进行端口扫描的话是无意义的
+            process:
+            1、整理ipList对应存活的C段
+            2、初始化列表
+            3、开始计数
+            4、保存数据
+            """
+            filterIpList = []
+            for ip in ipList:
+                flag = True
+                for ipSegment in FILTER_CDN_IPSEGMENT_LIST:
+                    if ipInSubnet(ip, ipSegment):
+                        flag = False
+                        break
+                if flag:
+                    filterIpList.append(ip)
+
+            tempIpSegmentList = getIpSegment(filterIpList)
             for ipSegment in tempIpSegmentList:
                 ipSegmentList.append({'ipSegment': ipSegment, 'ip': [], 'num': 0})
-            for ip in ipList:
-                for ipSegment in tempIpSegmentList:
-                    ipList = IP(ipSegment)
-                    for i in ipList:
-                        if str(ip) == str(i):
-                            for j in ipSegmentList:
-                                if j.get('ipSegment') == ipSegment:
-                                    j['num'] += 1
-                                    j['ip'].append(ip)
+
+            for ip in filterIpList:
+                for index, ipSegment in enumerate(ipSegmentList):
+                    if ipInSubnet(ip, ipSegment['ipSegment']):
+                        ipSegmentList[index]['num'] += 1
+                        ipSegmentList[index]['ip'].append(ip)
+
             workbook = openpyxl.load_workbook(abs_path + str(domain) + ".xlsx")
             worksheet = workbook.worksheets[5]
             index = 0
@@ -406,12 +418,22 @@ class Spider(object):
             workbook.close()
 
         def flushAsn(domain, asnList):
+            filterAsnList = []
+            for asn in asnList:
+                flag = True
+                for filterAsn in FILTER_CDN_ASN_LIST:
+                    if str(asn) == str(filterAsn):
+                        print(filterAsn)
+                        flag = False
+                        break
+                if flag:
+                    filterAsnList.append(asn)
             workbook = openpyxl.load_workbook(abs_path + str(domain) + ".xlsx")
             worksheet = workbook.worksheets[6]
             index = 0
-            while index < len(asnList):
+            while index < len(filterAsnList):
                 web = list()
-                web.append(asnList[index])
+                web.append(filterAsnList[index])
                 worksheet.append(web)
                 index += 1
             workbook.save(abs_path + str(domain) + ".xlsx")
@@ -456,9 +478,6 @@ class Spider(object):
 
         # 0、备案查询
         self.beianSpider()
-
-        # 1、checkCdn
-        # checkCdn(self.domain)
 
         # 2、大师兄ske用的ksubdomain 自己后面跟着一起
         # 这里进行单一的查询，要不然直接导致带宽不够直接造成其他模块的无法使用
@@ -586,6 +605,7 @@ class Exploit(object):
         cmsScan = CmsScan(self.domain, domainList, moduleList)
         loop = asyncio.get_event_loop()
         loop.run_until_complete(cmsScan.main())
+
         # queue = asyncio.Queue(-1)
         # for aTask in self.domainList:
         #     aIp = aTask.get('ip')
@@ -632,16 +652,16 @@ def parse_args():
     parser = argparse.ArgumentParser(prog='MyScan', description='The tool is beneficial to attack web/service')
     parser.add_argument('-u', '--url', type=str, help='a url. for example: -u zjhu.edu.cn')
     parser.add_argument('-d', '--domain', type=str, help='Target domain. for example: -d zjhu.edu.cn')
-    parser.add_argument('-cn', '--company', type=str, help='Target company. for example: -cn 横戈信息安全有限公司')
+    parser.add_argument('-cn', '--company', type=str, help='Target company. for example: -cn 横戈安全有限公司')
     parser.add_argument('-i', '--ips', type=str, help='Target ip. for example: -i 192.168.1.1-192.168.1.127,192.168.3.1-192.168.3.255 | 192.168.1.0/24,192.168.3.0/24 | 192.168.1.1,192.168.1.2')
     parser.add_argument('-p', '--port', type=str, default='top100', help='Every Ip port, default top100, for example: -p top100')
     parser.add_argument('-m', '--module', type=str, help='Load/Show Payload Module(exploit/third/all)，example: -m exploit')
     parser.add_argument('-f', '--file', type=str, help='a file')
-    parser.add_argument('-fs', '--fofa', type=str, help='fofa scan title. for example: -fs "domain=\"hengGe.cn\"')
+    parser.add_argument('-fs', '--fofa', type=str, help='fofa scan title. for example: -fs "domain=\"zjhu.edu.cn\"')
+    parser.add_argument('-x', '--proxy', help='for example: -x 127.0.0.1:7890')
     parser.add_argument('-k', '--ksub', action='store_true', help='for example: -k')
     parser.add_argument('-ss', '--serviceScan', action='store_true', help='for service scan.')
     parser.add_argument('-cs', '--cmsScan', action='store_true', help='for cms scan.')
-    parser.add_argument('-x', '--proxy', help='http proxy')
     parser.add_argument('-v', '--version', action='version', version=getVersion(), help='Display version')
     # parser.add_argument('-f', '--file', type=str, help='file')
     return parser.parse_args()
@@ -650,6 +670,12 @@ def parse_args():
 if __name__ == '__main__':
     print('[+] Welcome From HengGe\'s Team ^.^')
     GlobalVariableManager.init()
+    # a = ModuleManager('exploit')
+    # print(a.remainModuleList)
+    """
+    测试代码
+    """
+    # exit(0)
     starttime = time.time()
     args = parse_args()
     if args.domain:
@@ -671,7 +697,7 @@ if __name__ == '__main__':
             exit(0)
         else:
             exit('[-] 文件名{}已存在，如果要运行的话需要将该文件{}.xlsx改名或者删除.'.format(args.domain, args.domain))
-    if args.cmsscan:
+    if args.cmsScan:
         fileName = str(int(time.time()))
         createXlsx(fileName)
         if args.url:
@@ -720,7 +746,7 @@ if __name__ == '__main__':
             print("[+] 总花费时间: " + str(time.time() - starttime))
             exit(0)
     # servicescan + portscan
-    if args.servicescan:
+    if args.serviceScan:
         fileName = str(int(time.time()))
         createXlsx(fileName)
         if args.ips:
@@ -757,8 +783,8 @@ if __name__ == '__main__':
         gLogger.info(httpList)
         print("[+] 总花费时间: " + str(time.time() - starttime))
         exit(0)
-    if args.module and args.domain is None:
-        ModuleLoader.showModule(args.module)
+    if args.module:
+        ModuleManager.showModule(args.module)
         # cmsScan = CmsScan('result.com', domainList, moduleList)
         exit(0)
     # if domain and module is None:

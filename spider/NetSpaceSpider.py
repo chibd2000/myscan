@@ -1,10 +1,11 @@
 # coding=utf-8
 
+from core.public import *
 from core.exception.net import NetPageLimitError
 from core.exception.net import NetPrivilegeError
 from core.request.request import HackRequest
 from spider.common import config
-from spider.public import *
+
 from common.tools import *
 from spider import BaseSpider
 from lxml import etree

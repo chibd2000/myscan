@@ -1,10 +1,14 @@
 # myscan
 
+[![Python 3.8](https://img.shields.io/badge/python-3.8-red.svg)](https://www.python.org/)  
+
 横戈安全团队  
 横戈安全团队  
 横戈安全团队  
 
-# 用法
+# 安装
+
+`pip3 install -r requirements.txt`
 
 配置API：spider/common/config.py
 
@@ -27,15 +31,15 @@
 * soft nofile 65536
 ```
 
-说明：这个脚本纯属自用，只是开源到github上，要用的话一般的用法下面都有讲到
+说明：这个脚本纯属自用，只是开源到github上，要用的话一般的用法下面中都有讲到
 
 # 构建信息搜集/漏洞扫描
 
-已经实现的功能：
-
-### 信息搜集（多线程+异步IO）：
+## 信息搜集
 
 - 1-DNS枚举查询(ksubdomain)子域名 (默认没开起来，要开的话自己在代码里面改下，batch.py 418行)
+
+![gather](img/gather-third.png)
 
 - 2-百度/Bing关键词查询子域名
 
@@ -103,9 +107,7 @@
 中间环节
 
 - 12、探测存活，整理数据，如下格式所示  
-
 ```
-
 # 资产IP+端口格式
 
 [+] [ipPortList] [280] [{'ip': '202.103.147.144', 'port': [8080, 8090]}, {'ip': '125.19.57.134', 'port': []}, {'ip': '58.60.230.103', 'port': [8000, 2000]}, {'ip': '202.103.147.169', 'port': [25]}]
@@ -139,9 +141,9 @@
 [+] [domainList] [522] ['b2bprodhk.xxx.com.cn', 'out2.xxx.com.cn', 'topicscn.xxx.com.cn', '18.184.132.222:443', 'ilearning.xxx.com.cn', '47.75.103.207:443', 'sslsfshct.xxx.com.cn', 'pantheon-akamaigs1.wpc.edgecastcdn.net.xxx.com.cn', 'support.xxx.com.cn', 'mx10.xxx.com.cn', 'ca.xxx.com.cn', '47.92.49.128', 'guide.xxx.com', 'mx5.xxx.com.cn', '39.98.88.177:443', 'xxxtcm.xxx.com.cn', '47.111.170.47', 'apimes.sc.xxx.com.cn']
 ```
 
-### 漏洞扫描（多进程、多线程、异步IO）：
+## 漏洞扫描
 
-1、CMS框架漏洞
+### CMS框架漏洞
 
 - 集成了大概100+个poc
 
@@ -169,7 +171,7 @@
 
 ![cmscan](img/fofa-cmscan-2.png)
 
-2、端口服务漏洞
+### 端口服务漏洞
 
 用于探测一些中间件的未授权和敏感端口的弱口令以及部分可能存在的反序列化端口，比如RMI log4j Dubbo之类的
 
@@ -194,15 +196,15 @@
 
 `python3 batch.py -i 1.1.1.1, 2.2.2.2 -p top100 -ss`
 
-3、SQL注入漏洞
+### SQL注入漏洞
 
 - 通过sqlmap来进行探测，根据sqlmap来判断是否存在注入，用的方法是langzi的方法，参考文章在下面
 
-#用法：
+# 用法：
 
-###信息搜集/漏洞利用
+记得挂代理，因为部分接口都需要翻墙，代理端口为7890，目前是写死的，之后完全写完之后再改这个代理端口的问题。
 
-`python batch.py -d zjhu.edu.cn`
+脚本运行: `python3 batch.py -d zjhu.edu.cn`
 
 信息搜集测试域名：zjhu.edu.cn
 
@@ -210,27 +212,19 @@
 
 ![spider](img/spider.jpg)
 
-#版本展示：
-
-`python batch.py -v`
-
-![version](img/version.png)
-
-# 设计的思维导图
+#设计的思维导图
 
 个人感觉整体架构写的其实不是很好，可能是在写的过程中，想法同样也会发生变化，当后面觉得前面不完善的时候，又需要强行插入一些东西，看起来就十分的僵硬，还是有很多需要学习的地方。
-
-![Myscan](img/Myscan.png)
     
-# 总结：
+#总结：
 
 1、学习python编写代码
 
 2、感谢ske大师兄和其他人的项目，前人栽树，后人乘凉
 
-3、虽然说是造轮子，对于自己来说还是有收获的
+3、虽然说是造轮子，但是自己觉得对于自己来说还是有收获的
 
-# 参考：
+#参考的项目和文章：
 
 1、https://xz.aliyun.com/t/9508
 
@@ -248,15 +242,11 @@
 
 8、http://www.langzi.fun/Sqlmap%E9%80%9F%E6%9F%A5%E8%A1%A8%E4%B8%8EPython%E8%BF%9B%E8%A1%8C%E5%8A%9F%E8%83%BD%E7%A7%BB%E6%A4%8D.html
 
-9、https://github.com/Threezh1/JSFinder
+9、http://mp.weixin.qq.com/s?__biz=Mzg4MzY3MTgyMw==&mid=2247483720&idx=1&sn=5449ed47b74cf892c01eb8833b59c952&chksm=cf429728f8351e3eee7387ca85c79a705ae68122509484d49bc278e24c9de4e22ef0080dc0c8&mpshare=1&scene=23&srcid=1114LGKgJqRAT9xqFA9s2BwC&sharer_sharetime=1636911890316&sharer_shareid=1b35adb1b046ef1a6379932d3eabbaf8#rd
 
-10、http://mp.weixin.qq.com/s?__biz=Mzg4MzY3MTgyMw==&mid=2247483720&idx=1&sn=5449ed47b74cf892c01eb8833b59c952&chksm=cf429728f8351e3eee7387ca85c79a705ae68122509484d49bc278e24c9de4e22ef0080dc0c8&mpshare=1&scene=23&srcid=1114LGKgJqRAT9xqFA9s2BwC&sharer_sharetime=1636911890316&sharer_shareid=1b35adb1b046ef1a6379932d3eabbaf8#rd
+10、https://github.com/sqlmapproject/sqlmap
 
-11、https://github.com/LandGrey/domainNamePredictor
-
-12、https://github.com/sqlmapproject/sqlmap
-
-# 需要增加的
+#需要增加的
 
 ~~1、基于请求数据的时候实现进度可视化，比如进度条~~（已实现）
 
@@ -312,6 +302,7 @@
 明明只需要第一次进行探测的时候知道了是这个系统，那么后面的同类型利用模块它每次就会跳过CMS识别，直接进行漏洞利用，这里优化的就是这个情况。
 
 FOFA上搜索的1000条域名数据测试，没优化之前的总EXP扫描速度为48分钟，目前为40分钟，写的还是不好，之后慢慢改好了，之后随着时间慢慢往上面改。
+
 
 ~~13、一些BUG~~（已完成）
 
@@ -388,8 +379,6 @@ EOFError
 
 ~~- 添加hunter奇安信接口~~
 
-2021.11.25 - 2021.12.9 这两个星期都不更新了，有个证书的考试需要准备下，后面继续改
+~~25、filterCDN方法添加(为后面的portscan节省时间，如果的cdn网段的ip进行端口扫描的话是无意义的)~~（已完成）
 
-25、filterCDN方法添加(为后面的portscan节省时间，如果的cdn网段的ip进行端口扫描的话是无意义的)
-
-26、flushIpSegment方法修改（原本清洗数据时间太长，这个方法改了可以缩短清洗数据的时间）
+~~26、flushIpSegment方法修改（原本清洗数据时间太长，这个方法改了可以缩短清洗数据的时间）~~（已完成）

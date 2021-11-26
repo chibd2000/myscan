@@ -2,7 +2,7 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-09-07 20:54
 
-from core.MySetting import top_banner_port
+from core.setting import TOP_1000_BANNER_PORT
 import IPy
 from socket import inet_ntoa
 from struct import pack
@@ -93,7 +93,7 @@ class PortWrapper(object):
                     portList = ports.split(',')
             elif ports[0:3] == 'top':
                 num = int(ports.split('top')[1])
-                portList.extend(top_banner_port[0:num])
+                portList.extend(TOP_1000_BANNER_PORT[0:num])
             else:
                 portList.append(ports)
             return portList

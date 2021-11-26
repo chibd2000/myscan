@@ -1,8 +1,6 @@
 # coding=utf-8
 
 import xlsxwriter
-import random
-from tldextract import extract
 
 url_rules = {'.com.cn', '.org.cn', '.net.cn', '.com', '.cn', '.cc', '.net', '.org', '.info', '.fun', '.one', '.xyz',
              '.name', '.io', '.top', '.me', '.club', '.tv', '.uk', '.hk'}
@@ -128,17 +126,6 @@ def getPortService(port):
             if int(b) == int(port):
                 return k
     return 'Unknown'
-
-
-def getRootdomain(url):
-    val = extract(url)
-    return f'{val.domain}.{val.suffix}' if val.domain and val.suffix else ''
-
-
-def getSubdomain(url):
-    val = extract(url)
-    return f'{val.subdomain}.{val.domain}.{val.suffix}' if val.subdomain and val.domain and val.suffix else ''
-
 
 # 创建图表
 def createXlsx(target):

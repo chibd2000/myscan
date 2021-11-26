@@ -1,7 +1,7 @@
 # coding=utf-8
 # @Author   : HengGe's team
 # @Time     : 2021-08-25 1:15
-from spider.public import *
+from core.public import *
 from spider import BaseSpider
 from core.utils.PorxyProvider import ProxyProvider
 

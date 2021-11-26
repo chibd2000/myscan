@@ -2,7 +2,8 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-31 23:04
 
-from spider.public import *
+from core.public import *
+
 from spider import BaseSpider
 
 

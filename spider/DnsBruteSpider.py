@@ -1,5 +1,5 @@
 # coding=utf-8
-from spider.public import *
+from core.public import *
 from spider import BaseSpider
 
 import subprocess

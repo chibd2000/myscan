@@ -1,6 +1,6 @@
 # coding=utf-8
 # @Author   : ske
-from spider.public import *
+from core.public import *
 from spider import BaseSpider
 
 

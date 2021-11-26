@@ -6,7 +6,8 @@ import importlib
 import os
 import re
 from core.constant import ModulePath
-from core.MyGlobalVariableManager import GlobalVariableManager
+from core.variablemanager import GlobalVariableManager
+
 
 # import sys
 abs_path = os.getcwd() + os.path.sep  # 路径
@@ -17,59 +18,6 @@ abs_path = os.getcwd() + os.path.sep  # 路径
 class ModuleLoader(object):
     def __init__(self, moduleType):
         self.moduleList = []
-        self.initMultiModuleDict(moduleType)
-
-    # 减少同类型多模块加载的时间消耗所写的类
-    def initMultiModuleDict(self, moduleType):
-        if moduleType == 'exploit':
-            exploitRule = {}
-            for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.EXPLOIT, followlinks=True):
-                dirFileLength = 0
-                for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
-                                                                                                     -3:] != '.py':
-                        continue
-                    dirFileLength += 1
-
-                if dirFileLength >= 2:
-                    dirName = re.split('[\\\\/]', parent)[-1]
-                    exploitRule[dirName] = []
-            GlobalVariableManager.setValue('exploitRule', exploitRule)
-
-    @staticmethod
-    def showModule(moduleType='exploit'):
-        def showExploitModule():
-            fileLength = 0
-            for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.EXPLOIT, followlinks=True):
-                for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
-                                                                                                     -3:] != '.py':
-                        continue
-                    fileLength += 1
-                    filePath = os.path.join(parent, filename)
-                    print('.'.join(re.split('[\\\\/]', filePath[len(abs_path):-3])))
-            print('[+] exploit module size: {}'.format(fileLength))
-
-        def showThirdModule():
-            fileLength = 0
-            for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.THIRDLIB, followlinks=True):
-                for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
-                                                                                                     -3:] != '.py':
-                        continue
-                    fileLength += 1
-                    filePath = os.path.join(parent, filename)
-                    print('.'.join(re.split('[\\\\/]', filePath[len(abs_path):-3])))
-            print('[+] third module size: {}'.format(fileLength))
-
-        if moduleType == 'all':
-            showThirdModule()
-            print('=======================================')
-            showExploitModule()
-        elif moduleType == 'exploit':
-            showExploitModule()
-        elif moduleType == 'third':
-            showThirdModule()
 
     def moduleLoad(self, moduleType, moduleObject=None):
         try:

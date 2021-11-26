@@ -1,11 +1,12 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
 # @Time     : 2021-09-02 13:18
+
+from core.public import *
+
 import codecs
 import contextlib
-
 from async_timeout import timeout
-from spider.public import *
 from spider import BaseSpider
 from spider.common.banner import *
 import zlib

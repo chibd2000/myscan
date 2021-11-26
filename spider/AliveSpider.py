@@ -1,10 +1,10 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
 # @Time     : 2021-09-01 11:08
+from core.public import *
 from core.parser.urlparser import urlParser
 from core.utils.differ import DifferentChecker
 from spider import BaseSpider
-from spider.public import *
 from bs4 import BeautifulSoup
 
 

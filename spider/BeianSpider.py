@@ -1,7 +1,7 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-26 13:46
-from spider.public import *
+from core.public import *
 from spider import BaseSpider
 import math
 from urllib.parse import quote

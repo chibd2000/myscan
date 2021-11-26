@@ -6,11 +6,13 @@
 from tldextract import extract
 from urllib.parse import urlparse
 
+
 class urlParser:
     """
     解析url相关格式信息
     write in 2021.11.24 14.26 @zpchcbd
     """
+
     def __init__(self, url):
         self.extractResult = extract(url)
         self.parseResult = urlparse(url)
