@@ -127,14 +127,19 @@ def getPortService(port):
                 return k
     return 'Unknown'
 
+
 # 创建图表
 def createXlsx(target):
     workbook = xlsxwriter.Workbook(target + ".xlsx")
 
     worksheet1 = workbook.add_worksheet('备案')
-    headings1 = ['域名', '主备案号']
-    worksheet1.set_column('A:A', 12)
-    worksheet1.set_column('B:B', 28)
+    headings1 = ['域名', '网站', '备案人', 'ICP备案', '类型', '备案时间']
+    worksheet1.set_column('A:A', 18)
+    worksheet1.set_column('B:B', 29)
+    worksheet1.set_column('C:C', 8)
+    worksheet1.set_column('D:D', 22)
+    worksheet1.set_column('E:E', 8)
+    worksheet1.set_column('F:F', 11)
     worksheet1.write_row('A1', headings1)
 
     worksheet2 = workbook.add_worksheet('企业架构')

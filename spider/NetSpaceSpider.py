@@ -1,9 +1,8 @@
 # coding=utf-8
-
+from core.parser.urlparser import urlParser
 from core.public import *
 from core.exception.net import NetPageLimitError
 from core.exception.net import NetPrivilegeError
-from core.request.request import HackRequest
 from spider.common import config
 
 from common.tools import *
@@ -48,7 +47,7 @@ class FofaProperty:
         self.name = FofaProperty.NAME_FIELD
         self.subdomain = _.get(FofaProperty.SUBDOMAIN_FIELD, '')
         self.portService = getPortService(_.get(FofaProperty.PORT_FIELD, ''))
-        self.rootdomain = getRootdomain(_.get(FofaProperty.DOMAIN_FIELD, ''))
+        self.rootdomain = urlParser(_.get(HunterProperty.DOMAIN_FIELD, '')).rootdomain
         self.port = _.get(FofaProperty.PORT_FIELD, '')
         self.ip = _.get(FofaProperty.IP_FIELD, '')
         self.title = _.get(FofaProperty.TITLE_FIELD, '')
@@ -83,7 +82,7 @@ class HunterProperty:
         self.name = HunterProperty.NAME_FIELD
         self.subdomain = _.get(HunterProperty.SUBDOMAIN_FIELD, '')
         self.portService = getPortService(_.get(HunterProperty.PORT_FIELD, ''))
-        self.rootdomain = getRootdomain(_.get(HunterProperty.DOMAIN_FIELD, ''))
+        self.rootdomain = urlParser(_.get(HunterProperty.DOMAIN_FIELD, '')).rootdomain
         self.port = _.get(HunterProperty.PORT_FIELD, '')
         self.ip = _.get(HunterProperty.IP_FIELD, '')
         self.title = _.get(HunterProperty.TITLE_FIELD, '')

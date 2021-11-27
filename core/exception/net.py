@@ -16,6 +16,6 @@ class NetPrivilegeError(NetGatherError):
 
 
 class NetPageLimitError(NetGatherError):
-    """空间搜索引擎特权问题导致的异常封装类"""
+    """空间搜索引擎页数问题导致的异常封装类"""
     def __init__(self, message):
         self.message = message

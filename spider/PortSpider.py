@@ -345,10 +345,10 @@ class ServiceScan(object):
     def get_http_title(self, response):
         title = '获取失败'
         try:
-            title_pattern = r'<title>(?P<result>[^<]+)</title>'
+            title_pattern = r'<title>(.*?)</title>'
             title = re.search(title_pattern, response, re.S | re.I).group(1)
             try:
-                title = title.decode().replace('\n', '').strip()
+                title = title.decode('utf-8').replace('\n', '').strip()
                 return title
             except:
                 try:

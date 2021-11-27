@@ -39,8 +39,7 @@ class ModuleManager(object):
                     if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[-3:] != '.py':
                         continue
                     dirFileLength += 1
-
-                if dirFileLength >= 2:
+                if dirFileLength >= 1:
                     dirName = re.split('[\\\\/]', parent)[-1]
                     exploitRule[dirName] = []
             GlobalVariableManager.setValue('exploitRule', exploitRule)

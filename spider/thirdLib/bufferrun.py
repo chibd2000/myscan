@@ -67,23 +67,27 @@ class Bufferover(BaseThird):
                                 print('[-] curl api.proxyscrape.com grabbed proxy fail.')
             except aiohttp.ClientHttpProxyError:
                 print('[-] curl api.proxyscrape.com need outer proxy.')
+                return []
             except asyncio.TimeoutError:
                 print("[-] curl api.proxyscrape.com timeout, check your proxy.")
                 return []
-
+            except Exception as e:
+                print("[-] curl api.proxyscrape.com error, thr error is {}".format(e.args))
+                return []
         print('[+] Load bufferover api ...')
         t = asyncio.create_task(getProxy())
         proxyList = await t
-        taskList = []
-        for _ in proxyList:
-            taskList.append(asyncio.create_task(self.getSubdomain(_)))
-        res = await asyncio.gather(*taskList)
-        for aList in res:
-            if aList is None:
-                continue
-            self.resList.extend(aList)
-        self.resList = list(set(self.resList))
-        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
+        if proxyList:
+            taskList = []
+            for _ in proxyList:
+                taskList.append(asyncio.create_task(self.getSubdomain(_)))
+            res = await asyncio.gather(*taskList)
+            for aList in res:
+                if aList is None:
+                    continue
+                self.resList.extend(aList)
+            self.resList = list(set(self.resList))
+            print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
         return self.resList
 
 

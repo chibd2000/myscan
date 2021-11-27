@@ -6,6 +6,9 @@
 横戈安全团队  
 横戈安全团队  
 
+author: Chibd2000
+blog: https://www.cnblogs.com/zpchcbd/
+
 # 安装
 
 `pip3 install -r requirements.txt`
@@ -39,17 +42,16 @@
 
 - 1-DNS枚举查询(ksubdomain)子域名 (默认没开起来，要开的话自己在代码里面改下，batch.py 418行)
 
-![gather](img/gather-third.png)
-
 - 2-百度/Bing关键词查询子域名
 
 - 3-fofa/shodan/quake/hunter整合查询子域名
 
 每个空间引擎搜集到的资产都会有点不一样，所以就是整合多个来进行合并，提高覆盖率，到时候好方便观察。
 
-默认都会存储空间引擎查询到的端口，然后和之后的端口扫描出来的结果一起整合，最后在服务扫描中一起进行探测利用。
+默认都会存储空间引擎查询到的所有端口（防止后面的端口扫描有可能没扫到，添加容错率），
+然后和之后的端口扫描出来的结果一起整合，最后在服务扫描模块中一起进行探测利用。
 
-默认关键字查询如下
+默认语法关键字查询如下
 
 1) domain="test.com"
 
@@ -57,7 +59,7 @@
 
 3) cert="test.com"
 
-4) icon_hash="test.com"
+4) icon_hash="-1227431955"
  
 - 4-ctfr证书查询子域名
 
@@ -66,7 +68,7 @@
 这里面的一些error是正常的，我这里没有隐藏掉，然后一些接口有cloudflare验证，比如bufferover接口，自己的方法是通过获取一批代理IP然后批量
 访问它，从而实现绕过cloudflare的验证
 
-![thirdLib](img/thirdLib.png)
+![gather](img/gather-third.png)
 
 - 6-github查询子域名
 
@@ -163,11 +165,13 @@
 
 ![cmscan](img/url-multi-cmscan.png)
 
-- 配合fofa批量探测单个poc/多个poc
+- 配合fofa批量探测
 
-`python batch.py -fs app=\"XXXXX\" -p exploit.web.Meeting.v2Conference.sql_inject`
+单个poc:`python batch.py -fs app=\"XXXXX\" -m exploit.web.Meeting.v2Conference.sql_inject -cs`
 
 ![cmscan](img/fofa-cmscan-1.png)
+
+默认所有poc:`python batch.py -fs app=\"XXXXX\" -cs`
 
 ![cmscan](img/fofa-cmscan-2.png)
 
@@ -285,7 +289,7 @@
 自己在挖掘src的时候碰到过很多，也同样撞出过挺多的资产，考虑要不要写进去，自己用HOST碰撞的时候都是用ffuf感觉这个速度很快，并且很准确，这个用
 的就挺好的...
 
-12、优化CMS扫描（对于同类型多EXP的探测进行优化，加快总扫描速度）
+~~12、优化CMS扫描（对于同类型多EXP的探测进行优化，加快总扫描速度）~~ （已完成）
 
 这里要优化的是什么？
 
@@ -303,6 +307,7 @@
 
 FOFA上搜索的1000条域名数据测试，没优化之前的总EXP扫描速度为48分钟，目前为40分钟，写的还是不好，之后慢慢改好了，之后随着时间慢慢往上面改。
 
+2021.11.27 16.51 1000条域名 110个poc 探测时间为32分钟
 
 ~~13、一些BUG~~（已完成）
 
@@ -382,3 +387,5 @@ EOFError
 ~~25、filterCDN方法添加(为后面的portscan节省时间，如果的cdn网段的ip进行端口扫描的话是无意义的)~~（已完成）
 
 ~~26、flushIpSegment方法修改（原本清洗数据时间太长，这个方法改了可以缩短清洗数据的时间）~~（已完成）
+
+~~27、信息搜集完的数据防止遗失，都会通过logger类来进行保存在log目录下进行保存~~（已完成）

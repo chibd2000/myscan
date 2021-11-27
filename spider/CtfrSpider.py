@@ -46,9 +46,11 @@ class CtfrSpider(BaseSpider):
                         sslInfo.append(domainInfo)
         except aiohttp.ClientHttpProxyError:
             print('[-] curl ctfr.sh need outer proxy.')
+            return []
         except Exception as e:
             print('[-] curl crt.sh error, the erorr is {}'.format(e.args))
-
+            return []
+        
         # 列表中的字典去重
         self.writeFile(getUniqueList(sslInfo), 3)
 

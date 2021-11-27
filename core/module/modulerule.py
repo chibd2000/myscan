@@ -4,9 +4,12 @@
 
 # 减少同类型多模块加载的时间消耗所写的类
 class ModuleRule:
+    """
+    存储格式应该为
+    remainModuleList = [{"seeyon"}]
+    """
     # JAVA
     Jboss = []  # JBOSS
-
     # OA系列
     Weaver = []  # 泛微系列OA
     Landray = []  # 蓝凌系列OA

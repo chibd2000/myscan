@@ -232,7 +232,7 @@ class AliveSpider(BaseSpider):
                                     for htmlLink in htmlFinaLinks:
                                         if self.domain in htmlLink:
                                             self.linkList.append(htmlLink)
-                                print(scriptFinaLinks, htmlFinaLinks)
+                                # print(scriptFinaLinks, htmlFinaLinks)
                             # 探测后台目录
                             # self._getBackend(session, url)
         except TimeoutError:

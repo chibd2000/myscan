@@ -1,9 +1,12 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
-# @blog     : https://www.cnblogs.com/zpchcbd/
+# @Blog     : https://www.cnblogs.com/zpchcbd/
 # @Time     : 2021-11-22 12:59
 
-"""封装一个日志类，想要实现的是文件和控制台都可以记录相关信息"""
+"""
+封装一个日志类，想要实现的是文件和控制台都可以记录相关信息
+write in 2021.11.22 12.59 @zpchcbd
+"""
 import logging
 
 

@@ -27,8 +27,10 @@ class Hacketarget(BaseThird):
                         print('[-] hackertarget API No Subdomains.')
         except aiohttp.ClientHttpProxyError:
             print('[-] curl api.hackertarget.com need outer proxy.')
+            return []
         except Exception as e:
             print('[-] curl api.hackertarget.com api error, the error is {}'.format(e.args))
+            return []
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

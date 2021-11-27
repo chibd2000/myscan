@@ -1,5 +1,5 @@
 # coding=utf-8
-
+from core.exception.github import GithubPrivilegeError
 from core.public import *
 from spider import BaseSpider
 from spider.common import config
@@ -60,14 +60,14 @@ class GithubSpider(BaseSpider):
         # q=搜索的关键字，q=signtool+sign+pfx+language:Batchfile  指定语言在q参数里，使用language参数
         # extension:pfx 指定后缀在q参数里，使用extension参数
         headers = {"Authorization": 'token {}'.format(self.githubApi)}
-        try:
-            async with session.get(url=self.addr.format(self.domain, page, self.per_page, proxy='http://127.0.0.1:7890'),
-                                   headers=headers, timeout=self.reqTimeout, verify_ssl=False) as response:
-                text = await response.json()
-                await asyncio.sleep(2)
-                return text
-        except Exception as e:
-            print('[-] [{}] curl {} error, the error is {}'.format(self.source, self.addr, e.args))
+        async with session.get(url=self.addr.format(self.domain, page, self.per_page, proxy='http://127.0.0.1:7890'),
+                               headers=headers, timeout=self.reqTimeout, verify_ssl=False) as response:
+            text = await response.json()
+            await asyncio.sleep(2)
+            if 'API rate limit exceeded' in text:
+                print('[-] check your github api rate limit')
+                raise GithubPrivilegeError from None
+            return text
 
     async def getSubdomains(self, session, url):
         async with session.get(url=url, headers=self.headers, timeout=self.reqTimeout, verify_ssl=False, proxy='http://127.0.0.1:7890') as response:
@@ -105,9 +105,6 @@ class GithubSpider(BaseSpider):
         try:
             async with aiohttp.ClientSession() as session:
                 text1 = await self.githubSearch(session, 1)
-                if 'API rate limit exceeded' in text1:
-                    print('[-] check your github api rate limit')
-                    return []
                 total_count = text1['total_count']
                 # E.G. total = 50，max_page = 1; total = 51, max_page = 2
                 # 需要搜索的页数为max_page和task.page中最小的值
@@ -129,12 +126,15 @@ class GithubSpider(BaseSpider):
 
                 # 这里则进行异步操作对每个构造好的raw.githubusercontent.com中的内容进行匹配
                 await asyncio.gather(*taskList)  # [[{}],[{}]]
+        except GithubPrivilegeError:
+            print('[-] curl github.com error, please check your API Limit.'.format(self.source))
+            return []
         except aiohttp.ClientHttpProxyError:
-            print('[-] curl github.com need outer proxy.')
-        except KeyError as e:
-            print('[-] [{}] get total_count error, please check your API Limit'.format(self.source))
+            print('[-] curl github.com need outer proxy.'.format(self.source))
+            return []
         except Exception as e:
             print('[-] [{}] curl api.github.com error, the erorr is {}'.format(self.source, e.args))
+            return []
 
         self.resList = list(set(self.resList))
         print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))

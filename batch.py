@@ -1,6 +1,6 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
-# @blog     : https://www.cnblogs.com/zpchcbd/
+# @Blog     : https://www.cnblogs.com/zpchcbd/
 # @Time     : 2020-11-23 20:45
 
 # core
@@ -375,6 +375,7 @@ class Spider(object):
         # 整理数据，去除cdn段的asn 去除cdn段的节点段
         def flushIpSegment(domain, ipList, ipSegmentList):
             """
+            write in 2021.11.27 12.53 @zpchcbd
             dest:
             1、去除ip端为cdn节点的可能，为后面的portscan模块节省时间
             2、如果的cdn网段的ip进行端口扫描的话是无意义的
@@ -423,7 +424,7 @@ class Spider(object):
                 flag = True
                 for filterAsn in FILTER_CDN_ASN_LIST:
                     if str(asn) == str(filterAsn):
-                        print(filterAsn)
+                        # print(filterAsn)
                         flag = False
                         break
                 if flag:
@@ -474,8 +475,6 @@ class Spider(object):
 
         global gDomainList, gDomainAliveList, gIpPortServiceList, gWebParamsList
 
-        # -----------------------
-
         # 0、备案查询
         self.beianSpider()
 
@@ -494,37 +493,36 @@ class Spider(object):
         self.threadList.append(Thread(target=self.baiduSpider, ))
         self.threadList.append(Thread(target=self.bingSpider, ))
         self.threadList.append(Thread(target=self.ctfrSpider, ))
-        self.threadList.append(Thread(target=self.netSpider, ))
         self.threadList.append(Thread(target=self.githubSpider, ))
         for _ in self.threadList:
             _.start()
         for _ in self.threadList:
             _.join()
 
-        # 5、清洗整理数据
+        # 5、netSpace
+        self.netSpider()
+
+        # 6、清洗整理数据
         # self.flushResult()
 
-        # 6、友链爬取
+        # 7、友链爬取
         self.friendChainsSpider()
 
-        # 7、domain2ip
+        # 8、domain2ip
         self.domain2ip()
 
-        # 8、ip2domain
+        # 9、ip2domain
         self.ip2domain()
 
-        # 9、sslSpider @keefe @行牛 @ske 2021.09.01 SSL
+        # 10、sslSpider @keefe @行牛 @ske 2021.09.01 SSL
         # self.sslSpider()
 
-        # 10、alive
+        # 11、alive
         self.aliveSpider()
 
-        # 11、asn和ip段整理
+        # 12、asn和ip段整理 filter
         flushIpSegment(self.domain, self.ipList, self.ipSegmentList)
         flushAsn(self.domain, self.asnList)
-
-        # 12、过滤属于CDN网段的IP
-        # filterCDN()
 
         # 13、port scan in self.ipPortList
         # print('portConfig: ', portConfig)
@@ -547,7 +545,8 @@ class Spider(object):
         print('==========================')
         gLogger.info('[+] [IpPortList] [{}] {}'.format(len(self.ipPortList), self.ipPortList))
         print('==========================')
-        gLogger.info('[+] [JavaScriptParamsList] [{}] {}'.format(len(self.javaScriptParamList), self.javaScriptParamList))
+        gLogger.info(
+            '[+] [JavaScriptParamsList] [{}] {}'.format(len(self.javaScriptParamList), self.javaScriptParamList))
         print('==========================')
         gLogger.info('[+] [gWebParamsList] [{}] {}'.format(len(gWebParamsList), gWebParamsList))
         print('==========================')
@@ -644,6 +643,11 @@ class Exploit(object):
         #     i.join()
 
 
+def globalVariableInit():
+    GlobalVariableManager.init()
+    GlobalVariableManager.setValue("remainModuleList", [])
+
+
 def getVersion():
     return 'Myscan Tool\'s version is 2.0 - HengGe'
 
@@ -653,9 +657,12 @@ def parse_args():
     parser.add_argument('-u', '--url', type=str, help='a url. for example: -u zjhu.edu.cn')
     parser.add_argument('-d', '--domain', type=str, help='Target domain. for example: -d zjhu.edu.cn')
     parser.add_argument('-cn', '--company', type=str, help='Target company. for example: -cn 横戈安全有限公司')
-    parser.add_argument('-i', '--ips', type=str, help='Target ip. for example: -i 192.168.1.1-192.168.1.127,192.168.3.1-192.168.3.255 | 192.168.1.0/24,192.168.3.0/24 | 192.168.1.1,192.168.1.2')
-    parser.add_argument('-p', '--port', type=str, default='top100', help='Every Ip port, default top100, for example: -p top100')
-    parser.add_argument('-m', '--module', type=str, help='Load/Show Payload Module(exploit/third/all)，example: -m exploit')
+    parser.add_argument('-i', '--ips', type=str,
+                        help='Target ip. for example: -i 192.168.1.1-192.168.1.127,192.168.3.1-192.168.3.255 | 192.168.1.0/24,192.168.3.0/24 | 192.168.1.1,192.168.1.2')
+    parser.add_argument('-p', '--port', type=str, default='top100',
+                        help='Every Ip port, default top100, for example: -p top100')
+    parser.add_argument('-m', '--module', type=str,
+                        help='Load/Show Payload Module(exploit/third/all)，example: -m exploit')
     parser.add_argument('-f', '--file', type=str, help='a file')
     parser.add_argument('-fs', '--fofa', type=str, help='fofa scan title. for example: -fs "domain=\"zjhu.edu.cn\"')
     parser.add_argument('-x', '--proxy', help='for example: -x 127.0.0.1:7890')
@@ -669,13 +676,7 @@ def parse_args():
 
 if __name__ == '__main__':
     print('[+] Welcome From HengGe\'s Team ^.^')
-    GlobalVariableManager.init()
-    # a = ModuleManager('exploit')
-    # print(a.remainModuleList)
-    """
-    测试代码
-    """
-    # exit(0)
+    globalVariableInit()
     starttime = time.time()
     args = parse_args()
     if args.domain:
@@ -705,6 +706,10 @@ if __name__ == '__main__':
             if args.module is None:
                 print('[+] load all module')
                 moduleList = moduleLoader.moduleLoad(moduleType='exploit')
+                currentModuleList = GlobalVariableManager.getValue("remainModuleList")
+                for _ in currentModuleList:
+                    print(_)
+                # exit(0)
             else:
                 print('[+] load module -> {}'.format(args.module.split(',')))
                 modulenameList = args.module.split(',')

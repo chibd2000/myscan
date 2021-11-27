@@ -18,13 +18,18 @@ class urlParser:
         self.parseResult = urlparse(url)
 
     @property
-    def rootdomain(self):
+    def subdomain(self):
         return f'{self.extractResult.subdomain}.{self.extractResult.domain}.{self.extractResult.suffix}' if self.extractResult.subdomain and self.extractResult.domain and self.extractResult.suffix else ''
 
     @property
-    def subdomain(self):
+    def rootdomain(self):
         return f'{self.extractResult.domain}.{self.extractResult.suffix}' if self.extractResult.domain and self.extractResult.suffix else ''
 
     @property
     def scheme(self):
         return f'{self.parseResult.scheme}://'
+
+
+if __name__ == '__main__':
+    t = urlParser('bpmyh.test.com')
+    print(t.rootdomain)

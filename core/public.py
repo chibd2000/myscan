@@ -20,6 +20,7 @@ try:
     import os
     import socket
     import copy
+    import hashlib
     from tqdm import tqdm
     from core.request.asynchttp import *
     from spider.common.config import *

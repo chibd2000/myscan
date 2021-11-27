@@ -31,6 +31,9 @@ class ProxyProvider(object):
                             print('[-] api.proxyscrape.com No proxy.')
             print('[+] verifying proxy is enable...')
             await self.testProxy()
+        except aiohttp.ClientHttpProxyError:
+            print('[-] curl api.proxyscrape.com need outer proxy.')
+            return []
         except asyncio.TimeoutError:
             print("[-] curl {} Timeout, check your proxy.".format(self.addr))
         except Exception as e:

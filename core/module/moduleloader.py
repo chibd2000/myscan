@@ -62,11 +62,46 @@ class ModuleLoader(object):
         # default
         # 因为分目录了，所以这里想要动态加载模块只能是os.walk()
         # sys.path.append(self.modulePath)
-        if moduleType == 'third':
+
+        # version: 2
+        if moduleType == 'exploit':
+            for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.EXPLOIT, followlinks=True):
+                dirFileLength = 0
+                sameTypeModuleList = []
+                for filename in filenameList:
+                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[-3:] != '.py':
+                        continue
+                    try:
+                        filePath = os.path.join(parent, filename)
+                        modulePY = importlib.import_module('.'.join(re.split('[\\\\/]', filePath[len(abs_path):-3])))
+                        if hasattr(modulePY, 'Script'):
+                            # 一般一个同类型的模块只加载一次，那么如果目录文件>=1的话，那么则该目录为同类型多模块
+                            if dirFileLength >= 1:
+                                aModule = getattr(modulePY, 'Script')
+                                sameTypeModuleList.append(aModule)
+                            # 不是同类型多模块的处理
+                            else:
+                                aModule = getattr(modulePY, 'Script')
+                                self.moduleList.append(aModule)
+                            dirFileLength += 1
+                    except Exception as e:
+                        print('import module {} error, {}'.format(filename, e.__str__()))
+                if sameTypeModuleList:
+                    # 如果是同类型多模块的话，那么就存储到全局变量表中，key为当前模块名，值为相关域名的信息和最后要加载的模块对象
+                    dirName = re.split('[\\\\/]', parent)[-1]
+                    """
+                    格式为 
+                    [
+                        {"seeyon": {"domain": [], "module": [module1(), module2(), module3()]}},
+                        {"seeyon": {"domain": [], "module": [module1(), module2(), module3()]}},                    
+                    ]
+                    """
+                    currentModuleList = GlobalVariableManager.getValue("remainModuleList")
+                    currentModuleList.append({'name': dirName, 'domain': [], 'module': sameTypeModuleList})
+        elif moduleType == 'third':
             for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.THIRDLIB, followlinks=True):
                 for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
-                                                                                                     -3:] != '.py':
+                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[-3:] != '.py':
                         continue
                     try:
                         filePath = os.path.join(parent, filename)
@@ -78,22 +113,44 @@ class ModuleLoader(object):
                             self.moduleList.append(aModule)
                     except Exception as e:
                         print('import module {} error, {}'.format(filename, e.__str__()))
-        elif moduleType == 'exploit':
-            for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.EXPLOIT, followlinks=True):
-                for filename in filenameList:
-                    if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
-                                                                                                     -3:] != '.py':
-                        continue
-                    try:
-                        filePath = os.path.join(parent, filename)
-                        modulePY = importlib.import_module(
-                            '.'.join(re.split('[\\\\/]', filePath[len(abs_path):-3])))
-                        # module = importlib.import_module('FineReport')
-                        if hasattr(modulePY, 'Script'):
-                            aModule = getattr(modulePY, 'Script')
-                            self.moduleList.append(aModule)
-                    except Exception as e:
-                        print('import module {} error, {}'.format(filename, e.__str__()))
+
+
+        # version: 1
+        # if moduleType == 'third':
+        #     for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.THIRDLIB, followlinks=True):
+        #         for filename in filenameList:
+        #             if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
+        #                                                                                              -3:] != '.py':
+        #                 continue
+        #             try:
+        #                 filePath = os.path.join(parent, filename)
+        #                 modulePY = importlib.import_module(
+        #                     '.'.join(re.split('[\\\\/]', filePath[len(abs_path):-3])))
+        #                 # module = importlib.import_module('FineReport')
+        #                 if hasattr(modulePY, 'do'):
+        #                     aModule = getattr(modulePY, 'do')
+        #                     self.moduleList.append(aModule)
+        #             except Exception as e:
+        #                 print('import module {} error, {}'.format(filename, e.__str__()))
+        # elif moduleType == 'exploit':
+        #     for parent, dirnames, filenameList in os.walk(abs_path + ModulePath.EXPLOIT, followlinks=True):
+        #         for filename in filenameList:
+        #             if filename[-3:] == 'pyc' or filename[:2] == '__' or filename[-5:] == '__.py' or filename[
+        #                                                                                              -3:] != '.py':
+        #                 continue
+        #             try:
+        #                 filePath = os.path.join(parent, filename)
+        #                 modulePY = importlib.import_module(
+        #                     '.'.join(re.split('[\\\\/]', filePath[len(abs_path):-3])))
+        #                 # module = importlib.import_module('FineReport')
+        #                 if hasattr(modulePY, 'Script'):
+        #                     aModule = getattr(modulePY, 'Script')
+        #                     self.moduleList.append(aModule)
+        #             except Exception as e:
+        #                 print('import module {} error, {}'.format(filename, e.__str__()))
+
+
+
         # modules = filter(lambda x: (True, False)[x[-3:] == 'pyc' or x[-5:] == '__.py' or x[:2] == '__'],
         #                  os.listdir(self.modulePath))
         # for _ in modules:
