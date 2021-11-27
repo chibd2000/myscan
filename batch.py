@@ -31,8 +31,8 @@ from spider.FriendChainsSpider import FriendChainsSpider
 from spider.AliveSpider import AliveSpider
 # exploit
 from exploit.CmsExploit import CmsScan
-# from exploit.SQLExploit import *
 from exploit.ServiceExploit import PortServiceScan
+from exploit.SQLExploit import SqlScan
 # from exploit.AliveScan import *
 # from exploit.IpUnauthExploit import *
 # from exploit.HttpUnauthExploit import *
@@ -590,6 +590,9 @@ class Exploit(object):
     # 基于网站参数的漏扫
     def sqlExploit(self, webParamsList):
         gLogger.info('SqlScan Start')
+        sqlScan = SqlScan(self.domain, webParamsList)
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(sqlScan.main())
         # queue = asyncio.Queue(-1)
         # for aTask in webParamsList:
         #     pass
@@ -641,6 +644,12 @@ class Exploit(object):
         #
         # for i in self.threadList:
         #     i.join()
+
+
+class ShellExploit:
+    """
+    一个新想法，待定吧 @zpchcbd write in 2021.11.27 23.13
+    """
 
 
 def globalVariableInit():

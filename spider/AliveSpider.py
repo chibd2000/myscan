@@ -3,6 +3,7 @@
 # @Time     : 2021-09-01 11:08
 from core.public import *
 from core.parser.urlparser import urlParser
+from core.setting import CONCURRENCY
 from core.utils.differ import DifferentChecker
 from spider import BaseSpider
 from bs4 import BeautifulSoup
@@ -298,8 +299,7 @@ class AliveSpider(BaseSpider):
         return ''
 
     async def spider(self):
-        concurrency = 500  # 这里的话稍微控制下并发量
-        semaphore = asyncio.Semaphore(concurrency)
+        semaphore = asyncio.Semaphore(CONCURRENCY)
         await asyncio.gather(*[asyncio.create_task(self._getAlive(semaphore, i)) for i in self.domainList])
         self.linkList = list(set(self.linkList))
         self.aliveList = list(set(self.aliveList))

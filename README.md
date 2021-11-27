@@ -7,7 +7,6 @@
 横戈安全团队  
 
 author: Chibd2000
-blog: https://www.cnblogs.com/zpchcbd/
 
 # 安装
 
@@ -204,6 +203,8 @@ blog: https://www.cnblogs.com/zpchcbd/
 
 - 通过sqlmap来进行探测，根据sqlmap来判断是否存在注入，用的方法是langzi的方法，参考文章在下面
 
+![sqlscan](img/scan-sql.png)
+
 # 用法：
 
 记得挂代理，因为部分接口都需要翻墙，代理端口为7890，目前是写死的，之后完全写完之后再改这个代理端口的问题。
@@ -250,7 +251,7 @@ blog: https://www.cnblogs.com/zpchcbd/
 
 10、https://github.com/sqlmapproject/sqlmap
 
-#需要增加的
+## ❗(bugs) and 📑(suggestions)
 
 ~~1、基于请求数据的时候实现进度可视化，比如进度条~~（已实现）
 

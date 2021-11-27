@@ -3,6 +3,10 @@
 # @blog     : https://www.cnblogs.com/zpchcbd/
 # @Time     : 2021-11-23 20:45
 
+# SPEED
+
+CONCURRENCY = 500
+
 # REGEXP
 
 REGEXP_TITLE_STRING = r'<title>(?P<result>[^<]+)</title>'
@@ -13,27 +17,72 @@ REGEXP_PARAM_STRING = r''
 
 SQL_COMMON_FALG_SIGN = '@@'
 
-SQL_HTML_FLAG_SIGN = '@@.htm'
+SQL_HTML_FLAG_SIGN = '.htm'
 
-SQL_SHTML_FLAG_SIGN = '@@.shtm'
+SQL_SHTML_FLAG_SIGN = '.shtm'
 
 ERROR_PAYLOAD_XML = 'dict/payload/errors.xml'
 
 BOOL_PAYLOAD_XML = 'dict/payload/bool.xml'
 
-ERROR_FLAG = {'SQL syntax': 'mysql',
-                      'syntax to use near': 'mysql',
-                      'MySQLSyntaxErrorException': 'mysql',
-                      'valid MySQL result': 'mysql',
-                      'Access Database Engine': 'Access',
-                      'JET Database Engine': 'Access',
-                      'Microsoft Access Driver': 'Access',
-                      'SQLServerException': 'mssql',
-                      'SqlException': 'mssql',
-                      'SQLServer JDBC Driver': 'mssql',
-                      'Incorrect syntax': 'mssql',
-                      'MySQL Query fail': 'mysql'
-                      }
+ERROR_FLAG = {
+    'SQL syntax': 'MYSQL',
+    'syntax to use near': 'MYSQL',
+    'MySQLSyntaxErrorException': 'MYSQL',
+    'valid MySQL result': 'MYSQL',
+    'SQL syntax.*?MySQL': 'MYSQL',
+    'Warning.*?mysql_': 'MYSQL',
+    'MySqlException \(0x': 'MYSQL',
+    "PostgreSQL.*?ERROR": "PostgreSQL",
+    "Warning.*?\Wpg_": "PostgreSQL",
+    "valid PostgreSQL result": "PostgreSQL",
+    "Npgsql\.": "PostgreSQL",
+    "PG::SyntaxError:": "PostgreSQL",
+    "org\.postgresql\.util\.PSQLException": "PostgreSQL",
+    "ERROR:\s\ssyntax error at or near": "PostgreSQL",
+    "Driver.*? SQL[\-\_\ ]*Server": "Microsoft SQL Server",
+    "OLE DB.*? SQL Server": "Microsoft SQL Server",
+    "SQL Server[^&lt;&quot;]+Driver": "Microsoft SQL Server",
+    "Warning.*?(mssql|sqlsrv)_": "Microsoft SQL Server",
+    "SQL Server[^&lt;&quot;]+[0-9a-fA-F]{8}": "Microsoft SQL Server",
+    "System\.Data\.SqlClient\.SqlException": "Microsoft SQL Server",
+    "(?s)Exception.*?\WRoadhouse\.Cms\.": "Microsoft SQL Server",
+    "Microsoft SQL Native Client error '[0-9a-fA-F]{8}": "Microsoft SQL Server",
+    "com\.microsoft\.sqlserver\.jdbc\.SQLServerException": "Microsoft SQL Server",
+    "ODBC SQL Server Driver": "Microsoft SQL Server",
+    "ODBC Driver \d+ for SQL Server": "Microsoft SQL Server",
+    "macromedia\.jdbc\.sqlserver": "Microsoft SQL Server",
+    "com\.jnetdirect\.jsql": "Microsoft SQL Server",
+    "SQLSrvException": "Microsoft SQL Server",
+    "Microsoft Access (\d+ )?Driver": "Microsoft Access",
+    "ODBC Microsoft Access": "Microsoft Access",
+    "Syntax error \(missing operator\) in query expression": "Microsoft Access",
+    "ORA-\d{5}": "Oracle",
+    "Oracle error": "Oracle",
+    "Oracle.*?Driver": "Oracle",
+    "Warning.*?\Woci_": "Oracle",
+    "Warning.*?\Wora_": "Oracle",
+    "oracle\.jdbc\.driver": "Oracle",
+    "quoted string not properly terminated": "Oracle",
+    "SQL command not properly ended": "Oracle",
+    "DB2 SQL error": "CLI Driver.*?DB2",
+    "db2_\w+\(": "CLI Driver.*?DB2",
+    "SQLSTATE.+SQLCODE": "CLI Driver.*?DB2",
+    'check the manual that corresponds to your (MySQL|MariaDB) server version': 'MYSQL',
+    "Unknown column '[^ ]+' in 'field list'": 'MYSQL',
+    "MySqlClient\.": 'MYSQL',
+    'com\.mysql\.jdbc\.exceptions': 'MYSQL',
+    'Zend_Db_Statement_Mysqli_Exception': 'MYSQL',
+    'Access Database Engine': 'Microsoft Access',
+    'JET Database Engine': 'Microsoft Access',
+    'Microsoft Access Driver': 'Microsoft Access',
+    'SQLServerException': 'Microsoft SQL Server',
+    'SqlException': 'Microsoft SQL Server',
+    'SQLServer JDBC Driver': 'Microsoft SQL Server',
+    'Incorrect syntax': 'Microsoft SQL Server',
+    'MySQL Query fail': 'MYSQL',
+    'Unknown column.*?order clause': 'MYSQL'
+}
 
 HIGH_RADIO = -1
 

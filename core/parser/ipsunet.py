@@ -59,19 +59,22 @@ def maskToBinary(mask):
 
 # 判断IP地址是否属于这个网段
 def ipInSubnet(ip, subnet):
-    subnet_list = subnet.split('/')
-    networt_add = subnet_list[0]
-    network_mask = subnet_list[1]
+    try:
+        subnet_list = subnet.split('/')
+        networt_add = subnet_list[0]
+        network_mask = subnet_list[1]
 
-    # 原来的得出的二进制数据类型是str，转换数据类型
-    ip_num = int(ipToBinary(ip), 2)
-    subnet_num = int(ipToBinary(networt_add), 2)
-    mask_bin = int(maskToBinary(network_mask), 2)
+        # 原来的得出的二进制数据类型是str，转换数据类型
+        ip_num = int(ipToBinary(ip), 2)
+        subnet_num = int(ipToBinary(networt_add), 2)
+        mask_bin = int(maskToBinary(network_mask), 2)
 
-    # IP和掩码与运算后比较
-    if (ip_num & mask_bin) == (subnet_num & mask_bin):
-        return True
-    else:
+        # IP和掩码与运算后比较
+        if (ip_num & mask_bin) == (subnet_num & mask_bin):
+            return True
+        else:
+            return False
+    except Exception:
         return False
 
 
@@ -192,7 +195,6 @@ def test(ipList, ipSegmentList):
                 break
         if flag:
             filterIpList.append(ip)
-
     tempIpSegmentList = getIpSegment(filterIpList)
     for ipSegment in tempIpSegmentList:
         ipSegmentList.append({'ipSegment': ipSegment, 'ip': [], 'num': 0})
@@ -205,7 +207,7 @@ def test(ipList, ipSegmentList):
 
 
 if __name__ == '__main__':
-    ipList = ['1.31.128.238', '120.79.208.87', '121.37.218.76', '119.23.85.136', '120.77.164.50', '124.238.245.99',
+    ipList = ['1.31.128.238', '2408:863c:861:1::200', '120.79.208.87', '121.37.218.76', '119.23.85.136', '120.77.164.50', '124.238.245.99',
               '47.106.47.204', '8.129.38.45', '47.112.97.182', '221.194.147.203', '116.11.123.228', '47.106.228.201',
               '47.115.134.113', '120.79.200.254', '8.129.6.249', '39.108.64.221', '47.107.54.234', '119.23.93.160',
               '13.228.45.83', '120.25.135.144', '47.106.61.39', '47.113.58.123', '120.77.170.48', '47.112.186.118',
