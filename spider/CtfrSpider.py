@@ -1,5 +1,6 @@
 # coding=utf-8
 
+from core.setting import HTTP_PROXY
 from core.public import *
 from spider import BaseSpider
 
@@ -31,7 +32,7 @@ class CtfrSpider(BaseSpider):
         sslInfo = []
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(url=self.addr.format(self.domain), verify_ssl=False, headers=self.headers, proxy='http://127.0.0.1:7890') as response:
+                async with session.get(url=self.addr.format(self.domain), verify_ssl=False, headers=self.headers, proxy=HTTP_PROXY) as response:
                     text = await response.json()
                     for (key, value) in enumerate(text):
                         subdomainSSL = value['name_value'].split('\n')

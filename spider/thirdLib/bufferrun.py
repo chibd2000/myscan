@@ -1,6 +1,7 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-26 21:25
+from core.setting import HTTP_PROXY
 from spider.thirdLib.public import *
 from spider.thirdLib import BaseThird
 
@@ -56,7 +57,7 @@ class Bufferover(BaseThird):
             url = 'https://api.proxyscrape.com/?request=displayproxies&proxytype=http&country=all&anonymity=all&ssl=yes&timeout=2000'
             try:
                 async with aiohttp.ClientSession(headers=self.headers) as session:
-                    async with session.get(url=url, verify_ssl=False, timeout=self.reqTimeout, proxy='http://127.0.0.1:7890') as response:
+                    async with session.get(url=url, verify_ssl=False, timeout=self.reqTimeout, proxy=HTTP_PROXY) as response:
                         if response is not None:
                             text = await response.text()
                             if text:

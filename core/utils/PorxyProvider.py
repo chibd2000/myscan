@@ -1,6 +1,8 @@
 # coding=utf-8
 # @Author   : zpchcbd HG team
 # @Time     : 2021-10-11 18:30
+
+from core.setting import HTTP_PROXY
 import random
 import aiohttp
 import asyncio
@@ -21,7 +23,7 @@ class ProxyProvider(object):
     async def getProxy(self):
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(url=self.addr, verify_ssl=False, timeout=10, proxy='http://127.0.0.1:7890') as response:
+                async with session.get(url=self.addr, verify_ssl=False, timeout=10, proxy=HTTP_PROXY) as response:
                     if response is not None:
                         text = await response.text()
                         if text:

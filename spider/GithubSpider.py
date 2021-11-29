@@ -1,4 +1,9 @@
 # coding=utf-8
+# @Author   : zpchcbd HG team
+# @Blog     : https://www.cnblogs.com/zpchcbd/
+# @Time     : 2020-11-23 20:45
+
+from core.setting import HTTP_PROXY
 from core.exception.github import GithubPrivilegeError
 from core.public import *
 from spider import BaseSpider
@@ -60,7 +65,7 @@ class GithubSpider(BaseSpider):
         # q=搜索的关键字，q=signtool+sign+pfx+language:Batchfile  指定语言在q参数里，使用language参数
         # extension:pfx 指定后缀在q参数里，使用extension参数
         headers = {"Authorization": 'token {}'.format(self.githubApi)}
-        async with session.get(url=self.addr.format(self.domain, page, self.per_page, proxy='http://127.0.0.1:7890'),
+        async with session.get(url=self.addr.format(self.domain, page, self.per_page, proxy=HTTP_PROXY),
                                headers=headers, timeout=self.reqTimeout, verify_ssl=False) as response:
             text = await response.json()
             await asyncio.sleep(2)
@@ -70,7 +75,7 @@ class GithubSpider(BaseSpider):
             return text
 
     async def getSubdomains(self, session, url):
-        async with session.get(url=url, headers=self.headers, timeout=self.reqTimeout, verify_ssl=False, proxy='http://127.0.0.1:7890') as response:
+        async with session.get(url=url, headers=self.headers, timeout=self.reqTimeout, verify_ssl=False, proxy=HTTP_PROXY) as response:
             text = await response.text('utf-8', 'ignore')
             subdomains = self.matchSubdomain(self.domain, text)
             self.resList.extend(subdomains)

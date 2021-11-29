@@ -6,15 +6,21 @@
 横戈安全团队  
 横戈安全团队  
 
-author: Chibd2000
+author: chibd2000
 
-# 安装
+# 用法：
+
+1、安装依赖包
 
 `pip3 install -r requirements.txt`
+
+2、配置第三方接口API
 
 配置API：spider/common/config.py
 
 ![api-config](img/api-config.png)
+
+3、设置最大文件描述符限制
 
 运行环境：linux centos7 + py3.8
 
@@ -32,6 +38,18 @@ author: Chibd2000
 * hard nofile 65536
 * soft nofile 65536
 ```
+
+4、记得挂代理，因为部分接口都需要翻墙，代理设置地址为 core/setting.py 中的 HTTP_PROXY 字段
+
+![proxy1](img/proxy.png)
+
+5、脚本运行: `python3 batch.py -d zjhu.edu.cn`
+
+信息搜集测试域名：zjhu.edu.cn
+
+结果相关域名资产大概255，里面会包括部分隐藏资产IP之类的，该域名搜集时间加上数据清洗和整理，总共花费7分钟。
+
+![spider](img/spider.jpg)
 
 说明：这个脚本纯属自用，只是开源到github上，要用的话一般的用法下面中都有讲到
 
@@ -205,18 +223,6 @@ author: Chibd2000
 
 ![sqlscan](img/scan-sql.png)
 
-# 用法：
-
-记得挂代理，因为部分接口都需要翻墙，代理端口为7890，目前是写死的，之后完全写完之后再改这个代理端口的问题。
-
-脚本运行: `python3 batch.py -d zjhu.edu.cn`
-
-信息搜集测试域名：zjhu.edu.cn
-
-结果相关域名资产大概255，里面会包括部分隐藏资产IP之类的，该域名搜集时间加上数据清洗和整理，总共花费7分钟。
-
-![spider](img/spider.jpg)
-
 #设计的思维导图
 
 个人感觉整体架构写的其实不是很好，可能是在写的过程中，想法同样也会发生变化，当后面觉得前面不完善的时候，又需要强行插入一些东西，看起来就十分的僵硬，还是有很多需要学习的地方。
@@ -228,6 +234,8 @@ author: Chibd2000
 2、感谢ske大师兄和其他人的项目，前人栽树，后人乘凉
 
 3、虽然说是造轮子，但是自己觉得对于自己来说还是有收获的
+
+![xmind](img/Myscan.png)
 
 #参考的项目和文章：
 
@@ -353,7 +361,7 @@ EOFError
 
 ~~13、github项目 Common 和 Exploit 和 Spider 都可以去掉~~（已完成）
 
-16、SQL注入自动化探测（正在写）
+~~16、SQL注入自动化探测（已完成）~~
 
 - sql相似度匹配 参考文章：http://mp.weixin.qq.com/s?__biz=Mzg4MzY3MTgyMw==&mid=2247483720&idx=1&sn=5449ed47b74cf892c01eb8833b59c952&chksm=cf429728f8351e3eee7387ca85c79a705ae68122509484d49bc278e24c9de4e22ef0080dc0c8&mpshare=1&scene=23&srcid=1114LGKgJqRAT9xqFA9s2BwC&sharer_sharetime=1636911890316&sharer_shareid=1b35adb1b046ef1a6379932d3eabbaf8#rd
 
