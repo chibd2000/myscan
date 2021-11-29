@@ -342,27 +342,16 @@ class ServiceScan(object):
 
         return bret
 
-    def get_http_title(self, response):
-        title = '获取失败'
+    def get_http_title(self, content):
+        title = ''
         try:
             title_pattern = r'<title>(.*?)</title>'
-            title = re.search(title_pattern, response, re.S | re.I).group(1)
-            try:
-                title = title.decode('utf-8').replace('\n', '').strip()
-                return title
-            except:
-                try:
-                    title = title.decode('gbk').replace('\n', '').strip()
-                    return title
-                except:
-                    return title
-        except:
-            return title
+            detectEncode = chardet.detect(content)  # 利用chardet模块检测编码
+            title = re.findall(title_pattern, content.decode(detectEncode['encoding']), re.S | re.I)[0]
+        except Exception:
+            title = '获取失败'
         finally:
-            if title == '':
-                return title + ' 标题为空'
-            else:
-                return title
+            return title
 
 
 class PortScan(BaseSpider):
@@ -461,7 +450,7 @@ class PortScan(BaseSpider):
 
 
 if __name__ == '__main__':
-    portscan = PortScan('zjhu.edu.cn', [{'ip': '60.30.241.10', 'port': [2121]}])
+    portscan = PortScan('zjhu.edu.cn', [{'ip': '118.31.189.86', 'port': [5003]}])
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(portscan.main())
     print(res)
