@@ -1,2 +1,45 @@
-# python 
+# myscan
+test/
+log/
+spider/log
+spider/pymotw.crt
+exploit/script/0day/
+*_0day.py
+
+# git
+.gitignore
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
 *.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+eggs/
+.eggs/
+DS_Store/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# PyBuilder
+target/
+
+# idea
+.idea/
+
+
+
+

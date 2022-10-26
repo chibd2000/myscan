@@ -1,9 +1,11 @@
 # coding=utf-8
-from spider.thirdLib.public import *
-from spider.thirdLib import BaseThird
+from core.request.asynchttp import AsyncFetcher
+from core.data import gLogger, config_dict
+from spider import BaseSpider
+import aiohttp
 
 
-class Virustotal(BaseThird):
+class Virustotal(BaseSpider):
     """
     virustotal third spider
     """
@@ -11,31 +13,28 @@ class Virustotal(BaseThird):
         super().__init__()
         self.addr = 'https://www.virustotal.com/vtapi/v2/domain/report?apikey={}&domain={}'
         self.domain = domain
-        self.api = config.virustotalApi
+        self.api = config_dict['virustotal']
         self.source = 'virustotal'
 
     async def spider(self):
-        print('[+] Load VirusTotal api ...')
+        gLogger.myscan_debug('Load {} api ...'.format(self.source))
         try:
+            if not self.api:
+                gLogger.myscan_warn('{} no api.'.format(self.source))
+                return []
             async with aiohttp.ClientSession() as session:
-                async with session.get(url=self.addr.format(self.api, self.domain), headers=self.headers,
-                                       verify_ssl=False,
-                                       timeout=self.reqTimeout) as response:
-                    text = await response.text(encoding='utf-8')
-                    if response.status == 403:
-                        print('[-] VirusTotal API Permission error.')
-                    elif response.status == 200:
-                        ret_json = json.loads(text)
-                        if 'subdomains' in ret_json.keys():
-                            self.resList = ret_json['subdomains']
-                    else:
-                        print('[-] VirusTotal API No Subdomains.')
+                ret_json = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.api, self.domain), headers=self.headers, json=True)
+                if 'Domain not found' in str(ret_json):
+                    gLogger.myscan_warn('{} - error invalid host.'.format(self.source))
+                    return []
+                if 'subdomains' in ret_json.keys():
+                    self.res_list = ret_json['subdomains']
         except Exception as e:
             print('[-] curl virustotal.com api error, the error is {}'.format(e.args))
-
-        self.resList = list(set(self.resList))
-        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
-        return self.resList
+        self._is_continue = False
+        self.res_list = list(set(self.res_list))
+        gLogger.myscan_info('[{}] [{}] {}'.format(self.source, len(self.res_list), self.res_list))
+        return self.res_list
 
 
 async def do(domain):
@@ -45,5 +44,6 @@ async def do(domain):
 
 
 if __name__ == '__main__':
+    import asyncio
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(do('baidu.com'))

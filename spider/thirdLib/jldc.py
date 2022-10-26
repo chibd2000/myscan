@@ -2,14 +2,13 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-26 0:01
 
-from spider.thirdLib.public import *
-from spider.thirdLib import BaseThird
+from core.request.asynchttp import AsyncFetcher
+from core.data import gLogger, config_dict
+from spider import BaseSpider
+import aiohttp
 
 
-class Jldc(BaseThird):
-    """
-    jidc third spider
-    """
+class Jldc(BaseSpider):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
@@ -17,22 +16,22 @@ class Jldc(BaseThird):
         self.source = 'jidc'
 
     async def spider(self):
-        print('[+] Load Jidc api ...')
+        gLogger.myscan_debug('Load {} api ...'.format(self.source))
         try:
             async with aiohttp.ClientSession() as session:
                 text = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain))
                 result = eval(text)
                 if result:
                     for _ in result:
-                        self.resList.append(_)
+                        self.res_list.append(_)
                 else:
-                    print('Jldc API No Subdomains.')
+                    gLogger.myscan_warn('jldc api no subdomains.')
         except Exception as e:
-            print('[-] curl jldc.me api error, the error is {}'.format(e.args))
-
-        self.resList = list(set(self.resList))
-        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
-        return self.resList
+            gLogger.myscan_error('curl jldc.me api error, the error is {}'.format(e.args))
+        self._is_continue = False
+        self.res_list = list(set(self.res_list))
+        gLogger.myscan_info('[{}] [{}] {}'.format(self.source, len(self.res_list), self.res_list))
+        return self.res_list
 
 
 async def do(domain):
@@ -40,7 +39,7 @@ async def do(domain):
     res = await alien.spider()
     return res
 
-
 if __name__ == '__main__':
+    import asyncio
     loop = asyncio.get_event_loop()
-    res = loop.run_until_complete(do('nbcc.cn'))
+    res = loop.run_until_complete(do('baidu.com'))

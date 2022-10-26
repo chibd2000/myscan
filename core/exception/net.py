@@ -5,17 +5,29 @@
 
 
 class NetGatherError(Exception):
-    """空间搜索引擎异常Base类"""
+    """@todo: NetGather Base class"""
     pass
 
-
 class NetPrivilegeError(NetGatherError):
-    """空间搜索引擎特权问题导致的异常封装类"""
-    def __init__(self, message):
+    """@todo: NetGather subclass, which result in priviledge error"""
+
+    def __init__(self, message=None, *args, **kwargs):
         self.message = message
 
-
 class NetPageLimitError(NetGatherError):
-    """空间搜索引擎页数问题导致的异常封装类"""
-    def __init__(self, message):
+    """@todo: NetGather subclass, which result in search page limit"""
+
+    def __init__(self, message=None, *args, **kwargs):
+        self.message = message
+
+class NetSyntaxError(NetGatherError):
+    """@todo: NetGather subclass, which result in search syntax incorrect"""
+
+    def __init__(self, message=None, *args, **kwargs):
+        self.message = message
+
+class NetTokenError(NetGatherError):
+    """@todo: NetGather subclass, which result in unauth search"""
+
+    def __init__(self, message=None, *args, **kwargs):
         self.message = message

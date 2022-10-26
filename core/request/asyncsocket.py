@@ -6,6 +6,10 @@ import asyncio
 import asyncore
 import socket
 
+"""
+封装用于服务端口利用
+"""
+
 
 class Client(asyncore.dispatcher):
     def __init__(self, host, port):

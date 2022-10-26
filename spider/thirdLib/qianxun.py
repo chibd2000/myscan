@@ -1,9 +1,14 @@
 # coding=utf-8
-from spider.thirdLib.public import *
-from spider.thirdLib import BaseThird
+
+from core.request.asynchttp import AsyncFetcher
+from core.data import gLogger
+from spider import BaseSpider
+import aiohttp
+import time
+import re
 
 
-class Qianxun(BaseThird):
+class Qianxun(BaseSpider):
     """
     qianxun third spider
     """
@@ -14,7 +19,7 @@ class Qianxun(BaseThird):
         self.source = 'qianxun'
 
     async def spider(self):
-        print('[+] Load qianxun api ...')
+        gLogger.myscan_debug('Load {} api ...'.format(self.source))
         headers = self.headers.copy()
         headers.update({'Upgrade': 'http/1.1'})
         try:
@@ -23,32 +28,31 @@ class Qianxun(BaseThird):
                 while True:
                     time.sleep(0.25)
                     params = {'ecmsfrom': '8.8.8.8', 'show': 'none', 'keywords': self.domain, 'page': page}
-                    async with session.post(url=self.addr, data=params, headers=headers,
-                                            verify_ssl=False, timeout=self.reqTimeout) as response:
-                        text = await response.text(encoding='utf-8')
-                        re_data = re.findall(r'<a href="http[s]?://(.*?)"\srel', text, flags=re.S)[1:]
-                        if re_data:
-                            self.resList.extend(re_data)
-                        else:
-                            break
+                    text = await AsyncFetcher.post_fetch(session=session, url=self.addr, data=params, headers=headers, timeout=self.reqTimeout)
+                    re_data = re.findall(r'<a href="http[s]?://(.*?)"\srel', text, flags=re.S)[1:]
+                    if re_data:
+                        self.res_list.extend(re_data)
+                    else:
+                        break
                     page += 1
         except Exception as e:
-            print('[-] curl dnsscan.cn error, the error is {}'.format(e.args))
-
-        for value in enumerate(self.resList.copy()):
+            gLogger.myscan_error('curl dnsscan.cn error, the error is {}'.format(e.args))
+        for value in enumerate(self.res_list.copy()):
             if '*' in value:
-                self.resList.remove(value)
-        self.resList = list(set(self.resList))
-        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
-        return self.resList
+                self.res_list.remove(value)
+        self._is_continue = False
+        self.res_list = list(set(self.res_list))
+        gLogger.myscan_info('[{}] [{}] {}'.format(self.source, len(self.res_list), self.res_list))
+        return self.res_list
 
 
 async def do(domain):
     qianxun = Qianxun(domain)
-    res = await qianxun.spider()
-    return res
+    result = await qianxun.spider()
+    return result
 
 
 if __name__ == '__main__':
+    import asyncio
     loop = asyncio.get_event_loop()
-    res = loop.run_until_complete(do('nbcc.cn'))
+    res = loop.run_until_complete(do('zjhu.edu.cn'))

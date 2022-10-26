@@ -1,9 +1,13 @@
 # coding=utf-8
-from spider.thirdLib.public import *
-from spider.thirdLib import BaseThird
+
+from core.request.asynchttp import AsyncFetcher
+from core.data import gLogger, config_dict
+from spider import BaseSpider
+import aiohttp
+import re
 
 
-class Rapiddns(BaseThird):
+class Rapiddns(BaseSpider):
     """
     rapiddns third spider
     """
@@ -14,30 +18,31 @@ class Rapiddns(BaseThird):
         self.source = 'rapiddns'
 
     async def spider(self):
-        print('[+] Load rapiddns api ...')
+        gLogger.myscan_debug('Load {} api ...'.format(self.source))
         try:
             async with aiohttp.ClientSession() as session:
                 text = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain))
                 results = re.findall(r'<th scope="row ">\d+</th>\n<td>(.*?)</td>', text, re.S | re.I)
                 if results:
                     for _ in results:
-                        self.resList.append(_)
+                        self.res_list.append(_)
                 else:
-                    print('[-] rapiddns API No Subdomains.')
+                    gLogger.myscan_warn('rapiddns api no subdomains.')
         except Exception as e:
-            print('[-] curl rapiddns api error, the error is {}'.format(e.args))
-
-        self.resList = list(set(self.resList))
-        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
-        return self.resList
+            gLogger.myscan_error('curl rapiddns.io error, the error is {}'.format(e.args))
+        self._is_continue = False
+        self.res_list = list(set(self.res_list))
+        gLogger.myscan_info('[{}] [{}] {}'.format(self.source, len(self.res_list), self.res_list))
+        return self.res_list
 
 
 async def do(domain):
     rapiddns = Rapiddns(domain)
-    res = await rapiddns.spider()
-    return res
+    result = await rapiddns.spider()
+    return result
 
 
 if __name__ == '__main__':
+    import asyncio
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(do('zjhu.edu.cn'))

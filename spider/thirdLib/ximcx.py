@@ -1,10 +1,12 @@
 # coding=utf-8
 
-from spider.thirdLib.public import *
-from spider.thirdLib import BaseThird
+from core.request.asynchttp import AsyncFetcher
+from core.data import gLogger
+from spider import BaseSpider
+import aiohttp
 
 
-class Ximcx(BaseThird):
+class Ximcx(BaseSpider):
     """
      ximcx third spider
      """
@@ -15,7 +17,7 @@ class Ximcx(BaseThird):
         self.domain = domain
 
     async def spider(self):
-        print('[+] Load ximcx api ...')
+        gLogger.myscan_debug('Load {} api ...'.format(self.source))
         self.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         try:
             async with aiohttp.ClientSession(headers=self.headers) as session:
@@ -24,15 +26,16 @@ class Ximcx(BaseThird):
                 if code == 0:
                     for _ in results['data']:
                         subdomain = _['domain']
-                        self.resList.append(subdomain)
+                        self.res_list.append(subdomain)
                 else:
-                    print('ximcx API No Subdomains.')
+                    gLogger.myscan_warn('{} api no subdomains.'.format(self.source))
+                    return []
         except Exception as e:
-            print('[-] curl ximcx api error, the error is {}'.format(e.args))
-
-        self.resList = list(set(self.resList))
-        print('[{}] {}'.format(len(self.resList), self.resList))
-        return self.resList
+            gLogger.myscan_error('curl ximcx api error, the error is {}'.format(e.args))
+        self._is_continue = False
+        self.res_list = list(set(self.res_list))
+        gLogger.myscan_info('[{}] [{}] {}'.format(self.source, len(self.res_list), self.res_list))
+        return self.res_list
 
 
 async def do(domain):
@@ -42,5 +45,6 @@ async def do(domain):
 
 
 if __name__ == '__main__':
+    import asyncio
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(do('zjhu.edu.cn'))

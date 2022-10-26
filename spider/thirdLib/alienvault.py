@@ -2,14 +2,13 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-26 0:13
 
-from spider.thirdLib.public import *
-from spider.thirdLib import BaseThird
+from core.request.asynchttp import AsyncFetcher
+from core.data import gLogger, config_dict
+from spider import BaseSpider
+import aiohttp
 
 
-class Alien(BaseThird):
-    """
-    alienvault third spider
-    """
+class Alien(BaseSpider):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
@@ -17,35 +16,32 @@ class Alien(BaseThird):
         self.source = "alienvault"
 
     async def spider(self):
-        print('[+] Load alienvault api ...')
+        gLogger.myscan_debug('Load {} api ...'.format(self.source))
         try:
-            # async with aiohttp.ClientSession() as session:
-            #     async with session.get(url=self.addr.format(self.domain), headers=self.headers, verify_ssl=False,
-            #                            timeout=self.reqTimeout) as response:
-            #         text = await response.json(encoding='utf-8')
             async with aiohttp.ClientSession() as session:
-                text = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), json=True)
-                res = text['passive_dns']
-                if res:
-                    for _ in res:
-                        self.resList.append(_.get('hostname'))
+                proxy = config_dict['proxy']
+                text = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), proxy=proxy, timeout=self.reqTimeout, json=True)
+                result = text['passive_dns']
+                if result:
+                    for _ in result:
+                        self.res_list.append(_.get('hostname'))
                 else:
-                    print('[-] alienvault API No Subdomains.')
+                    gLogger.warn('[{}] alienvault api no subdomains'.format(self.source))
         except Exception as e:
-            print('[-] curl otx.alienvault.com api error, the error is {}'.format(e.args))
-
-        self.resList = list(set(self.resList))
-        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
-        return self.resList
+            gLogger.myscan_error('curl otx.alienvault.com api error, the error is {}'.format(e.args))
+        self._is_continue = False
+        self.res_list = list(set(self.res_list))
+        gLogger.myscan_info('[{}] [{}] {}'.format(self.source, len(self.res_list), self.res_list))
+        return self.res_list
 
 
 async def do(domain):
     alien = Alien(domain)
-    domainList = await alien.spider()
-    return domainList
+    result = await alien.spider()
+    return result
 
 
 if __name__ == '__main__':
+    import asyncio
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(do('zjhu.edu.cn'))
-

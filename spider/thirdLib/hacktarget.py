@@ -1,13 +1,12 @@
 # coding=utf-8
-from core.setting import HTTP_PROXY
-from spider.thirdLib.public import *
-from spider.thirdLib import BaseThird
+
+from core.request.asynchttp import AsyncFetcher
+from core.data import gLogger, config_dict
+from spider import BaseSpider
+import aiohttp
 
 
-class Hacketarget(BaseThird):
-    """
-    hacktarget third spider
-    """
+class Hacketarget(BaseSpider):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
@@ -15,35 +14,38 @@ class Hacketarget(BaseThird):
         self.source = 'hacktarget'
 
     async def spider(self):
-        print('[+] Load hackertarget api ...')
+        gLogger.myscan_debug('Load {} api ...'.format(self.source))
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(url=self.addr.format(self.domain), headers=self.headers, verify_ssl=False, timeout=self.reqTimeout, proxy=HTTP_PROXY) as response:
-                    text = await response.text()
-                    if text != 'error check your search parameter':
-                        for _ in text.split('\n'):
-                            subdomain = _.split(',')[0]
-                            self.resList.append(subdomain)
-                    else:
-                        print('[-] hackertarget API No Subdomains.')
+                proxy = config_dict['proxy']
+                text = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), headers=self.headers, proxy=proxy)
+                if text != 'error check your search parameter':
+                    for _ in text.split('\n'):
+                        subdomain = _.split(',')[0]
+                        self.res_list.append(subdomain)
+                elif 'error invalid host' in text:
+                    gLogger.myscan_warn('{} - error invalid host.'.format(self.source))
+                else:
+                    gLogger.myscan_warn('{} - api no subdomains.'.format(self.source))
         except aiohttp.ClientHttpProxyError:
-            print('[-] curl api.hackertarget.com need outer proxy.')
+            gLogger.myscan_error('curl api.hackertarget.com need outer proxy.')
             return []
         except Exception as e:
-            print('[-] curl api.hackertarget.com api error, the error is {}'.format(e.args))
+            gLogger.myscan_error('curl api.hackertarget.com api error, the error is {}'.format(e.args))
             return []
-
-        self.resList = list(set(self.resList))
-        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
-        return self.resList
+        self._is_continue = False
+        self.res_list = list(set(self.res_list))
+        gLogger.myscan_info('[{}] [{}] {}'.format(self.source, len(self.res_list), self.res_list))
+        return self.res_list
 
 
 async def do(domain):
-    hackTarget = Hacketarget(domain)
-    res = await hackTarget.spider()
-    return res
+    hacktarget = Hacketarget(domain)
+    result = await hacktarget.spider()
+    return result
 
 
 if __name__ == '__main__':
+    import asyncio
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(do('baidu.com'))

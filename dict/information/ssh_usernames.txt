@@ -1,7 +1,2 @@
 root
-itsm
-it
-sec
 oracle
-user
-test

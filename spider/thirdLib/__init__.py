@@ -1,11 +1,17 @@
 # coding=utf-8
 import re
 
+import openpyxl
 
-class BaseThird(object):
+
+class BaseThird:
     __slots__ = ('source', 'headers', 'reqTimeout', 'domain', 'resList')
 
     def __init__(self):
+        self.resList = []
+        self.reqTimeout = 10
+        self.source = "BaseThird"
+        self.domain = ''
         self.headers = {
             'Accept': 'text/html,application/xhtml+xml,'
                       'application/xml;q=0.9,*/*;q=0.8',
@@ -19,13 +25,9 @@ class BaseThird(object):
             'Upgrade-Insecure-Requests': '1',
             'X-Forwarded-For': '127.0.0.1',
         }
-        self.resList = []
-        self.reqTimeout = 10
-        self.source = "BaseThird"
-        self.domain = ''
 
     # 匹配每个页面中的子域名
-    def matchSubdomain(self, domain, text):
+    def match_subdomain(self, domain, text):
         regexp = r'(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.){0,}' + domain.replace('.', r'\.')
         result = re.findall(regexp, text, flags=re.I | re.S)
         if not result:

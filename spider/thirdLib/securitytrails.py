@@ -2,11 +2,13 @@
 # @Author   : zpchcbd HG team
 # @Time     : 2021-08-25 23:53
 
-from spider.thirdLib.public import *
-from spider.thirdLib import BaseThird
+from core.request.asynchttp import AsyncFetcher
+from core.data import gLogger, config_dict
+from spider import BaseSpider
+import aiohttp
 
 
-class Securitytrails(BaseThird):
+class Securitytrails(BaseSpider):
     """
     securitytrails third spider
     """
@@ -15,10 +17,13 @@ class Securitytrails(BaseThird):
         self.domain = domain
         self.addr = 'https://api.securitytrails.com/v1/domain/{}/subdomains?children_only=false&include_inactive=true'
         self.source = 'securitytrails'
-        self.api = config.securitytrailsApi
+        self.api = config_dict['securitytrails']
 
     async def spider(self):
-        print('[+] Load securitytrails api ...')
+        gLogger.myscan_debug('Load {} api ...'.format(self.source))
+        if not self.api:
+            gLogger.myscan_warn('{} no api.'.format(self.source))
+            return []
         headers = self.headers.copy()
         headers.update({'APIKEY': self.api, 'Accept': 'application/json'})
         try:
@@ -27,22 +32,23 @@ class Securitytrails(BaseThird):
                 results = text.get('subdomains', '')
                 if results:
                     for _ in results:
-                        self.resList.append('{}.{}'.format(_, self.domain))
+                        self.res_list.append('{}.{}'.format(_, self.domain))
                 else:
-                    print('securitytrails API No Subdomains.')
+                    gLogger.myscan_warn('securitytrails api no subdomains.')
         except Exception as e:
-            print('[-] curl securitytrails api error, the error is {}'.format(e.args))
-
-        self.resList = list(set(self.resList))
-        print('[+] [securitytrails] [{}] {}'.format(len(self.resList), self.resList))
-        return self.resList
+            gLogger.myscan_error('curl api.securitytrails.com error, the error is {}'.format(e.args))
+        self._is_continue = False
+        self.res_list = list(set(self.res_list))
+        gLogger.myscan_info('[{}] [{}] {}'.format(self.source, len(self.res_list), self.res_list))
+        return self.res_list
 
 
 async def do(domain):
     s = Securitytrails(domain)
-    res = await s.spider()
-    return res
+    result = await s.spider()
+    return result
 
 if __name__ == '__main__':
+    import asyncio
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(do('huolala.cn'))

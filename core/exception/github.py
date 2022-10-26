@@ -4,17 +4,16 @@
 # @Time     : 2021-11-27 1:06
 
 """
-prepare for github error, write in 2021.11.27 1.06 @zpchcbd
+@todo: prepare for github error, write in 2021.11.27 1.06 @zpchcbd
 """
 
 
 class GithubSearchError(Exception):
-    """GithubSearch异常Base类"""
+    """@todo: GithubSearch Base class"""
     pass
 
 
 class GithubPrivilegeError(GithubSearchError):
-    """GithubSearch权限问题导致的异常封装类"""
-
-    def __init__(self, message):
+    """@todo: GithubSearch subclass, which result in priviledge error"""
+    def __init__(self, message=None, *args, **kwargs):
         self.message = message

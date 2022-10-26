@@ -39,7 +39,7 @@ class DifferentChecker:
         #        [i for i in reversed(range(maxLen)) if matchA[i] != matchB[i]][0]
 
     @staticmethod
-    def getCloseMatchIndex(word, possibilities, n=1000, cutoff=0.8):
+    def get_close_match_index(word, possibilities, n=1000, cutoff=0.8):
         # 改成get_close_matches取下标索引的
         if not n > 0:
             raise ValueError("n must be > 0: %r" % (n,))
@@ -48,11 +48,8 @@ class DifferentChecker:
         result = []
         s = SequenceMatcher()
         s.set_seq2(word)
-        dcPossibilities = copy.deepcopy(possibilities)
-        for idx, x in enumerate(dcPossibilities):
-            # if x == word:
-            #     possibilities.__delitem__(idx)
-            #     continue
+        dc_possibilities = copy.deepcopy(possibilities)
+        for idx, x in enumerate(dc_possibilities):
             s.set_seq1(x)
             if s.real_quick_ratio() >= cutoff and \
                     s.quick_ratio() >= cutoff and \

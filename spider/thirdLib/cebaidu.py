@@ -1,10 +1,12 @@
 # coding=utf-8
-from spider.thirdLib.public import *
-from spider.thirdLib import BaseThird
+
+from core.data import gLogger
+from spider import BaseSpider
+from core.request.asynchttp import AsyncFetcher
+import aiohttp
 
 
-
-class CeBaidu(BaseThird):
+class CeBaidu(BaseSpider):
     """
     ceBaidu third spider
     """
@@ -15,24 +17,21 @@ class CeBaidu(BaseThird):
         self.source = "cebaidu"
 
     async def spider(self):
-        print('[+] Load ceBaidu api ...')
+        gLogger.myscan_debug('Load {} api ...'.format(self.source))
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(url=self.addr.format(self.domain), headers=self.headers, verify_ssl=False,
-                                       timeout=self.reqTimeout) as response:
-                    text = await response.text(encoding='utf-8')
-                    ret_json = json.loads(text)
-                    if 'data' in ret_json.keys():
-                        for _ in ret_json['data']:
-                            self.resList.append(_['domain'])
-                    else:
-                        print('[-] ceBaidu API No Subdomains.')
+                ret_json = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), timeout=self.reqTimeout, json=True)
+                if isinstance(ret_json, dict) and 'data' in ret_json.keys():
+                    for _ in ret_json['data']:
+                        self.res_list.append(_['domain'])
+                else:
+                    gLogger.myscan_warn('cebaidu api no subdomains.')
         except Exception as e:
-            print('[-] curl ce.baidu.com api error, the error is {}'.format(e.args))
-
-        self.resList = list(set(self.resList))
-        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
-        return self.resList
+            gLogger.myscan_error('curl ce.baidu.com api error, the error is {}'.format(e.args))
+        self._is_continue = False
+        self.res_list = list(set(self.res_list))
+        gLogger.myscan_info('[{}] [{}] {}'.format(self.source, len(self.res_list), self.res_list))
+        return self.res_list
 
 
 async def do(domain):
@@ -42,5 +41,6 @@ async def do(domain):
 
 
 if __name__ == '__main__':
+    import asyncio
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(do('baidu.com'))

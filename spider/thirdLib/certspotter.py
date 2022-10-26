@@ -1,46 +1,46 @@
 # coding=utf-8
 
-from spider.thirdLib.public import *
-from spider.thirdLib import BaseThird
+from core.request.asynchttp import AsyncFetcher
+from core.data import gLogger, config_dict
+from spider import BaseSpider
+import aiohttp
 
 
-class Certspotter(BaseThird):
-    """
-    certspotter third spider
-    """
+class Certspotter(BaseSpider):
     def __init__(self, domain):
         super().__init__()
         self.domain = domain
-        self.addr = "https://api.certspotter.com/v1/issuances?domain={}&include_subdomains=true&expand=dns_names"
         self.source = 'certspotter'
+        self.addr = "https://api.certspotter.com/v1/issuances?domain={}&include_subdomains=true&expand=dns_names"
 
     async def spider(self):
-        print('[+] Load certspotter api ...')
+        gLogger.myscan_debug('Load {} api ...'.format(self.source))
         try:
-            async with aiohttp.ClientSession(headers=self.headers) as session:
-                text = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain))
+            async with aiohttp.ClientSession() as session:
+                text = await AsyncFetcher.fetch(session=session, url=self.addr.format(self.domain), headers=self.headers)
                 if 'not_allowed_by_plan' not in text:
                     for _ in eval(text):
                         for subdomain in _['dns_names']:
                             if '*.' in subdomain:
                                 subdomain = subdomain.replace('*.', '')
-                            self.resList.append(subdomain)
+                            self.res_list.append(subdomain)
                 else:
-                    print('certspotter API No Subdomains.')
+                    gLogger.myscan_warn('certspotter api no subdomains.')
         except Exception as e:
-            print('[-] curl certspotter api error, the error is {}'.format(e.args))
-
-        self.resList = list(set(self.resList))
-        print('[+] [{}] [{}] {}'.format(self.source, len(self.resList), self.resList))
-        return self.resList
+            gLogger.myscan_error('curl certspotter api error, the error is {}'.format(e.args))
+        self._is_continue = False
+        self.res_list = list(set(self.res_list))
+        gLogger.myscan_info('[{}] [{}] {}'.format(self.source, len(self.res_list), self.res_list))
+        return self.res_list
 
 
 async def do(domain):
     cer = Certspotter(domain)
-    res = await cer.spider()
-    return res
+    result = await cer.spider()
+    return result
 
 
 if __name__ == '__main__':
+    import asyncio
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(do('ncist.edu.cn'))

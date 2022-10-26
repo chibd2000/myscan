@@ -1,0 +1,64 @@
+# coding=utf-8
+
+# default register port
+port:
+  default_port_config: 'top100'
+
+# some api need to proxy
+proxy: 'http://127.0.0.1:7890'
+
+# fofa.so
+fofa:
+  fofa_email: ''
+  fofa_api: ''
+
+# hunter.qianxin.com
+hunter:
+  hunter_name: ''
+  hunter_api: ''
+
+# shodan.io
+shodan: ''
+
+# quake.360.com
+quake: ''
+
+# https://search.censys.io/account/api
+censys:
+  censys_id: ''
+  censys_secret : ''
+
+# virustotal.com
+virustotal: ''
+
+# https://github.com/settings/tokens
+github: ''
+
+# http://api.chinaz.com/ApiDetails/Alexa
+chinaz: ''
+
+# https://securitytrails.com/corp/api
+securitytrails: ''
+
+# https://app.binaryedge.io/account/api
+binaryedge: ''
+
+# https://x.threatbook.cn/v5/myApi
+threatbook: ''
+
+# https://fullhunt.io/user/settings/
+fullhunter: ''
+
+# http://ceye.io
+# 公共账号，原因是在比如T3协议，无法通过python来发包实现页面回显，所以这里用的就是dns带外验证，但是我数据包是写死的
+# 所以地址也只能写死，这里的漏洞验证我都是通过这个地址来进行验证的，如果想换的话，可能还需要大家自己重新构造下回显的数据包
+# 如果想用回显的话只能通过调用jar包来发包验证，但是自己又不想引入第三方的东西，所以只能写成这样了
+# weblogic t3漏洞协议认证默认用的是如下这个0wtpsg.ceye.io，作为公共来使用了，如果大家要改的话那么weblogic t3 payload还需要自己重新抓个包来进行处理
+ceye:
+  ceye_api : '4f4d05058fe3fe065b733e118731c42a'
+  ceye_identifier : '0wtpsg.ceye.io'
+
+# 常用的dnslog平台基本都被厂商禁止通信了，自己这里找了一个用的比较少的dnslog平台，作为相关漏洞验证平台
+eyes:
+  eyes_api : ''
+  eyes_identifier : ''
