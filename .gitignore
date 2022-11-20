@@ -1,6 +1,5 @@
 # myscan
 test/
-log/
 spider/log
 spider/pymotw.crt
 exploit/script/0day/
