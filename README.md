@@ -1,6 +1,8 @@
 # myscan
 
-[![Python 3.8](https://img.shields.io/badge/python-3.8-red.svg)](https://www.python.org/)  
+[![Python 3.8](https://img.shields.io/badge/python-3.8-red.svg)](https://www.python.org/) 
+
+图形化实现地址：https://github.com/chibd2000/vue-myscan
 
 Team：HengGe横戈安全团队
 
@@ -20,7 +22,7 @@ myscan是异步实现信息搜集以及漏洞利用功能的一款自动化扫�
 
 `conf/myscan.yaml`
 
-提示：效果最佳最好挂上代理，代理设置地址为 conf/myscan.yaml 中的 proxy 字段，默认代理端口为 http://127.0.0.1:1080
+提示：效果最佳最好挂上代理，代理设置地址为 conf/myscan.yaml 中的 proxy 字段，默认代理端口为 http://127.0.0.1:7890
 
 ![config](img/config.png)
 
